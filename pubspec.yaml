@@ -42,6 +42,8 @@ dependencies:
   flutter_svg:
   flutter_screenutil:
   intl_phone_number_field: ^0.2.0
+  webview_flutter: ^4.9.0
+  flutterwave_standard_smart: ^1.0.4
 
 
 dev_dependencies:

@@ -5,6 +5,7 @@ class Network {
   static const receiverTimeOut = Duration(seconds: 120);
   late Dio dio;
   late bool showLog;
+  static const subPath = '/api';
 
   final _dioBaseOptions = BaseOptions(
     connectTimeout: connectTimeOut,
@@ -37,7 +38,6 @@ class Network {
 
   /// Factory constructor used mainly for injecting an instance of [Dio] mock
   Network.test(this.dio);
-
   Future<Response> call(
     String path,
     RequestMethod method, {
@@ -50,6 +50,7 @@ class Network {
     bool useUrlEncoded = false,
   }) async {
     Response? response;
+    path = subPath + path;
     var params = queryParams ?? {};
     final headerOverride = useUrlEncoded
         ? {
@@ -104,13 +105,13 @@ class Network {
       }
       // if (showLog) devLog("$path API response: $response");
       return response;
-    } on DioException catch (error, stackTrace) {
+    } on DioException catch (error) {
       final apiError = ApiError.fromDioError(error);
       if (showLog) {
         // devLog("$path: ${error.response?.statusCode} code");
         // devLog("API response: ${error.response}");
       }
-      return Future.error(apiError, stackTrace);
+      throw apiError;
     } catch (_) {
       rethrow;
     }
@@ -154,4 +155,3 @@ class Network {
 }
 
 enum RequestMethod { post, get, put, delete, upload, patch }
-

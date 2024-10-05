@@ -78,9 +78,9 @@ class _LoginscreenState extends State<Loginscreen> with Validators {
               label: "Login",
               onPressed: () {
                 if (!loginForm.currentState!.validate()) return;
-                // context.read<AuthenticationBloc>().add(LoginEvent(
-                //     email: _emailController.text,
-                //     password: _passwordController.text));
+                context.read<AuthenticationBloc>().add(LoginEvent(
+                    email: _emailController.text,
+                    password: _passwordController.text));
               },
             ),
             RichText(

@@ -9,6 +9,22 @@ abstract class AuthenticationState extends Equatable {
 
 class AuthenticationInitial extends AuthenticationState {}
 
+class LoginLoading extends AuthenticationState {}
+
+class LoginFailed extends AuthenticationState {
+  final String message;
+
+  LoginFailed({required this.message});
+}
+
+class UserAccount extends AuthenticationState {
+  final UserModel userModel;
+
+  UserAccount({required this.userModel});
+}
+
+class SetUserState extends AuthenticationState {}
+
 class PersonalInfoState extends AuthenticationState {
   final PersonalInfoModel personalInfoModel;
 

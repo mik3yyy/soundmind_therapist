@@ -20,4 +20,5 @@ abstract class AuthenticationRepository {
     required VerificationInfoModel verificationInfoModel,
     required ProfileInfoEvent profileInfoEvent,
   });
+  ResultFuture<UserModel> checkUser();
 }

@@ -31,7 +31,7 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
         password: password,
       );
       print(userData);
-      if (userData['data']['isEmailVerified']) {
+      if (userData['isEmailVerified']) {
         UserModel userModel = UserModel.fromJson(userData);
 
         _authenticationHiveDataSource.saveUser(userModel: userModel);
@@ -63,6 +63,18 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
       return Right(verificationData);
     } on ApiError catch (e) {
       return Left(ServerFailure(e.errorDescription));
+    }
+  }
+
+  @override
+  ResultFuture<UserModel> checkUser() async {
+    try {
+      UserModel userModel = await _authenticationHiveDataSource.getUser();
+
+      return Right(userModel);
+    } catch (e) {
+      print(e.toString());
+      return const Left(CacheFailure("No User"));
     }
   }
 }

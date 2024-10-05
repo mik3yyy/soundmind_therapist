@@ -20,9 +20,10 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    context.read<AuthenticationBloc>().add(CheckUser());
 
     // context.read<AuthenticationBloc>().add(CheckUser());
-    goToOnboardingScreen();
+    // goToOnboardingScreen();
   }
 
   void goToOnboardingScreen() {
@@ -38,11 +39,16 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) async {
-        // if (state is UserAccount) {}
-        // if (state is SetUserState) {
-        //   await Future.delayed(const Duration(seconds: 2));
-        //   context.replaceNamed(Routes.onboardingName);
-        // }
+        if (state is UserAccount) {
+          await Future.delayed(const Duration(seconds: 2));
+          // ignore: use_build_context_synchronously
+          context.replaceNamed(Routes.homeName);
+        }
+        if (state is SetUserState) {
+          await Future.delayed(const Duration(seconds: 2));
+          // ignore: use_build_context_synchronously
+          context.replaceNamed(Routes.onboardingName);
+        }
       },
       child: Scaffold(
         backgroundColor: context.primaryColor,

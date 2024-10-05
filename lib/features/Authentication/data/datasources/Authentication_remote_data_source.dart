@@ -36,7 +36,7 @@ class AuthenticationRemoteDataSourceImpl
         "password": password,
       },
     );
-    return response.data;
+    return response.data['data'];
   }
 
   @override
@@ -46,7 +46,6 @@ class AuthenticationRemoteDataSourceImpl
       required PracticalInfoModel practicalInfoModel,
       required VerificationInfoModel verificationInfoModel,
       required ProfileInfoEvent profileInfoEvent}) {
-    // TODO: implement createAccount
     throw UnimplementedError();
   }
 }

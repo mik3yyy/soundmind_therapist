@@ -1,5 +1,7 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:soundmind_therapist/core/bloc_config/observer.dart';
 import 'package:soundmind_therapist/core/network/network.dart';
 import 'package:soundmind_therapist/core/network/url_config.dart';
 import 'package:soundmind_therapist/core/notifications/notification_service.dart';
@@ -12,6 +14,48 @@ import 'package:soundmind_therapist/features/Authentication/domain/repositories/
 import 'package:soundmind_therapist/features/Authentication/domain/usecases/create_account.dart';
 import 'package:soundmind_therapist/features/Authentication/domain/usecases/login.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/Authentication_bloc.dart';
+import 'package:soundmind_therapist/features/appointment/data/datasources/appointment_hive_data_source.dart';
+import 'package:soundmind_therapist/features/appointment/data/datasources/appointment_remote_data_source.dart';
+import 'package:soundmind_therapist/features/appointment/data/repositories/appointment_repository_impl.dart';
+import 'package:soundmind_therapist/features/appointment/domain/repositories/appointment_repository.dart';
+import 'package:soundmind_therapist/features/appointment/domain/usecases/approve_appointment_request.dart';
+import 'package:soundmind_therapist/features/appointment/domain/usecases/get_accepted_request.dart';
+import 'package:soundmind_therapist/features/appointment/domain/usecases/get_appointment_data.dart';
+import 'package:soundmind_therapist/features/appointment/domain/usecases/get_appointment_request.dart';
+import 'package:soundmind_therapist/features/appointment/domain/usecases/get_pending_appointment.dart';
+import 'package:soundmind_therapist/features/appointment/domain/usecases/get_rejected_appointment.dart';
+import 'package:soundmind_therapist/features/appointment/domain/usecases/reject_appointment_request.dart';
+import 'package:soundmind_therapist/features/appointment/presentation/bloc/appointment_bloc.dart';
+import 'package:soundmind_therapist/features/appointment/presentation/bloc/approve_appointment_request/approve_appointment_request_cubit.dart';
+import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_accepted_appointments/get_accepted_appointments_cubit.dart';
+import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_pending_appointments/get_pending_appointments_cubit.dart';
+import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_rejected_appointments/get_rejected_appointments_cubit.dart';
+import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_upcoming_appointment_request/get_upcoming_appointment_request_cubit.dart';
+import 'package:soundmind_therapist/features/appointment/presentation/bloc/reject_appointment_request/reject_appointment_request_cubit.dart';
+import 'package:soundmind_therapist/features/main/data/datasources/main_hive_data_source.dart';
+import 'package:soundmind_therapist/features/main/data/datasources/main_remote_data_source.dart';
+import 'package:soundmind_therapist/features/main/data/repositories/main_repository_impl.dart';
+import 'package:soundmind_therapist/features/main/domain/repositories/main_repository.dart';
+import 'package:soundmind_therapist/features/main/domain/usecases/get_main_data.dart';
+import 'package:soundmind_therapist/features/main/presentation/blocs/main_bloc.dart';
+import 'package:soundmind_therapist/features/wallet/data/datasources/wallet_remote_data_source.dart';
+import 'package:soundmind_therapist/features/wallet/data/repositories/wallet_repository_impl.dart';
+import 'package:soundmind_therapist/features/wallet/domain/usecases/confirm_wallet_top_up.dart';
+import 'package:soundmind_therapist/features/wallet/domain/usecases/get_banks.dart';
+import 'package:soundmind_therapist/features/wallet/domain/usecases/get_user_transaction.dart';
+import 'package:soundmind_therapist/features/wallet/domain/usecases/get_user_wallet.dart';
+import 'package:soundmind_therapist/features/wallet/domain/usecases/initiate_wallet_top_up.dart';
+import 'package:soundmind_therapist/features/wallet/domain/usecases/resolve_bank.dart';
+import 'package:soundmind_therapist/features/wallet/domain/usecases/withdraw_to_bank.dart';
+import 'package:soundmind_therapist/features/wallet/presentation/blocs/get_bank/get_banks_cubit.dart';
+import 'package:soundmind_therapist/features/wallet/presentation/blocs/get_bank_transactions/get_bank_transactions_cubit.dart';
+import 'package:soundmind_therapist/features/wallet/presentation/blocs/resolve_bank_account/resolve_bank_account_cubit.dart';
+import 'package:soundmind_therapist/features/wallet/presentation/blocs/top_up/topup_wallet_cubit.dart';
+import 'package:soundmind_therapist/features/wallet/presentation/blocs/wallet_bloc.dart';
+import 'package:soundmind_therapist/features/wallet/presentation/blocs/withdraw_to_bank/withdraw_to_bank_cubit.dart';
+
+import '../../features/Authentication/domain/usecases/check_user.dart';
+import '../../features/wallet/domain/repositories/wallet_repository.dart';
 
 final sl = GetIt.instance;
 
@@ -29,9 +73,10 @@ Future<void> init() async {
   sl.registerSingleton<Box>(box);
 
   sl
-    ..registerFactory(
-        () => AuthenticationBloc(login: sl(), createAccount: sl()))
+    ..registerFactory(() =>
+        AuthenticationBloc(login: sl(), createAccount: sl(), checkUser: sl()))
     ..registerLazySingleton(() => CreateAccount(repository: sl()))
+    ..registerLazySingleton(() => CheckUserUseCase(repository: sl()))
     ..registerLazySingleton(() => Login(repository: sl()))
 
     // AuthenticationHiveDataSource
@@ -46,4 +91,96 @@ Future<void> init() async {
         () => AuthenticationHiveDataSourceImpl(box: sl()))
     ..registerLazySingleton(
         () => Network(baseUrl: UrlConfig.baseUrl, showLog: true));
+
+  sl
+    ..registerFactory(() => MainBloc(getMainData: sl()))
+    ..registerLazySingleton(() => GetMainData(repository: sl()))
+
+    // AuthenticationHiveDataSource
+    ..registerLazySingleton<MainRepository>(
+        () => MainRepositoryImpl(remoteDataSource: sl(), hiveDataSource: sl()))
+    ..registerLazySingleton<MainRemoteDataSource>(
+      () => MainRemoteDataSourceImpl(network: sl()),
+    )
+    ..registerLazySingleton<MainHiveDataSource>(
+      () => MainHiveDataSourceImpl(),
+    );
+
+  sl
+    ..registerFactory(() => AppointmentBloc(getAppointmentData: sl()))
+    ..registerLazySingleton(() => GetAppointmentData(repository: sl()))
+
+    // AuthenticationHiveDataSource
+    ..registerLazySingleton<AppointmentRepository>(() =>
+        AppointmentRepositoryImpl(remoteDataSource: sl(), hiveDataSource: sl()))
+    ..registerLazySingleton<AppointmentRemoteDataSource>(
+      () => AppointmentRemoteDataSourceImpl(network: sl()),
+    )
+    ..registerLazySingleton<AppointmentHiveDataSource>(
+      () => AppointmentHiveDataSourceImpl(box: box),
+    );
+
+  sl
+    ..registerFactory(() =>
+        GetAcceptedAppointmentsCubit(getAcceptedAppointmentsUseCase: sl()))
+    ..registerLazySingleton(() => GetAcceptedAppointments(repository: sl()));
+
+  sl
+    ..registerFactory(
+        () => GetPendingAppointmentsCubit(getPendingAppointmentsUseCase: sl()))
+    ..registerLazySingleton(() => GetPendingAppointments(repository: sl()));
+
+  sl
+    ..registerFactory(
+        () => ApproveAppointmentCubit(approveAppointmentRequestUseCase: sl()))
+    ..registerLazySingleton(() => ApproveAppointmentRequest(repository: sl()));
+
+  sl
+    ..registerFactory(() =>
+        GetRejectedAppointmentsCubit(getRejectedAppointmentsUseCase: sl()))
+    ..registerLazySingleton(() => GetRejectedAppointments(repository: sl()));
+
+  sl
+    ..registerFactory(
+        () => RejectAppointmentCubit(rejectAppointmentRequestUseCase: sl()))
+    ..registerLazySingleton(() => RejectAppointmentRequest(repository: sl()));
+
+  sl
+    ..registerFactory(() => GetUpcomingAppointmentRequestCubit(
+        getUpcomingAppointmentRequestUseCase: sl()))
+    ..registerLazySingleton(
+        () => GetUpcomingAppointmentRequest(repository: sl()));
+  sl
+    ..registerFactory(
+        () => TopUpCubit(initiateWalletTopUp: sl(), confirmWalletTopUp: sl()))
+    ..registerLazySingleton(() => InitiateWalletTopUp(repository: sl()))
+    ..registerLazySingleton(() => ConfirmWalletTopUp(repository: sl()));
+
+  sl
+    ..registerFactory(
+        () => GetBankTransactionsCubit(getUserWalletTransactions: sl()))
+    ..registerLazySingleton(() => GetUserWalletTransactions(repository: sl()));
+  sl
+    ..registerFactory(() => GetBanksCubit(getBanks: sl()))
+    ..registerLazySingleton(() => GetBanks(repository: sl()));
+
+  sl
+    ..registerFactory(() => WithdrawToBankCubit(withdrawToBank: sl()))
+    ..registerLazySingleton(() => WithdrawToBank(repository: sl()));
+
+  sl
+    ..registerFactory(() => ResolveBankAccountCubit(resolveBankAccount: sl()))
+    ..registerLazySingleton(() => ResolveBankAccount(repository: sl()));
+
+  sl
+    ..registerFactory(() => WalletBloc(getUserWallet: sl()))
+    ..registerLazySingleton(() => GetUserWallet(repository: sl()))
+    ..registerLazySingleton<WalletRepository>(
+      () => WalletRepositoryImpl(remoteDataSource: sl()),
+    )
+    ..registerLazySingleton<WalletRemoteDataSource>(
+      () => WalletRemoteDataSourceImpl(network: sl()),
+    );
+
+  Bloc.observer = SimpleBlocObserver();
 }
