@@ -1,6 +1,6 @@
-import 'package:soundmind_therapist/core/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:soundmind_therapist/core/extensions/context_extensions.dart';
 
 class CustomButton extends StatefulWidget {
   final String label;
@@ -58,7 +58,7 @@ class _CustomButtonState extends State<CustomButton> {
                 color: widget.enable
                     ? widget.color ?? context.primaryColor
                     : Color(0xFFE3E4E8),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(36),
                 border: widget.border,
                 boxShadow: widget.isshadow
                     ? [
@@ -85,8 +85,8 @@ class _CustomButtonState extends State<CustomButton> {
                               TextStyle(
                                 color: widget.enable
                                     ? widget.textColor ?? context.colors.white
-                                    : context
-                                        .colors.greyDecor, //Color(0xFF8692A6),
+                                    : context.colors
+                                        .greenDecorDark, //Color(0xFF8692A6),
                                 fontWeight: FontWeight.w500,
                                 fontSize: widget.textSize ?? 16,
                               ),
@@ -96,9 +96,9 @@ class _CustomButtonState extends State<CustomButton> {
                     Positioned(
                         right: 10,
                         top: 56 / 4,
-                        child: LoadingAnimationWidget.bouncingBall(
-                          color: Theme.of(context).colorScheme.secondary,
-                          // rightDotColor: Constant.generalColor,
+                        child: LoadingAnimationWidget.flickr(
+                          leftDotColor: Theme.of(context).colorScheme.secondary,
+                          rightDotColor: context.colors.black,
                           size: 20,
                         )),
                 ],
@@ -110,4 +110,3 @@ class _CustomButtonState extends State<CustomButton> {
     );
   }
 }
-

@@ -1,6 +1,7 @@
 library theme;
 
 import 'package:flutter/material.dart';
+import 'package:soundmind_therapist/core/gen/fonts.gen.dart';
 
 part 'colors.dart';
 part 'text_styles.dart';
@@ -12,15 +13,18 @@ ThemeData get darkTheme => _buildDarkTheme();
 ThemeData _buildLightTheme() {
   const Color primaryColor = _Colors.primaryColor;
   const Color secondaryColor = _Colors.secondaryColor;
+  const Color tertiary = _Colors.lilly4;
 
   final ColorScheme colorScheme = const ColorScheme.light().copyWith(
     primary: primaryColor,
     secondary: secondaryColor,
+    tertiary: tertiary,
     error: _Colors.red,
   );
 
   final themeData = ThemeData(
     useMaterial3: false,
+    fontFamily: FontFamily.outfit,
     primaryColor: primaryColor,
     scaffoldBackgroundColor: _Colors.scaffoldColor,
     cardColor: _Colors.white,
@@ -91,6 +95,7 @@ ThemeData _buildLightTheme() {
       bodySmall: _AppTextStyles.bodySmall,
       displayLarge: _AppTextStyles.displayLarge,
       displayMedium: _AppTextStyles.displayMedium,
+      displaySmall: _AppTextStyles.displaySmall,
       titleLarge: _AppTextStyles.titleLarge,
       titleMedium: _AppTextStyles.titleMedium,
       titleSmall: _AppTextStyles.titleSmall,
@@ -98,6 +103,7 @@ ThemeData _buildLightTheme() {
     ),
     extensions: [
       AppColorExtension(
+        lilly4: _Colors.lilly4,
         green: _Colors.green,
         white: _Colors.white,
         red: _Colors.red,
@@ -214,6 +220,7 @@ ThemeData _buildDarkTheme() {
     extensions: [
       AppColorExtension(
         green: _Colors.green,
+        lilly4: _Colors.lilly4,
         white: _Colors.white,
         red: _Colors.red,
         orange: _Colors.orange,
@@ -238,4 +245,3 @@ ThemeData _buildDarkTheme() {
   );
   return themeData;
 }
-

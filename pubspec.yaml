@@ -41,6 +41,7 @@ dependencies:
   firebase_messaging: 
   flutter_svg:
   flutter_screenutil:
+  intl_phone_number_field: ^0.2.0
 
 
 dev_dependencies:
@@ -48,12 +49,12 @@ dev_dependencies:
     sdk: flutter
   build_runner: 
   flutter_lints: ^3.0.0
+  flutter_gen_runner: ^5.7.0
+
 
   hive_generator: 
-  flutter_gen_runner: 
-
 flutter_gen:
-  output: lib/gen/ # Optional (default: lib/gen/)
+  output: lib/core/gen/ # Optional (default: lib/gen/)
   line_length: 80 # Optional (default: 80)
 
   integrations:
@@ -65,9 +66,56 @@ flutter_gen:
 flutter:
   uses-material-design: true
 
+  # assets:
+    # - .env
+    # - application/assets/
+    # - application/assets/images/
+    # - application/assets/fonts/
+
   assets:
     - .env
     - application/assets/
     - application/assets/images/
+    - application/assets/svgs/
+    - application/assets/images/onboarding_images/
     - application/assets/fonts/
+    - application/assets/fonts/Outfit/
+
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: application/assets/fonts/Montserrat-Thin.ttf
+          weight: 100
+        - asset: application/assets/fonts/Montserrat-ExtraLight.ttf
+          weight: 200
+        - asset: application/assets/fonts/Montserrat-Light.ttf
+          weight: 300
+        - asset: application/assets/fonts/Montserrat-Regular.ttf
+          weight: 400
+        - asset: application/assets/fonts/Montserrat-Medium.ttf
+          weight: 500
+        - asset: application/assets/fonts/Montserrat-SemiBold.ttf
+          weight: 600
+        - asset: application/assets/fonts/Montserrat-Bold.ttf
+          weight: 700
+        - asset: application/assets/fonts/Montserrat-ExtraBold.ttf
+          weight: 800
+        - asset: application/assets/fonts/Montserrat-Black.ttf
+          weight: 900
+    - family: Outfit
+      fonts:
+        - asset: application/assets/fonts/outfit/Outfit-ExtraLight.ttf
+          weight: 200
+        - asset: application/assets/fonts/outfit/Outfit-Regular.ttf
+          weight: 400
+        - asset: application/assets/fonts/outfit/Outfit-Medium.ttf
+          weight: 500
+        - asset: application/assets/fonts/outfit/Outfit-SemiBold.ttf
+          weight: 600
+        - asset: application/assets/fonts/outfit/Outfit-Bold.ttf
+          weight: 700
+        - asset: application/assets/fonts/outfit/Outfit-ExtraBold.ttf
+          weight: 800
+        - asset: application/assets/fonts/outfit/Outfit-Black.ttf
+          weight: 900
 

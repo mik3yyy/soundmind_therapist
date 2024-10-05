@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 extension WidgetExtensions on Widget {
@@ -5,6 +6,13 @@ extension WidgetExtensions on Widget {
   Widget withPadding([EdgeInsetsGeometry padding = const EdgeInsets.all(8.0)]) {
     return Padding(
       padding: padding,
+      child: this,
+    );
+  }
+
+  Widget withCustomPadding() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: this,
     );
   }
@@ -25,8 +33,15 @@ extension WidgetExtensions on Widget {
     );
   }
 
-  Widget withExpanded() {
+  Widget withExpanded({int flex = 1}) {
     return Expanded(
+      flex: flex,
+      child: this,
+    );
+  }
+
+  Widget withSafeArea() {
+    return SafeArea(
       child: this,
     );
   }
@@ -115,5 +130,3 @@ extension WidgetExtensions on Widget {
     );
   }
 }
-
-

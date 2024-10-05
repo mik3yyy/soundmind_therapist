@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:soundmind_therapist/core/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:soundmind_therapist/core/extensions/context_extensions.dart';
 
 class CustomTextField extends StatefulWidget {
   const CustomTextField(
@@ -22,6 +22,7 @@ class CustomTextField extends StatefulWidget {
       this.borderColor,
       this.onTap,
       this.labelText,
+      this.radius = 6,
       this.focusNode,
       this.titleText,
       this.onEditingComplete,
@@ -47,6 +48,7 @@ class CustomTextField extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final VoidCallback? onTap;
   final int? maxLength;
+  final double radius;
   final int? maxLines;
   final TextAlign? textAlign;
   final FormFieldValidator<String>? validator;
@@ -69,7 +71,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               widget.titleText!,
               style: context.textTheme.bodyMedium,
             ),
-            Gap(5),
+            const Gap(5),
           ],
           TextFormField(
             enabled: widget.enabled,
@@ -77,6 +79,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             textAlign: widget.textAlign ?? TextAlign.start,
 
             // cursorHeight: 17,
+
             keyboardType: widget.keyboardType,
             obscureText: widget.isPasswordField ? visible : widget.obscureText,
             cursorColor: context.colors.black,
@@ -87,48 +90,48 @@ class _CustomTextFieldState extends State<CustomTextField> {
             maxLength: widget.maxLength,
             focusNode: widget.focusNode,
             onTap: widget.onTap,
+
             onEditingComplete: widget.onEditingComplete,
+
             decoration: InputDecoration(
               prefixIcon: widget.prefix,
-              fillColor: widget.fillColor,
-              filled: widget.fillColor != null,
+              fillColor: widget.fillColor ?? context.colors.greyOutline,
+              filled: true, // widget.fillColor != null,
               labelText: widget.labelText,
               errorText: widget.errorText,
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(widget.radius),
                 borderSide: BorderSide(
                   color: widget.controller.text.isEmpty
-                      ? context.colors.greyDecor
-                      : widget.borderColor ?? context.primaryColor,
+                      ? context.colors.greyOutline
+                      : widget.borderColor ?? context.colors.greyOutline,
                 ),
                 gapPadding: 0,
               ),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(widget.radius),
                 borderSide: BorderSide(
-                  color: widget.borderColor ??
-                      Theme.of(context).colorScheme.primary,
+                  color: widget.borderColor ?? context.colors.greyOutline,
                 ),
                 gapPadding: 0,
               ),
               disabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(widget.radius),
                 borderSide: BorderSide(
-                  color: widget.borderColor ??
-                      Theme.of(context).colorScheme.primary,
+                  color: widget.borderColor ?? context.colors.greyOutline,
                 ),
                 gapPadding: 0,
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(widget.radius),
                 borderSide: BorderSide(
-                  color: widget.borderColor ??
-                      Theme.of(context).colorScheme.primary,
+                  color: widget.borderColor ?? context.colors.greyOutline,
                 ),
                 gapPadding: 0,
               ),
               hintText: widget.isPasswordField ? "●●●●●●●●" : widget.hintText,
-              hintStyle: context.textTheme.bodyMedium,
+              hintStyle: context.textTheme.bodyMedium
+                  ?.copyWith(color: context.colors.black),
               suffixIcon: widget.isPasswordField
                   ? IconButton(
                       onPressed: () {
@@ -147,4 +150,3 @@ class _CustomTextFieldState extends State<CustomTextField> {
     );
   }
 }
-
