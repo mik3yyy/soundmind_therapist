@@ -9,12 +9,24 @@ import 'package:soundmind_therapist/core/theme/theme.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/Authentication_bloc.dart';
 import 'package:soundmind_therapist/features/appointment/domain/usecases/get_rejected_appointment.dart';
+import 'package:soundmind_therapist/features/appointment/domain/usecases/get_user_metrics.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/approve_appointment_request/approve_appointment_request_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_accepted_appointments/get_accepted_appointments_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_pending_appointments/get_pending_appointments_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_rejected_appointments/get_rejected_appointments_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_upcoming_appointment_request/get_upcoming_appointment_request_cubit.dart';
+import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_upcoming_appointments/get_upcoming_appointments_cubit.dart';
+import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_user_metrics/get_user_metrics_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/reject_appointment_request/reject_appointment_request_cubit.dart';
+import 'package:soundmind_therapist/features/patient/presentation/blocs/add_user_note/add_user_note_cubit.dart';
+import 'package:soundmind_therapist/features/patient/presentation/blocs/create_referral/create_referral_cubit.dart';
+import 'package:soundmind_therapist/features/patient/presentation/blocs/get_patient_details/get_patient_details_cubit.dart';
+import 'package:soundmind_therapist/features/patient/presentation/blocs/get_referral_instituitions/get_referral_institutions_cubit.dart';
+import 'package:soundmind_therapist/features/patient/presentation/blocs/get_referrals/get_referrals_cubit.dart';
+import 'package:soundmind_therapist/features/patient/presentation/blocs/get_user_chat_room/get_user_chat_rooms_cubit.dart';
+import 'package:soundmind_therapist/features/patient/presentation/blocs/get_user_chat_room_messages/get_user_chat_room_messages_cubit.dart';
+import 'package:soundmind_therapist/features/patient/presentation/blocs/patient_bloc.dart';
+import 'package:soundmind_therapist/features/patient/presentation/blocs/request_for_patient_notes/request_for_patient_notes_cubit.dart';
 import 'package:soundmind_therapist/features/wallet/presentation/blocs/get_bank/get_banks_cubit.dart';
 import 'package:soundmind_therapist/features/wallet/presentation/blocs/get_bank_transactions/get_bank_transactions_cubit.dart';
 import 'package:soundmind_therapist/features/wallet/presentation/blocs/resolve_bank_account/resolve_bank_account_cubit.dart';
@@ -87,7 +99,54 @@ class MyApp extends StatelessWidget {
           create: (context) => sl<GetBankTransactionsCubit>(),
         ),
         BlocProvider(
+          create: (context) => sl<GetUpcomingAppointmentsCubit>(),
+        ),
+        BlocProvider(
           create: (context) => sl<TopUpCubit>(),
+        ), //GetUpcomingAppointmentsCubit
+        BlocProvider(
+          create: (context) => sl<GetUserMetricsCubit>(), //PatientBloc
+        ),
+        BlocProvider(
+          create: (context) => sl<PatientBloc>(), //PatientBloc
+        ),
+        BlocProvider(
+          create: (context) => sl<AddUserNoteCubit>(),
+        ),
+
+        // GetPatientDetailsCubit
+        BlocProvider(
+          create: (context) => sl<GetPatientDetailsCubit>(),
+        ),
+
+        // RequestForPatientNotesCubit
+        BlocProvider(
+          create: (context) => sl<RequestForPatientNotesCubit>(),
+        ),
+
+        // GetUserChatRoomsCubit
+        BlocProvider(
+          create: (context) => sl<GetUserChatRoomsCubit>(),
+        ),
+
+        // GetUserChatRoomMessagesCubit
+        BlocProvider(
+          create: (context) => sl<GetUserChatRoomMessagesCubit>(),
+        ),
+
+        // GetReferralInstitutionsCubit
+        BlocProvider(
+          create: (context) => sl<GetReferralInstitutionsCubit>(),
+        ),
+
+        // GetReferralsCubit
+        BlocProvider(
+          create: (context) => sl<GetReferralsCubit>(),
+        ),
+
+        // CreateReferralCubit
+        BlocProvider(
+          create: (context) => sl<CreateReferralCubit>(),
         ),
       ],
       child: ScreenUtilInit(

@@ -15,7 +15,7 @@ class GetUpcomingAppointmentRequestLoading
 
 class GetUpcomingAppointmentRequestSuccess
     extends GetUpcomingAppointmentRequestState {
-  final List<AppointmentModel> appointments;
+  final AppointmentModel appointments;
 
   const GetUpcomingAppointmentRequestSuccess(this.appointments);
 

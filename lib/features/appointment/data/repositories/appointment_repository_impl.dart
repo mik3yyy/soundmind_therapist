@@ -5,6 +5,7 @@ import 'package:soundmind_therapist/core/utils/typedef.dart';
 import 'package:soundmind_therapist/features/appointment/data/datasources/appointment_hive_data_source.dart';
 import 'package:soundmind_therapist/features/appointment/data/datasources/appointment_remote_data_source.dart';
 import 'package:soundmind_therapist/features/appointment/data/models/appointment_model.dart';
+import 'package:soundmind_therapist/features/appointment/data/models/metrics_model.dart';
 import 'package:soundmind_therapist/features/appointment/domain/repositories/appointment_repository.dart';
 
 class AppointmentRepositoryImpl extends AppointmentRepository {
@@ -21,8 +22,7 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
   ResultFuture<AppointmentModel> getUpcomingAppointments() async {
     try {
       final response = await _remoteDataSource.getUpcomingAppointments();
-      AppointmentModel appointment =
-          AppointmentModel.fromJson(response['data']);
+      AppointmentModel appointment = AppointmentModel.fromJson(response);
       await _hiveDataSource.saveUpcomingAppointments(appointment: appointment);
       return Right(appointment);
     } on ApiError catch (e) {
@@ -31,13 +31,26 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
   }
 
   @override
-  ResultFuture<List<AppointmentModel>> getUpcomingAppointmentRequest() async {
+  ResultFuture<AppointmentModel> getUpcomingAppointmentRequest() async {
     try {
       final response = await _remoteDataSource.getUpcomingAppointmentRequest();
-      List<AppointmentModel> appointments = (response['data'] as List)
-          .map((json) => AppointmentModel.fromJson(json))
-          .toList();
-      return Right(appointments);
+      print(response);
+      AppointmentModel appointment =
+          AppointmentModel.fromJson(response['data']);
+      return Right(appointment);
+    } on ApiError catch (e) {
+      return Left(ServerFailure(e.errorDescription));
+    }
+  }
+
+  @override
+  ResultFuture<MetricsModel> getUserMetrics() async {
+    try {
+      final response = await _remoteDataSource.getUserMetrics();
+      print(response);
+      MetricsModel metrics = MetricsModel.fromJson(response['data']);
+      print("-----------");
+      return Right(metrics);
     } on ApiError catch (e) {
       return Left(ServerFailure(e.errorDescription));
     }

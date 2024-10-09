@@ -5,14 +5,14 @@ import 'package:soundmind_therapist/features/appointment/data/models/appointment
 import 'package:soundmind_therapist/features/appointment/domain/repositories/appointment_repository.dart';
 
 class GetUpcomingAppointmentRequest
-    extends UsecaseWithoutParams<List<AppointmentModel>> {
+    extends UsecaseWithoutParams<AppointmentModel> {
   final AppointmentRepository _repository;
 
   GetUpcomingAppointmentRequest({required AppointmentRepository repository})
       : _repository = repository;
 
   @override
-  Future<Either<Failure, List<AppointmentModel>>> call() {
+  Future<Either<Failure, AppointmentModel>> call() {
     return _repository.getUpcomingAppointmentRequest();
   }
 }

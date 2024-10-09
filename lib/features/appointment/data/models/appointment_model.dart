@@ -3,14 +3,14 @@ import 'dart:convert';
 class AppointmentModel {
   final Booking booking;
   final Schedule schedule;
-  final String therapistName;
+  final String patientName;
   final String? profilePicture;
   final String? areaOfSpecialization;
 
   AppointmentModel({
     required this.booking,
     required this.schedule,
-    required this.therapistName,
+    required this.patientName,
     this.profilePicture,
     this.areaOfSpecialization,
   });
@@ -20,7 +20,7 @@ class AppointmentModel {
     return AppointmentModel(
       booking: Booking.fromJson(json['booking']),
       schedule: Schedule.fromJson(json['schedule']),
-      therapistName: json['therapistName'],
+      patientName: json['patientName'],
       profilePicture: json['profilePicture'],
       areaOfSpecialization: json['areaOfSpecialization'],
     );
@@ -31,7 +31,7 @@ class AppointmentModel {
     return {
       'booking': booking.toJson(),
       'schedule': schedule.toJson(),
-      'therapistName': therapistName,
+      'patientName': patientName,
       'profilePicture': profilePicture,
       'areaOfSpecialization': areaOfSpecialization,
     };

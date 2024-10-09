@@ -24,6 +24,8 @@ import 'package:soundmind_therapist/features/appointment/domain/usecases/get_app
 import 'package:soundmind_therapist/features/appointment/domain/usecases/get_appointment_request.dart';
 import 'package:soundmind_therapist/features/appointment/domain/usecases/get_pending_appointment.dart';
 import 'package:soundmind_therapist/features/appointment/domain/usecases/get_rejected_appointment.dart';
+import 'package:soundmind_therapist/features/appointment/domain/usecases/get_upcoming_appointment.dart';
+import 'package:soundmind_therapist/features/appointment/domain/usecases/get_user_metrics.dart';
 import 'package:soundmind_therapist/features/appointment/domain/usecases/reject_appointment_request.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/appointment_bloc.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/approve_appointment_request/approve_appointment_request_cubit.dart';
@@ -31,6 +33,8 @@ import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_a
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_pending_appointments/get_pending_appointments_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_rejected_appointments/get_rejected_appointments_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_upcoming_appointment_request/get_upcoming_appointment_request_cubit.dart';
+import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_upcoming_appointments/get_upcoming_appointments_cubit.dart';
+import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_user_metrics/get_user_metrics_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/reject_appointment_request/reject_appointment_request_cubit.dart';
 import 'package:soundmind_therapist/features/main/data/datasources/main_hive_data_source.dart';
 import 'package:soundmind_therapist/features/main/data/datasources/main_remote_data_source.dart';
@@ -38,6 +42,27 @@ import 'package:soundmind_therapist/features/main/data/repositories/main_reposit
 import 'package:soundmind_therapist/features/main/domain/repositories/main_repository.dart';
 import 'package:soundmind_therapist/features/main/domain/usecases/get_main_data.dart';
 import 'package:soundmind_therapist/features/main/presentation/blocs/main_bloc.dart';
+import 'package:soundmind_therapist/features/patient/data/datasources/patient_hive_data_source.dart';
+import 'package:soundmind_therapist/features/patient/data/datasources/patient_remote_data_source.dart';
+import 'package:soundmind_therapist/features/patient/data/repositories/patient_repository_impl.dart';
+import 'package:soundmind_therapist/features/patient/domain/repositories/patient_repository.dart';
+import 'package:soundmind_therapist/features/patient/domain/usecases/add_user_note.dart';
+import 'package:soundmind_therapist/features/patient/domain/usecases/create_referal.dart';
+import 'package:soundmind_therapist/features/patient/domain/usecases/get_chat_room.dart';
+import 'package:soundmind_therapist/features/patient/domain/usecases/get_patient_data.dart';
+import 'package:soundmind_therapist/features/patient/domain/usecases/get_referral.dart';
+import 'package:soundmind_therapist/features/patient/domain/usecases/get_referral_intituition.dart';
+import 'package:soundmind_therapist/features/patient/domain/usecases/get_user_chats.dart';
+import 'package:soundmind_therapist/features/patient/domain/usecases/request_patients_note.dart';
+import 'package:soundmind_therapist/features/patient/presentation/blocs/add_user_note/add_user_note_cubit.dart';
+import 'package:soundmind_therapist/features/patient/presentation/blocs/create_referral/create_referral_cubit.dart';
+import 'package:soundmind_therapist/features/patient/presentation/blocs/get_patient_details/get_patient_details_cubit.dart';
+import 'package:soundmind_therapist/features/patient/presentation/blocs/get_referral_instituitions/get_referral_institutions_cubit.dart';
+import 'package:soundmind_therapist/features/patient/presentation/blocs/get_referrals/get_referrals_cubit.dart';
+import 'package:soundmind_therapist/features/patient/presentation/blocs/get_user_chat_room/get_user_chat_rooms_cubit.dart';
+import 'package:soundmind_therapist/features/patient/presentation/blocs/get_user_chat_room_messages/get_user_chat_room_messages_cubit.dart';
+import 'package:soundmind_therapist/features/patient/presentation/blocs/patient_bloc.dart';
+import 'package:soundmind_therapist/features/patient/presentation/blocs/request_for_patient_notes/request_for_patient_notes_cubit.dart';
 import 'package:soundmind_therapist/features/wallet/data/datasources/wallet_remote_data_source.dart';
 import 'package:soundmind_therapist/features/wallet/data/repositories/wallet_repository_impl.dart';
 import 'package:soundmind_therapist/features/wallet/domain/usecases/confirm_wallet_top_up.dart';
@@ -107,7 +132,13 @@ Future<void> init() async {
     );
 
   sl
-    ..registerFactory(() => AppointmentBloc(getAppointmentData: sl()))
+    ..registerFactory(() =>
+        GetUserMetricsCubit(getUserMetricsUseCase: sl())) //GetUserMetricsCubit
+    ..registerLazySingleton(() => GetUserMetrics(repository: sl()));
+
+  sl
+    ..registerFactory(
+        () => AppointmentBloc(getAppointmentData: sl())) //GetUserMetricsCubit
     ..registerLazySingleton(() => GetAppointmentData(repository: sl()))
 
     // AuthenticationHiveDataSource
@@ -148,8 +179,12 @@ Future<void> init() async {
   sl
     ..registerFactory(() => GetUpcomingAppointmentRequestCubit(
         getUpcomingAppointmentRequestUseCase: sl()))
-    ..registerLazySingleton(
-        () => GetUpcomingAppointmentRequest(repository: sl()));
+    ..registerLazySingleton(() => GetUpcomingAppointmentRequest(
+        repository: sl())); //GetUpcomingAppointmentsCubit
+  sl
+    ..registerFactory(() =>
+        GetUpcomingAppointmentsCubit(getUpcomingAppointmentsUseCase: sl()))
+    ..registerLazySingleton(() => GetUpcomingAppointments(repository: sl()));
   sl
     ..registerFactory(
         () => TopUpCubit(initiateWalletTopUp: sl(), confirmWalletTopUp: sl()))
@@ -181,6 +216,59 @@ Future<void> init() async {
     ..registerLazySingleton<WalletRemoteDataSource>(
       () => WalletRemoteDataSourceImpl(network: sl()),
     );
+
+  sl
+    ..registerFactory(() => PatientBloc(getPatientData: sl()))
+    ..registerLazySingleton(() => GetPatientData(repository: sl()))
+
+    // AuthenticationHiveDataSource
+    ..registerLazySingleton<PatientRepository>(() =>
+        PatientRepositoryImpl(remoteDataSource: sl(), hiveDataSource: sl()))
+    ..registerLazySingleton<PatientRemoteDataSource>(
+      () => PatientRemoteDataSourceImpl(network: sl()),
+    )
+    ..registerLazySingleton<PatientHiveDataSource>(
+      () => PatientHiveDataSourceImpl(),
+    );
+
+// Registering Use Cases and Cubits for the Patient Feature
+  sl
+    // AddUserNote
+    ..registerFactory(() => AddUserNoteCubit(addUserNoteUseCase: sl()))
+    ..registerLazySingleton(() => AddUserNote(repository: sl()))
+
+    // GetPatientDetails
+    ..registerFactory(
+        () => GetPatientDetailsCubit(getPatientDetailsUseCase: sl()))
+    ..registerLazySingleton(() => GetPatientDetails(repository: sl()))
+
+    // RequestForPatientNotes
+    ..registerFactory(
+        () => RequestForPatientNotesCubit(requestForPatientNotesUseCase: sl()))
+    ..registerLazySingleton(() => RequestForPatientNotes(repository: sl()))
+
+    // GetUserChatRooms
+    ..registerFactory(
+        () => GetUserChatRoomsCubit(getUserChatRoomsUseCase: sl()))
+    ..registerLazySingleton(() => GetUserChatRooms(repository: sl()))
+
+    // GetUserChatRoomMessages
+    ..registerFactory(() =>
+        GetUserChatRoomMessagesCubit(getUserChatRoomMessagesUseCase: sl()))
+    ..registerLazySingleton(() => GetUserChatRoomMessages(repository: sl()))
+
+    // GetReferralInstitutions
+    ..registerFactory(() =>
+        GetReferralInstitutionsCubit(getReferralInstitutionsUseCase: sl()))
+    ..registerLazySingleton(() => GetReferralInstitutions(repository: sl()))
+
+    // GetReferrals
+    ..registerFactory(() => GetReferralsCubit(getReferralsUseCase: sl()))
+    ..registerLazySingleton(() => GetReferrals(repository: sl()))
+
+    // CreateReferral
+    ..registerFactory(() => CreateReferralCubit(createReferralUseCase: sl()))
+    ..registerLazySingleton(() => CreateReferral(repository: sl()));
 
   Bloc.observer = SimpleBlocObserver();
 }

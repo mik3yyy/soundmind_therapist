@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:soundmind_therapist/core/extensions/context_extensions.dart';
 import 'package:soundmind_therapist/core/extensions/widget_extensions.dart';
 import 'package:soundmind_therapist/core/gen/assets.gen.dart';

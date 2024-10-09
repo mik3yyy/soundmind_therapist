@@ -18,7 +18,7 @@ class _MainPageState extends State<MainPage> {
     Routes.homeName,
     Routes.appointmentName,
     Routes.walletName,
-    Routes.chatNAme,
+    Routes.patientName,
     Routes.referralsName,
   ];
 

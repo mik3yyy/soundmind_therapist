@@ -10,6 +10,7 @@ abstract class AppointmentRemoteDataSource {
   Future<DataMap> getRejectedAppointments();
   Future<void> approveAppointmentRequest({required int bookingId});
   Future<void> rejectAppointmentRequest({required int bookingId});
+  Future<DataMap> getUserMetrics();
 }
 
 class AppointmentRemoteDataSourceImpl extends AppointmentRemoteDataSource {
@@ -24,6 +25,7 @@ class AppointmentRemoteDataSourceImpl extends AppointmentRemoteDataSource {
       "/TherapistDashboard/GetUpcomingAppointment",
       RequestMethod.get,
     );
+    print(response.data['data']);
     return response.data['data'];
   }
 
@@ -31,6 +33,15 @@ class AppointmentRemoteDataSourceImpl extends AppointmentRemoteDataSource {
   Future<DataMap> getUpcomingAppointmentRequest() async {
     Response response = await _network.call(
       "/TherapistDashboard/GetUpcomingAppointmentRequest",
+      RequestMethod.get,
+    );
+    return response.data;
+  }
+
+  @override
+  Future<DataMap> getUserMetrics() async {
+    Response response = await _network.call(
+      "/TherapistDashboard/GetUserMetrics",
       RequestMethod.get,
     );
     return response.data;

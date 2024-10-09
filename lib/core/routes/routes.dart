@@ -5,7 +5,12 @@ import 'package:soundmind_therapist/features/Onboarding/presentation/views/Onboa
 import 'package:soundmind_therapist/features/Onboarding/presentation/views/Splash_screen.dart';
 import 'package:soundmind_therapist/features/Onboarding/presentation/views/introduction.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/views/appointment_page.dart';
+import 'package:soundmind_therapist/features/main/presentation/views/home_screen/home_screen.dart';
 import 'package:soundmind_therapist/features/main/presentation/views/main_page.dart';
+import 'package:soundmind_therapist/features/patient/data/models/chat_room.dart';
+import 'package:soundmind_therapist/features/patient/presentation/views/chat/chat_room.dart';
+import 'package:soundmind_therapist/features/patient/presentation/views/patient_page.dart';
+import 'package:soundmind_therapist/features/patient/presentation/views/view_patient.dart';
 import 'package:soundmind_therapist/features/wallet/presentation/views/wallet_page.dart';
 import 'package:soundmind_therapist/features/wallet/presentation/views/withdraw_amount.dart';
 import 'package:soundmind_therapist/features/wallet/presentation/views/withdraw_page.dart';
@@ -27,7 +32,7 @@ class Routes {
   static const String onboardingName = 'onboarding';
   static const String onboardingPath = 'onboarding';
   static const String referralsName = 'referrals';
-  static const String referralsPath = 'referrals';
+  static const String referralsPath = '/referrals';
   static const String walletName = 'wallet';
   static const String walletPath = '/wallet';
   static const String introName = 'intro';
@@ -62,12 +67,23 @@ class Routes {
 
   static const String addFundPath = 'addFund';
   static const String addFundName = 'addFund';
+
+  static const String chatRoomPath = 'chatRoom/:id';
+  static const String chatRoomName = 'chatRoom';
+
+  static const String patientPath = '/patient';
+  static const String patientName = 'patient';
+
+  static const String view_patientPath = 'view_patient/:id';
+  static const String view_patientName = 'view_patient';
   // Navigator keys for nested navigation
   static final GlobalKey<NavigatorState> rootNavigatorKey =
       GlobalKey<NavigatorState>();
   static final GlobalKey<NavigatorState> shellNavigatorKey =
       GlobalKey<NavigatorState>();
-
+// ChattRoomScreen(
+//                                     chat_id: chatRoom.chatRoomID,
+//                                     user_id: chatRoom.receiverID),
   static final GoRouter router = GoRouter(
     navigatorKey: rootNavigatorKey,
     routes: [
@@ -112,7 +128,7 @@ class Routes {
               pageBuilder: (context, state) {
                 return CustomTransitionPage(
                   key: state.pageKey,
-                  child: Placeholder(),
+                  child: HomeScreen(),
                   transitionsBuilder:
                       (context, animation, secondaryAnimation, child) {
                     return FadeTransition(
@@ -208,6 +224,33 @@ class Routes {
                 Placeholder(), // Replace with actual screen widget
           ),
           GoRoute(
+            path: patientPath,
+            name: patientName,
+            parentNavigatorKey: shellNavigatorKey,
+            builder: (context, state) => PatientPage(),
+            routes: [
+              // GoRoute(path: path)
+
+              GoRoute(
+                path: view_patientPath,
+                name: view_patientName,
+                parentNavigatorKey: rootNavigatorKey,
+                builder: (context, state) => ViewPatient(
+                  id: state.pathParameters['id']!,
+                ), // Replace with actual screen widget
+              ),
+              GoRoute(
+                path: chatRoomPath,
+                name: chatRoomName,
+                parentNavigatorKey: rootNavigatorKey,
+                builder: (context, state) => ChattRoomScreen(
+                  chat_id: int.parse(state.pathParameters['id']!),
+                  user_id: state.extra as ChatRoom,
+                ),
+              ),
+            ],
+          ),
+          GoRoute(
               path: walletPath,
               name: walletName,
               parentNavigatorKey: shellNavigatorKey,
@@ -252,52 +295,6 @@ class Routes {
                       ),
                     ]),
               ]),
-
-          // GoRoute(
-          //     path: walletPath,
-          //     name: walletName,
-          //     parentNavigatorKey: shellNavigatorKey,
-          //     // builder: (context, state) =>
-          //     //     WalletPage(), // Replace with actual screen widget
-          //     pageBuilder: (context, state) {
-          //       return CustomTransitionPage(
-          //         key: state.pageKey,
-          //         child: WalletPage(),
-          //         transitionsBuilder:
-          //             (context, animation, secondaryAnimation, child) {
-          //           return FadeTransition(
-          //             opacity: animation,
-          //             child: child,
-          //           );
-          //         },
-          //       );
-          //     },
-          //     routes: [
-          //       GoRoute(
-          //         path: addFundPath,
-          //         name: addFundName,
-          //         parentNavigatorKey: rootNavigatorKey,
-          //         builder: (context, state) =>
-          //             const AddFundsPage(), // Replace with actual screen widget
-          //       ),
-          //       GoRoute(
-          //           path: withdrawPath,
-          //           name: withdrawName,
-          //           parentNavigatorKey: rootNavigatorKey,
-          //           builder: (context, state) =>
-          //               const WithdrawPage(), // Replace with actual screen widget
-          //           routes: [
-          //             GoRoute(
-          //               path: add_amountPath,
-          //               name: add_amountName,
-          //               parentNavigatorKey: rootNavigatorKey,
-          //               builder: (context, state) => AddAmountPage(
-          //                 number: state.extra as String,
-          //                 bank: state.uri.queryParameters,
-          //               ), // Replace with actual screen widget
-          //             ),
-          //           ]),
-          //     ]),
         ],
       ),
     ],
