@@ -8,12 +8,10 @@ import 'package:signalr_netcore/hub_connection_builder.dart';
 import 'package:signalr_netcore/itransport.dart';
 import 'package:soundmind_therapist/core/extensions/context_extensions.dart';
 import 'package:soundmind_therapist/core/extensions/widget_extensions.dart';
-import 'package:soundmind_therapist/core/services/injection_container.dart';
 import 'package:soundmind_therapist/core/widgets/custom_text_field.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/Authentication_bloc.dart';
 import 'package:soundmind_therapist/features/patient/data/models/chat_message.dart';
 import 'package:soundmind_therapist/features/patient/data/models/chat_room.dart';
-import 'package:soundmind_therapist/features/patient/domain/usecases/get_user_chats.dart';
 import 'package:soundmind_therapist/features/patient/presentation/blocs/get_user_chat_room_messages/get_user_chat_room_messages_cubit.dart';
 import 'package:logging/logging.dart';
 
@@ -35,6 +33,7 @@ class _ChattRoomScreenState extends State<ChattRoomScreen> {
   @override
   void initState() {
     super.initState();
+
     context
         .read<GetUserChatRoomMessagesCubit>()
         .fetchChatMessages(widget.chat_id);
@@ -78,9 +77,20 @@ class _ChattRoomScreenState extends State<ChattRoomScreen> {
 
     _hubConnection.on("ReceiveMessage", (List<Object?>? parameters) {
       if (parameters != null && parameters.isNotEmpty) {
-        String message = parameters[0].toString();
+        String message = parameters[2].toString();
         print(parameters);
         print("Message received: $message");
+
+        messages.add(ChatMessage.fromMessage(
+          message: message,
+          chatId: widget.chat_id,
+          senderId: parameters[0] as int,
+          receiverId: widget.user_id.receiverID,
+        ));
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollToBottom();
+        });
+        // messages.add(ChatMessage(senderId: parameters[1] as int, chatId: parameters[0] as int, message: message, id: id, timeCreated: timeCreated, timeUpdated: timeUpdated));
         // Handle the message as needed
       } else {
         print("No parameters received.");
@@ -115,10 +125,33 @@ class _ChattRoomScreenState extends State<ChattRoomScreen> {
   // Send a message to the server
   Future<void> _sendMessage(String message) async {
     if (isConnected) {
+      var user =
+          (context.read<AuthenticationBloc>().state as UserAccount).userModel;
       try {
-        await _hubConnection.invoke("SendMessage", args: <Object>[message]);
-        print("Message sent: $message");
+        setState(() {
+          messages.add(ChatMessage.fromMessage(
+            message: message,
+            chatId: widget.chat_id,
+            senderId: user.userId,
+            receiverId: widget.user_id.receiverID,
+          ));
+          controller.text = '';
+        });
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollToBottom();
+        });
+        await _hubConnection.invoke(
+          "SendMessage",
+          args: <Object>[widget.chat_id, message],
+        );
+
+        print(
+            "Message sent: $message"); //flutter: [11, 4, Hello from client! dd]
       } catch (error) {
+        setState(() {
+          messages.removeLast();
+          controller.text = message;
+        });
         print("Error sending message: $error");
       }
     }
@@ -127,11 +160,21 @@ class _ChattRoomScreenState extends State<ChattRoomScreen> {
   @override
   void dispose() {
     _hubConnection.stop();
+    _scrollController.dispose();
     super.dispose();
   }
 
-  List<ChatMessage> messages = [];
+  // Scroll to the bottom method
+  void _scrollToBottom() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(seconds: 1),
+      curve: Curves.easeInOut,
+    );
+  }
 
+  List<ChatMessage> messages = [];
+  final ScrollController _scrollController = ScrollController();
   TextEditingController controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -144,6 +187,11 @@ class _ChattRoomScreenState extends State<ChattRoomScreen> {
         if (state is GetUserChatRoomMessagesSuccess) {
           setState(() {
             messages = state.messages;
+          });
+
+          // Ensure that scrolling happens after the UI frame is rendered
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _scrollToBottom();
           });
         }
       },
@@ -158,7 +206,8 @@ class _ChattRoomScreenState extends State<ChattRoomScreen> {
         body: Column(
           children: [
             ListView.separated(
-              separatorBuilder: (context, index) => Gap(10),
+              controller: _scrollController,
+              separatorBuilder: (context, index) => const Gap(10),
               itemCount: messages.length,
               itemBuilder: (context, index) {
                 ChatMessage message = messages[index];
@@ -181,7 +230,7 @@ class _ChattRoomScreenState extends State<ChattRoomScreen> {
                           child: Text(
                             message.message,
                             style: context.textTheme.bodyMedium
-                                ?.copyWith(color: context.colors.black),
+                                ?.copyWith(color: context.colors.white),
                           ),
                         ),
                       ),
@@ -210,16 +259,17 @@ class _ChattRoomScreenState extends State<ChattRoomScreen> {
                   );
                 }
               },
-            ).withExpanded()
+            ).withExpanded(),
+            const Gap(100)
           ],
         ).withCustomPadding(),
-        bottomNavigationBar: Container(
-          height: 150,
+        bottomSheet: SizedBox(
+          height: 100,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 height: 60,
                 width: context.screenWidth * .7,
                 child: CustomTextField(
@@ -231,7 +281,7 @@ class _ChattRoomScreenState extends State<ChattRoomScreen> {
                   onPressed: () {
                     _sendMessage(controller.text);
                   },
-                  icon: Icon(Icons.send))
+                  icon: const Icon(Icons.send))
             ],
           ).withCustomPadding(),
         ),

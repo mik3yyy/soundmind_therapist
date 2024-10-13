@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:soundmind_therapist/core/extensions/context_extensions.dart';
-import 'package:soundmind_therapist/core/extensions/widget_extensions.dart';
 
 // Enum to define date picker modes
 enum DatePickerMode { birth, license }

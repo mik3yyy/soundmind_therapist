@@ -45,6 +45,7 @@ dependencies:
   webview_flutter: ^4.9.0
   flutterwave_standard_smart: ^1.0.4
   signalr_netcore: ^1.4.0
+  fade_shimmer: ^2.2.0
 
 
 dev_dependencies:

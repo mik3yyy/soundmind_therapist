@@ -26,6 +26,21 @@ class ChatMessage {
       timeUpdated: DateTime.parse(json['timeUpdated']),
     );
   }
+  // Factory constructor to create a ChatMessage from JSON
+  factory ChatMessage.fromMessage(
+      {required String message,
+      required int chatId,
+      required int senderId,
+      required int receiverId}) {
+    return ChatMessage(
+      senderId: senderId,
+      chatId: chatId,
+      message: message,
+      id: chatId,
+      timeCreated: DateTime.now(),
+      timeUpdated: DateTime.now(),
+    );
+  }
 
   // Method to convert a ChatMessage to JSON
   Map<String, dynamic> toJson() {
