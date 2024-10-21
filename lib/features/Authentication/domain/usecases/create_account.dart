@@ -7,10 +7,11 @@ import 'package:soundmind_therapist/features/Authentication/data/models/verifica
 import 'package:soundmind_therapist/features/Authentication/domain/repositories/Authentication_repository.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/Authentication_bloc.dart';
 
-class CreateAccount extends UsecaseWithParams<DataMap, CreateAccountParams> {
+class CreateAccountUseCase
+    extends UsecaseWithParams<DataMap, CreateAccountParams> {
   final AuthenticationRepository _repository;
 
-  CreateAccount({required AuthenticationRepository repository})
+  CreateAccountUseCase({required AuthenticationRepository repository})
       : _repository = repository;
   @override
   ResultFuture<DataMap> call(CreateAccountParams params) =>

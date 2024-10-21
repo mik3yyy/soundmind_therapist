@@ -100,7 +100,7 @@ Future<void> init() async {
   sl
     ..registerFactory(() =>
         AuthenticationBloc(login: sl(), createAccount: sl(), checkUser: sl()))
-    ..registerLazySingleton(() => CreateAccount(repository: sl()))
+    ..registerLazySingleton(() => CreateAccountUseCase(repository: sl()))
     ..registerLazySingleton(() => CheckUserUseCase(repository: sl()))
     ..registerLazySingleton(() => Login(repository: sl()))
 

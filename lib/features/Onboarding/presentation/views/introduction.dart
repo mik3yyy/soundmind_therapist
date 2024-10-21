@@ -7,6 +7,7 @@ import 'package:soundmind_therapist/core/extensions/context_extensions.dart';
 import 'package:soundmind_therapist/core/extensions/list_extensions.dart';
 import 'package:soundmind_therapist/core/extensions/widget_extensions.dart';
 import 'package:soundmind_therapist/core/gen/assets.gen.dart';
+import 'package:soundmind_therapist/core/routes/routes.dart';
 import 'package:soundmind_therapist/core/widgets/custom_button.dart';
 
 class IntroductionScreen extends StatefulWidget {
@@ -28,12 +29,12 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
             width: 120,
           ),
           AutoSizeText(
-            "Welcome! Let SoundMind help personlize your experience",
+            "Register as a Therapist",
             style: context.textTheme.displayMedium,
             textAlign: TextAlign.center,
           ),
           AutoSizeText(
-            "We will be asking you a series of questions to help us better understand you and your health",
+            "Your information will be collected and verified. If you meet the criteria required, your submission will be approved and your authentication details will be sent to your email ",
             style: context.textTheme.bodyLarge,
             textAlign: TextAlign.center,
           )
@@ -44,9 +45,9 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
         width: context.screenWidth,
         child: Column(children: [
           CustomButton(
-            label: "Continue",
+            label: "Get Started",
             onPressed: () {
-              // context.pushNamed(Routes.questionName);
+              context.pushNamed(Routes.personal_infoName);
             },
           )
               .animate()

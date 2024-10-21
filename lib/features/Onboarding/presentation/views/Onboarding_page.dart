@@ -114,6 +114,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           children: [
                             TextSpan(
                               text: 'Log in',
+                              style: TextStyle(
+                                  decoration: TextDecoration.underline,
+                                  // decorationStyle: TextDecorationStyl,
+                                  color: context.primaryColor),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
                                   context.replaceNamed(Routes.loginName);
@@ -183,7 +187,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     effect: WormEffect(
                       dotWidth: 8,
                       dotHeight: 8,
-                      dotColor: context.colors.greyDecorDark,
+                      dotColor: context.colors.black.withOpacity(.5),
                       activeDotColor: context.colors.white,
                     ),
                   ),

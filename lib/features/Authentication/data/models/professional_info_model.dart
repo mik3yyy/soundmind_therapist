@@ -7,11 +7,13 @@ class ProfessionalInfoModel extends Equatable {
   final List<Qualification> qualifications;
   final int yoe; // Years of experience
   final String professionalAffiliation;
+  final String licenseExpiryDate;
   final String aos; // Area of specialization
 
   ProfessionalInfoModel({
     required this.licenseNum,
     required this.issuingAuthority,
+    required this.licenseExpiryDate,
     required this.qualifications,
     required this.yoe,
     required this.professionalAffiliation,
@@ -25,6 +27,7 @@ class ProfessionalInfoModel extends Equatable {
       'issuingAuthority': issuingAuthority,
       'qualifications': qualifications.map((q) => q.toJson()).toList(),
       'yoe': yoe,
+      "licenseExpiryDate": licenseExpiryDate,
       'professionalAffiliation': professionalAffiliation,
       'aos': aos,
     };
@@ -41,6 +44,7 @@ class ProfessionalInfoModel extends Equatable {
       yoe: json['yoe'] ?? 0,
       professionalAffiliation: json['professionalAffiliation'] ?? '',
       aos: json['aos'] ?? '',
+      licenseExpiryDate: json['licenseExpiryDate'] ?? '',
     );
   }
 

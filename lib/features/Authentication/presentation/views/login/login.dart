@@ -33,6 +33,10 @@ class _LoginscreenState extends State<Loginscreen> with Validators {
         // if (state is UserAccount) {
         //   context.replaceNamed(Routes.securityName);
         // }
+
+        if (state is LoginFailed) {
+          context.showSnackBar(state.message);
+        }
       },
       child: Scaffold(
         body: Column(
@@ -74,13 +78,18 @@ class _LoginscreenState extends State<Loginscreen> with Validators {
                 CustomTextButton(label: "Forgot Password?", onPressed: () {}),
               ],
             ),
-            CustomButton(
-              label: "Login",
-              onPressed: () {
-                if (!loginForm.currentState!.validate()) return;
-                context.read<AuthenticationBloc>().add(LoginEvent(
-                    email: _emailController.text,
-                    password: _passwordController.text));
+            BlocBuilder<AuthenticationBloc, AuthenticationState>(
+              builder: (context, state) {
+                return CustomButton(
+                  notifier: ValueNotifier(state is LoginLoading),
+                  label: "Login",
+                  onPressed: () {
+                    if (!loginForm.currentState!.validate()) return;
+                    context.read<AuthenticationBloc>().add(LoginEvent(
+                        email: _emailController.text,
+                        password: _passwordController.text));
+                  },
+                );
               },
             ),
             RichText(

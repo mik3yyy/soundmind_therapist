@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:soundmind_therapist/features/Authentication/domain/usecases/create_account.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/views/create_account/create_account.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/views/create_account/personal_info.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/views/create_account/practice_info.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/views/create_account/professional_info.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/views/create_account/profile_info.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/views/create_account/signup_succesful.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/views/create_account/verification_info.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/views/login/login.dart';
 import 'package:soundmind_therapist/features/Onboarding/presentation/views/Onboarding_page.dart';
 import 'package:soundmind_therapist/features/Onboarding/presentation/views/Splash_screen.dart';
@@ -76,10 +84,25 @@ class Routes {
 
   static const String view_patientPath = 'view_patient/:id';
   static const String view_patientName = 'view_patient';
+
+  static const String personal_infoPath = '/personal_info';
+  static const String personal_infoName = 'personal_info';
+  static const String professioanlInfoPath = '/professioanlInfo';
+  static const String professioanlInfoName = 'professioanlInfo';
+  static const String practiceInfoPath = '/practiceInfo';
+  static const String practiceInfoName = 'practiceInfo';
+  static const String verificationInfoPath = '/verificationInfo';
+  static const String verificationInfoName = 'verificationInfo';
+  static const String profileInfoPath = '/profileInfo';
+  static const String profileInfoName = 'profileInfo';
+  static const String sucessSignupPath = '/sucessSignup';
+  static const String sucessSignupName = 'sucessSignup';
   // Navigator keys for nested navigation
   static final GlobalKey<NavigatorState> rootNavigatorKey =
       GlobalKey<NavigatorState>();
   static final GlobalKey<NavigatorState> shellNavigatorKey =
+      GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> shellNavigatorKey2 =
       GlobalKey<NavigatorState>();
 // ChattRoomScreen(
 //                                     chat_id: chatRoom.chatRoomID,
@@ -113,6 +136,50 @@ class Routes {
             builder: (context, state) => const Loginscreen(),
           ),
         ],
+      ),
+      ShellRoute(
+        navigatorKey: shellNavigatorKey2,
+        builder: (context, state, child) => CreateAccountScreen(
+          child: child,
+        ),
+        routes: [
+          GoRoute(
+            path: personal_infoPath,
+            name: personal_infoName,
+            builder: (context, state) => const PersonalInfoScreen(),
+            routes: [],
+          ),
+          GoRoute(
+            path: professioanlInfoPath,
+            name: professioanlInfoName,
+            builder: (context, state) => const ProfessionalInfoScreen(),
+            routes: [],
+          ),
+          GoRoute(
+            path: practiceInfoPath,
+            name: practiceInfoName,
+            builder: (context, state) => const PracticeInfoScreen(),
+            routes: [],
+          ),
+          GoRoute(
+            path: verificationInfoPath,
+            name: verificationInfoName,
+            builder: (context, state) => const VerificationInfoScreen(),
+            routes: [],
+          ),
+          GoRoute(
+            path: profileInfoPath,
+            name: profileInfoName,
+            builder: (context, state) => const ProfileInfoScreen(),
+            routes: [],
+          ),
+        ],
+      ),
+      GoRoute(
+        path: sucessSignupPath,
+        name: sucessSignupName,
+        builder: (context, state) => const SignupSuccesfulScreen(),
+        routes: [],
       ),
       ShellRoute(
         navigatorKey: shellNavigatorKey,

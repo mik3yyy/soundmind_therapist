@@ -46,6 +46,13 @@ extension WidgetExtensions on Widget {
     );
   }
 
+  Widget withScrollView() {
+    return SingleChildScrollView(
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+      child: this,
+    );
+  }
+
   Widget withBorder(Border border, {BorderRadius? radius}) {
     return Container(
       decoration: BoxDecoration(border: border, borderRadius: radius),

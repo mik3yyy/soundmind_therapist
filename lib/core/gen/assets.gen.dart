@@ -188,6 +188,10 @@ class $ApplicationAssetsSvgsGen {
   /// File path: application/assets/svgs/star.svg
   SvgGenImage get star => const SvgGenImage('application/assets/svgs/star.svg');
 
+  /// File path: application/assets/svgs/upload.svg
+  SvgGenImage get upload =>
+      const SvgGenImage('application/assets/svgs/upload.svg');
+
   /// File path: application/assets/svgs/wallet_bg.svg
   SvgGenImage get walletBg =>
       const SvgGenImage('application/assets/svgs/wallet_bg.svg');
@@ -201,6 +205,7 @@ class $ApplicationAssetsSvgsGen {
         message,
         question,
         star,
+        upload,
         walletBg
       ];
 }

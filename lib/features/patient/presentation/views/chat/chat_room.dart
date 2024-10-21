@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -8,6 +9,8 @@ import 'package:signalr_netcore/hub_connection_builder.dart';
 import 'package:signalr_netcore/itransport.dart';
 import 'package:soundmind_therapist/core/extensions/context_extensions.dart';
 import 'package:soundmind_therapist/core/extensions/widget_extensions.dart';
+import 'package:soundmind_therapist/core/gen/assets.gen.dart';
+import 'package:soundmind_therapist/core/widgets/custom_shimmer.dart';
 import 'package:soundmind_therapist/core/widgets/custom_text_field.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/Authentication_bloc.dart';
 import 'package:soundmind_therapist/features/patient/data/models/chat_message.dart';
@@ -181,7 +184,7 @@ class _ChattRoomScreenState extends State<ChattRoomScreen> {
     var user =
         (context.read<AuthenticationBloc>().state as UserAccount).userModel;
 
-    return BlocListener<GetUserChatRoomMessagesCubit,
+    return BlocConsumer<GetUserChatRoomMessagesCubit,
         GetUserChatRoomMessagesState>(
       listener: (context, state) {
         if (state is GetUserChatRoomMessagesSuccess) {
@@ -195,97 +198,162 @@ class _ChattRoomScreenState extends State<ChattRoomScreen> {
           });
         }
       },
-      child: Scaffold(
-        appBar: AppBar(
-          leading: BackButton(
-            color: context.colors.black,
+      builder: (BuildContext context, GetUserChatRoomMessagesState state) {
+        return Scaffold(
+          appBar: AppBar(
+            leading: BackButton(
+              color: context.colors.black,
+            ),
+            centerTitle: false,
+            title: Text(widget.user_id.senderName),
           ),
-          centerTitle: false,
-          title: Text(widget.user_id.senderName),
-        ),
-        body: Column(
-          children: [
-            ListView.separated(
-              controller: _scrollController,
-              separatorBuilder: (context, index) => const Gap(10),
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                ChatMessage message = messages[index];
-                if (message.senderId == user.userId) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(16),
-                            topRight: Radius.circular(2),
-                            bottomLeft: Radius.circular(16),
-                            bottomRight: Radius.circular(16),
-                          ),
-                          color: context.primaryColor,
-                        ),
-                        padding: EdgeInsets.all(10),
-                        child: Center(
-                          child: Text(
-                            message.message,
-                            style: context.textTheme.bodyMedium
-                                ?.copyWith(color: context.colors.white),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                } else {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(2),
-                            topRight: Radius.circular(16),
-                            bottomLeft: Radius.circular(16),
-                            bottomRight: Radius.circular(16),
-                          ),
-                          color: context.colors.greyDecor,
-                        ),
-                        padding: EdgeInsets.all(10),
-                        child: Center(
-                          child: Text(message.message),
-                        ),
-                      ),
-                    ],
-                  );
-                }
-              },
-            ).withExpanded(),
-            const Gap(100)
-          ],
-        ).withCustomPadding(),
-        bottomSheet: SizedBox(
-          height: 100,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
+          body: Column(
             children: [
-              SizedBox(
-                height: 60,
-                width: context.screenWidth * .7,
-                child: CustomTextField(
-                  controller: controller,
-                  hintText: "Enter a message",
-                ),
-              ),
-              IconButton(
-                  onPressed: () {
-                    _sendMessage(controller.text);
+              if (state is GetUserChatRoomMessagesLoading) ...[
+                ComplexShimmer.messagingShimmer(context).withExpanded()
+              ] else ...[
+                ListView.separated(
+                  controller: _scrollController,
+                  separatorBuilder: (context, index) => const Gap(10),
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    ChatMessage message = messages[index];
+                    bool isUser = message.senderId == user.userId;
+
+                    return Column(
+                      crossAxisAlignment: isUser
+                          ? CrossAxisAlignment.end
+                          : CrossAxisAlignment.start,
+                      children: [
+                        // if (isUser)
+                        //   CircleAvatar(
+                        //     radius: 10,
+                        //     child: CachedNetworkImage(
+                        //       imageUrl: isUser
+                        //           ? widget.user_id.senderProfilePhoto
+                        //           : widget.user_id.senderProfilePhoto,
+                        //       height: 20,
+                        //       width: 20,
+                        //       fit: BoxFit.cover,
+                        //     ).withClip(50),
+                        //   ),
+                        Gap(2),
+                        Row(
+                          mainAxisAlignment: isUser
+                              ? MainAxisAlignment.end
+                              : MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              constraints: BoxConstraints(
+                                minWidth: 20, // Minimum width for the container
+                                maxWidth: context.screenWidth *
+                                    .6, // Max width is 60% of the screen width
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: isUser
+                                      ? const Radius.circular(16)
+                                      : const Radius.circular(2),
+                                  topRight: isUser
+                                      ? const Radius.circular(2)
+                                      : const Radius.circular(16),
+                                  bottomLeft: const Radius.circular(16),
+                                  bottomRight: const Radius.circular(16),
+                                ),
+                                color: isUser
+                                    ? context.primaryColor
+                                    : context.colors.greyDecor,
+                              ),
+                              padding: const EdgeInsets.all(10),
+                              child: IntrinsicWidth(
+                                child: Text(
+                                  message.message,
+                                  style: isUser
+                                      ? context.textTheme.bodyMedium?.copyWith(
+                                          color: context.colors.white)
+                                      : context.textTheme.bodyMedium,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
                   },
-                  icon: const Icon(Icons.send))
+                ).withExpanded(),
+                const Gap(20)
+              ],
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Flexible(
+                    // Use Flexible to constrain the TextField's width and allow resizing
+                    child: Container(
+                      // height: 100,
+                      constraints: BoxConstraints(
+                        maxWidth: context.screenWidth *
+                            .7, // Set max width as 70% of screen
+                      ),
+                      child: CustomTextField(
+                        controller: controller,
+                        radius: 57,
+                        hintText: "Enter a message",
+                        minLines: 1, // TextField will start with 1 line
+                        maxLines:
+                            2, // TextField will expand to a maximum of 4 lines
+                        expands:
+                            false, // This ensures the field grows naturally based on content
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      _sendMessage(controller.text);
+                    },
+                    icon: Assets.application.assets.svgs.email.svg(),
+                  )
+                ],
+              ).toCenter().withCustomPadding(),
             ],
-          ).withCustomPadding(),
-        ),
-      ),
+          ).withSafeArea().withCustomPadding(),
+          // bottomSheet: SizedBox(
+          //   height: 100,
+          //   child: Row(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       Flexible(
+          //         // Use Flexible to constrain the TextField's width and allow resizing
+          //         child: Container(
+          //           height: 100,
+          //           constraints: BoxConstraints(
+          //             maxWidth: context.screenWidth *
+          //                 .7, // Set max width as 70% of screen
+          //           ),
+          //           child: CustomTextField(
+          //             controller: controller,
+          //             radius: 57,
+          //             hintText: "Enter a message",
+          //             minLines: 1, // TextField will start with 1 line
+          //             maxLines:
+          //                 2, // TextField will expand to a maximum of 4 lines
+          //             expands:
+          //                 false, // This ensures the field grows naturally based on content
+          //           ),
+          //         ),
+          //       ),
+          //       IconButton(
+          //         onPressed: () {
+          //           _sendMessage(controller.text);
+          //         },
+          //         icon: Assets.application.assets.svgs.sendMessage.svg(),
+          //       )
+          //     ],
+          //   ).toCenter().withCustomPadding(),
+          // ),
+        );
+      },
     );
   }
 }

@@ -45,5 +45,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>To personalize your experience, Wambe app requires access to the camera. Allow access to capture a photo for your profile, ensuring a visually engaging account.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Enhance your profile by allowing Wambe app access to your photo library. Select a personalized photo to add a touch of personality to your account.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 </dict>
 </plist>

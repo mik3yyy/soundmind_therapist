@@ -59,7 +59,7 @@ class ProfileInfoEvent extends AuthenticationEvent {
   final ProfessionalInfoModel professionalInfoModel;
   final PracticalInfoModel practicalInfoModel;
   final VerificationInfoModel verificationInfoModel;
-  final ProfileInfoEvent profileInfoEvent;
+  final ProfileInfoModel profileInfoEvent;
 
   const ProfileInfoEvent(
       {required this.personalInfoModel,
