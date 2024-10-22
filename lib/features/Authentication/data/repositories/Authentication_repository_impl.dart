@@ -7,6 +7,7 @@ import 'package:soundmind_therapist/features/Authentication/data/datasources/Aut
 import 'package:soundmind_therapist/features/Authentication/data/models/personal_info_model.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/practical_info_model.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/professional_info_model.dart';
+import 'package:soundmind_therapist/features/Authentication/data/models/profile_info_model.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/user.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/verification_model.dart';
 import 'package:soundmind_therapist/features/Authentication/domain/repositories/Authentication_repository.dart';
@@ -50,7 +51,7 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
     required ProfessionalInfoModel professionalInfoModel,
     required PracticalInfoModel practicalInfoModel,
     required VerificationInfoModel verificationInfoModel,
-    required ProfileInfoEvent profileInfoEvent,
+    required ProfileInfoModel profileInfoEvent,
   }) async {
     try {
       var verificationData =
@@ -75,6 +76,83 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
     } catch (e) {
       print(e.toString());
       return const Left(CacheFailure("No User"));
+    }
+  }
+
+  @override
+  ResultFuture<void> changePassword(
+      {required String old,
+      required String newPassword,
+      required String confirmPassword}) async {
+    // TODO: implement changePassword
+    try {
+      await _authenticationRemoteDataSource.changePassword(
+          old: old, newPassword: newPassword, confirmPassword: confirmPassword);
+
+      return Right(null);
+    } on ApiError catch (e) {
+      print(e.toString());
+      return Left(ServerFailure(e.errorDescription));
+    }
+  }
+
+  @override
+  ResultFuture<void> logout() async {
+    // TODO: implement logout
+    try {
+      await _authenticationHiveDataSource.deleteUser();
+
+      return const Right(null);
+    } catch (e) {
+      return const Left(CacheFailure("No User"));
+    }
+  }
+
+  @override
+  ResultFuture<UserModel> verifyEmail(
+      {required String otp, required String securityKey}) async {
+    // TODO: implement verifyEmail
+    try {
+      UserModel userModel = await _authenticationRemoteDataSource.verifyEmail(
+          otp: otp, securityKey: securityKey);
+      _authenticationHiveDataSource.saveUser(userModel: userModel);
+      return Right(userModel);
+    } on ApiError catch (e) {
+      return Left(ServerFailure(e.errorDescription));
+    } catch (e) {
+      return const Left(ServerFailure(ApiError.unknownError));
+    }
+  }
+
+  @override
+  ResultFuture<DataMap> checkIfPhoneAndEmailExist({
+    required String email,
+    required String phoneNumber,
+  }) async {
+    try {
+      DataMap result =
+          await _authenticationRemoteDataSource.checkIfPhoneAndEmailExist(
+        email: email,
+        phoneNumber: phoneNumber,
+      );
+      return Right(result);
+    } on ApiError catch (e) {
+      return Left(ServerFailure(e.errorDescription));
+    }
+  }
+
+  @override
+  ResultFuture<DataMap> resendVerificationOtp({
+    required String signupKey,
+  }) async {
+    try {
+      DataMap result =
+          await _authenticationRemoteDataSource.resendVerificationOtp(
+        signupKey: signupKey,
+      );
+      return Right(result);
+    } on ApiError catch (e) {
+      return Left(ServerFailure(e.errorDescription));
     }
   }
 }

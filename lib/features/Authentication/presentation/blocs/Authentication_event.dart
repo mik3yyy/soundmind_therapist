@@ -68,3 +68,16 @@ class ProfileInfoEvent extends AuthenticationEvent {
       required this.verificationInfoModel,
       required this.profileInfoEvent});
 }
+
+class VerifyEmailEvent extends AuthenticationEvent {
+  final DataMap verificationData;
+  final String otp;
+
+  const VerifyEmailEvent({required this.verificationData, required this.otp});
+}
+
+class ResendOtpEvent extends AuthenticationEvent {
+  final String signupKey;
+
+  ResendOtpEvent({required this.signupKey});
+}

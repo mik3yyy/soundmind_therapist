@@ -3,6 +3,7 @@ import 'package:soundmind_therapist/core/utils/typedef.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/personal_info_model.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/practical_info_model.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/professional_info_model.dart';
+import 'package:soundmind_therapist/features/Authentication/data/models/profile_info_model.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/verification_model.dart';
 import 'package:soundmind_therapist/features/Authentication/domain/repositories/Authentication_repository.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/Authentication_bloc.dart';
@@ -29,7 +30,7 @@ class CreateAccountParams {
   final ProfessionalInfoModel professionalInfoModel;
   final PracticalInfoModel practicalInfoModel;
   final VerificationInfoModel verificationInfoModel;
-  final ProfileInfoEvent profileInfoEvent;
+  final ProfileInfoModel profileInfoEvent;
 
   CreateAccountParams(
       {required this.personalInfoModel,

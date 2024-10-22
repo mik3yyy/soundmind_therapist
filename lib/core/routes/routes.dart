@@ -9,6 +9,7 @@ import 'package:soundmind_therapist/features/Authentication/presentation/views/c
 import 'package:soundmind_therapist/features/Authentication/presentation/views/create_account/signup_succesful.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/views/create_account/verification_info.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/views/login/login.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/views/verify_email.dart';
 import 'package:soundmind_therapist/features/Onboarding/presentation/views/Onboarding_page.dart';
 import 'package:soundmind_therapist/features/Onboarding/presentation/views/Splash_screen.dart';
 import 'package:soundmind_therapist/features/Onboarding/presentation/views/introduction.dart';
@@ -97,6 +98,8 @@ class Routes {
   static const String profileInfoName = 'profileInfo';
   static const String sucessSignupPath = '/sucessSignup';
   static const String sucessSignupName = 'sucessSignup';
+  static const String verifyPath = '/verify';
+  static const String verifyName = 'verify';
   // Navigator keys for nested navigation
   static final GlobalKey<NavigatorState> rootNavigatorKey =
       GlobalKey<NavigatorState>();
@@ -174,6 +177,15 @@ class Routes {
             routes: [],
           ),
         ],
+      ),
+      GoRoute(
+        path: verifyPath,
+        name: verifyName,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => VerifyEmail(
+          email: state.extra as String,
+        ),
+        routes: [],
       ),
       GoRoute(
         path: sucessSignupPath,

@@ -7,7 +7,7 @@ class PersonalInfoModel extends Equatable {
   final String password;
   final String passwordConfirmation;
   final String dob;
-  final String gender;
+  final int gender;
   final String phoneNumber;
 
   PersonalInfoModel({

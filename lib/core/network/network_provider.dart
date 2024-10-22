@@ -58,7 +58,6 @@ class Network {
             'Content-Type': 'application/x-www-form-urlencoded',
           }
         : null;
-
     try {
       switch (method) {
         case RequestMethod.post:

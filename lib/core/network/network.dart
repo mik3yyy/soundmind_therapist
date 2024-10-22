@@ -1,5 +1,7 @@
 library network;
 
+import 'dart:math';
+
 import 'package:dio/dio.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:io';

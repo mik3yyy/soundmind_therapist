@@ -98,7 +98,11 @@ class _ProfessionalInfoScreenState extends State<ProfessionalInfoScreen>
             validator: validateField,
           ),
         ].addSpacer(const Gap(10)),
-      ).withSafeArea().withCustomPadding().withForm(signupForm),
+      )
+          .withSafeArea()
+          .withCustomPadding()
+          .withForm(signupForm)
+          .withScrollView(),
       bottomNavigationBar: Container(
         height: 150,
         child: CustomButton(

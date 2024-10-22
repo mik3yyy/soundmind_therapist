@@ -44,11 +44,15 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
           context.goNamed(Routes.verificationInfoName);
         }
         if (state is VerificationInfoState) {
+          if (state.message != null) {
+            context.showSnackBar(state.message!);
+            return;
+          }
           context.goNamed(Routes.profileInfoName);
         }
-        if (state is ProfileInfoState) {
-          context.goNamed(Routes.sucessSignupName);
-        }
+        // if (state is ProfileInfoState) {
+        //   context.goNamed(Routes.verificationInfoName);
+        // }
       },
       builder: (context, state) {
         return Scaffold(

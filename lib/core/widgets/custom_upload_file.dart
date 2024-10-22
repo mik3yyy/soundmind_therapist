@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
+import 'package:easy_pdf_viewer/easy_pdf_viewer.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -12,8 +13,9 @@ import 'package:soundmind_therapist/core/utils/image_util.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/views/create_account/verification_info.dart';
 
 class Uploadfile extends StatefulWidget {
-  const Uploadfile({super.key, required this.title});
+  const Uploadfile({super.key, required this.title, required this.onTap});
   final String title;
+  final Function(File? file, int type) onTap;
 
   @override
   State<Uploadfile> createState() => _UploadfileState();
@@ -23,9 +25,15 @@ class _UploadfileState extends State<Uploadfile> {
   File? imageFile;
 
   File? pdfFile;
-
+  PDFDocument? pdfDocument;
   onImagePicker() async {
     imageFile = await ImageUtils.pickImage();
+
+    if (imageFile != null) {
+      pdfFile = null;
+    }
+    setState(() {});
+    widget.onTap(imageFile, 2);
   }
 
   addFilePicker() async {
@@ -37,17 +45,40 @@ class _UploadfileState extends State<Uploadfile> {
       ],
     );
     if (result != null) {
-      if (result.paths.first != null) pdfFile = File(result.paths.first!);
+      if (result.paths.first != null) {
+        pdfFile = File(result.paths.first!);
+        if (pdfFile != null) {
+          imageFile = null;
+          pdfDocument = await PDFDocument.fromFile(File(pdfFile!.path));
+          setState(() {});
+          widget.onTap(pdfFile, 1);
+        }
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    Widget loadDisplay() {
+      if (imageFile != null) {
+        return Image.asset(
+          imageFile!.path,
+          fit: BoxFit.cover,
+        );
+      } else if (pdfFile != null && pdfDocument != null) {
+        return PDFViewer(
+          document: pdfDocument!,
+        );
+      } else {
+        return EmptyUpload();
+      }
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(widget.title),
-        const Gap(10),
+        const Gap(5),
         DottedBorder(
           color: context.colors.black,
           strokeWidth: 1,
@@ -56,7 +87,7 @@ class _UploadfileState extends State<Uploadfile> {
           child: SizedBox(
             width: context.screenWidth * .9,
             height: 120,
-            child: const EmptyUpload(),
+            child: loadDisplay(),
           ),
         ).withOnTap(() {
           showModalBottomSheet(
@@ -64,7 +95,7 @@ class _UploadfileState extends State<Uploadfile> {
             context: context,
             builder: (context) {
               return Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 height: 200,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

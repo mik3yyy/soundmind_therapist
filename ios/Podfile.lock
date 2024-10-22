@@ -30,6 +30,8 @@ PODS:
   - DKPhotoGallery/Resource (0.0.19):
     - SDWebImage
     - SwiftyGif
+  - easy_pdf_viewer (1.0.8):
+    - Flutter
   - file_picker (0.0.1):
     - DKImagePickerController/PhotoGallery
     - Flutter
@@ -134,6 +136,7 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
+  - easy_pdf_viewer (from `.symlinks/plugins/easy_pdf_viewer/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
@@ -167,6 +170,8 @@ SPEC REPOS:
     - Toast
 
 EXTERNAL SOURCES:
+  easy_pdf_viewer:
+    :path: ".symlinks/plugins/easy_pdf_viewer/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
   firebase_core:
@@ -197,6 +202,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
   DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
+  easy_pdf_viewer: 92a716add4c1703a35e1734979caa7c689dcddd5
   file_picker: 09aa5ec1ab24135ccd7a1621c46c84134bfd6655
   Firebase: 98e6bf5278170668a7983e12971a66b2cd57fc8c
   firebase_core: 2bedc3136ec7c7b8561c6123ed0239387b53f2af
