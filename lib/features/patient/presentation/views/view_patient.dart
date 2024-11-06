@@ -8,6 +8,8 @@ import 'package:soundmind_therapist/core/gen/assets.gen.dart';
 import 'package:soundmind_therapist/core/routes/routes.dart';
 import 'package:soundmind_therapist/core/widgets/custom_button.dart';
 import 'package:soundmind_therapist/core/widgets/custom_dropdown_widget.dart';
+import 'package:soundmind_therapist/core/widgets/custom_shimmer.dart';
+import 'package:soundmind_therapist/core/widgets/error_screen.dart';
 import 'package:soundmind_therapist/features/patient/domain/usecases/create_referal.dart';
 import 'package:soundmind_therapist/features/patient/domain/usecases/get_referral_intituition.dart';
 import 'package:soundmind_therapist/features/patient/presentation/blocs/create_referral/create_referral_cubit.dart';
@@ -143,6 +145,30 @@ class _ViewPatientState extends State<ViewPatient> {
                 ).withExpanded(),
               ],
             );
+          } else if (state is GetPatientDetailsLoading) {
+            return Scaffold(
+              appBar: AppBar(
+                backgroundColor: Color(0xFFF3EEFA),
+                leadingWidth: 30,
+                leading: BackButton(
+                  color: context.colors.black,
+                ),
+              ),
+              body: ComplexShimmer.therapistProfileShimmer(context),
+            );
+          } else if (state is GetPatientDetailsError) {
+            return Scaffold(
+                appBar: AppBar(
+                  backgroundColor: Color(0xFFF3EEFA),
+                  leadingWidth: 30,
+                  leading: BackButton(
+                    color: context.colors.black,
+                  ),
+                ),
+                body: CustomErrorScreen(
+                  onTap: () {},
+                  message: state.message,
+                ));
           } else {
             return Container();
           }
@@ -184,7 +210,9 @@ class _ReferPatientDialodState extends State<ReferPatientDialod> {
               children: [
                 const Text("Refer Patient to"),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.pop();
+                  },
                   icon: const Icon(Icons.cancel_outlined),
                 ),
               ],
@@ -224,6 +252,10 @@ class _ReferPatientDialodState extends State<ReferPatientDialod> {
                   context.read<GetPatientDetailsCubit>().fetchPatientDetails(
                         int.parse(widget.id),
                       );
+                  context.pop();
+                }
+                if (state is CreateReferralError) {
+                  context.showSnackBar(state.message);
                   context.pop();
                 }
               },

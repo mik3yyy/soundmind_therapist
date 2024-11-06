@@ -1,7 +1,9 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:soundmind_therapist/core/extensions/context_extensions.dart';
 import 'package:soundmind_therapist/core/extensions/list_extensions.dart';
 import 'package:soundmind_therapist/core/extensions/widget_extensions.dart';
@@ -11,10 +13,13 @@ import 'package:soundmind_therapist/core/utils/validators.dart';
 import 'package:soundmind_therapist/core/widgets/custom_button.dart';
 import 'package:soundmind_therapist/core/widgets/custom_date_picker.dart';
 import 'package:soundmind_therapist/core/widgets/custom_dropdown_widget.dart';
+import 'package:soundmind_therapist/core/widgets/custom_text_button.dart';
 import 'package:soundmind_therapist/core/widgets/custom_text_field.dart';
 import 'package:soundmind_therapist/core/extensions/list_extensions.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/professional_info_model.dart';
+import 'package:soundmind_therapist/features/Authentication/data/models/qualification.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/Authentication_bloc.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/widgets/education_pop_up.dart';
 
 class ProfessionalInfoScreen extends StatefulWidget {
   const ProfessionalInfoScreen({super.key});
@@ -36,7 +41,7 @@ class _ProfessionalInfoScreenState extends State<ProfessionalInfoScreen>
   String? aoe;
   List<String> aoes = ['a', 'b', 'c'];
   String? licenseExpiryDate;
-
+  List<Qualification> qualifications = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,6 +81,63 @@ class _ProfessionalInfoScreenState extends State<ProfessionalInfoScreen>
             title: "License expiry date",
             mode: DatePMode.license,
           ),
+          AutoSizeText(
+            "Educational qualifications/Certification ",
+            style: context.textTheme.displaySmall,
+          ),
+          Column(
+            children: qualifications
+                .map<Widget>((qualification) {
+                  return Container(
+                    // height: 50,
+                    width: context.screenWidth * .9,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Color(0xFFF1F1F1),
+                    ),
+                    child: ListTile(
+                      title: Text(
+                        qualification.schoolName,
+                        style: context.textTheme.displaySmall,
+                      ),
+                      subtitle: Text(qualification.degree),
+                      trailing: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            qualifications.remove(qualification);
+                          });
+                        },
+                        icon: Icon(
+                          Icons.cancel,
+                          color: context.colors.black,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                  );
+                })
+                .toList()
+                .addSpacer(Gap(10)),
+          ),
+          CustomTextButton(
+            label: "Add New",
+            textStyle: context.textTheme.bodyMedium?.copyWith(
+              color: context.primaryColor,
+            ),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => EducationPopUp(
+                  onSubmit: (qualification) {
+                    setState(() {
+                      qualifications.add(qualification);
+                    });
+                    context.pop();
+                  },
+                ),
+              );
+            },
+          ).toRight(),
           CustomDropdown(
             items: aoes,
             title: "Area of specialization",

@@ -14,4 +14,7 @@ class Constants {
   }
 
   static String Naira = '₦';
+  static Function delayed = () {
+    Future.delayed(Duration(seconds: 3), () {});
+  };
 }

@@ -71,12 +71,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
                 expandedProgressBarColor: context.primaryColor,
                 collapsedBufferedBarColor: context.primaryColor,
                 collapsedProgressBarColor: context.primaryColor,
-                progress: Duration(seconds: 30),
-                buffered: Duration(seconds: 30),
+                progress: const Duration(seconds: 30),
+                buffered: const Duration(seconds: 30),
                 total: const Duration(minutes: 1),
-                onSeek: (position) {
-                  print('New position: $position');
-                },
+                onSeek: (position) {},
               ).withClip(1000).withPadding(
                   const EdgeInsetsDirectional.symmetric(horizontal: 8)),
             ),

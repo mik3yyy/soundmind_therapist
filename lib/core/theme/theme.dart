@@ -43,7 +43,9 @@ ThemeData _buildLightTheme() {
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       behavior: SnackBarBehavior.floating,
-      contentTextStyle: _AppTextStyles.bodyMedium,
+      backgroundColor: _Colors.primaryColor,
+      actionTextColor: _Colors.white,
+      contentTextStyle: _AppTextStyles.bodyMedium.copyWith(color: Colors.white),
       insetPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(

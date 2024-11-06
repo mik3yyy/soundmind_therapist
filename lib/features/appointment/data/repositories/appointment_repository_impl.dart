@@ -57,12 +57,12 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
   }
 
   @override
-  ResultFuture<List<Booking>> getAcceptedAppointments() async {
+  ResultFuture<List<AppointmentModel>> getAcceptedAppointments() async {
     try {
       final response = await _remoteDataSource.getAcceptedAppointments();
       print(response);
-      List<Booking> appointments = (response['data'] as List)
-          .map((json) => Booking.fromJson(json))
+      List<AppointmentModel> appointments = (response['data'] as List)
+          .map((json) => AppointmentModel.fromJson(json))
           .toList();
       return Right(appointments);
     } on ApiError catch (e) {
@@ -71,12 +71,12 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
   }
 
   @override
-  ResultFuture<List<Booking>> getPendingAppointments() async {
+  ResultFuture<List<AppointmentModel>> getPendingAppointments() async {
     try {
       final response = await _remoteDataSource.getPendingAppointments();
       print(response);
-      List<Booking> appointments = (response['data'] as List)
-          .map((json) => Booking.fromJson(json))
+      List<AppointmentModel> appointments = (response['data'] as List)
+          .map((json) => AppointmentModel.fromJson(json))
           .toList();
       return Right(appointments);
     } on ApiError catch (e) {
@@ -85,11 +85,11 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
   }
 
   @override
-  ResultFuture<List<Booking>> getRejectedAppointments() async {
+  ResultFuture<List<AppointmentModel>> getRejectedAppointments() async {
     try {
       final response = await _remoteDataSource.getRejectedAppointments();
-      List<Booking> appointments = (response['data'] as List)
-          .map((json) => Booking.fromJson(json))
+      List<AppointmentModel> appointments = (response['data'] as List)
+          .map((json) => AppointmentModel.fromJson(json))
           .toList();
       return Right(appointments);
     } on ApiError catch (e) {

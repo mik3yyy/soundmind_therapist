@@ -168,7 +168,7 @@ class AuthenticationRemoteDataSourceImpl
       },
     );
     print(response.data);
-    return UserModel.fromJson(response.data);
+    return UserModel.fromJson(response.data['data']);
   }
 
   @override

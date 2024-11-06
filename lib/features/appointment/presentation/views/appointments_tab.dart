@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -6,8 +7,10 @@ import 'package:soundmind_therapist/core/extensions/context_extensions.dart';
 import 'package:soundmind_therapist/core/extensions/widget_extensions.dart';
 import 'package:soundmind_therapist/core/routes/routes.dart';
 import 'package:soundmind_therapist/core/utils/date_formater.dart';
+import 'package:soundmind_therapist/core/utils/image_util.dart';
 import 'package:soundmind_therapist/core/widgets/custom_button.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/views/login/login.dart';
+import 'package:soundmind_therapist/features/appointment/data/models/appointment_model.dart';
 import 'package:soundmind_therapist/features/appointment/domain/usecases/get_accepted_request.dart';
 import 'package:soundmind_therapist/features/appointment/domain/usecases/get_pending_appointment.dart';
 import 'package:soundmind_therapist/features/appointment/domain/usecases/get_rejected_appointment.dart';
@@ -174,40 +177,13 @@ class _RequestsTabState extends State<RequestsTab> {
                     ListView.builder(
                       itemCount: bookings.length,
                       itemBuilder: (context, index) {
-                        var booking = bookings[index];
-                        return Container(
-                          child: Column(
-                            children: [
-                              ListTile(
-                                title: const Text("New Boking"),
-                                subtitle: Text("${booking.code}"),
-                                trailing: Text(
-                                  DateFormater.formatDate(booking.date),
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  CustomButton(
-                                    label: "Accept",
-                                    onPressed: () {
-                                      context
-                                          .read<ApproveAppointmentCubit>()
-                                          .approveAppointment(booking.id);
-                                    },
-                                  ).withExpanded(),
-                                  const Gap(10),
-                                  CustomSecondaryButton(
-                                    label: "Decline",
-                                    onPressed: () {
-                                      context
-                                          .read<RejectAppointmentCubit>()
-                                          .rejectAppointment(booking.id);
-                                    },
-                                  ).withExpanded()
-                                ],
-                              )
-                            ],
-                          ),
+                        var appoitments = bookings[index];
+                        return buildAppointmentCard(
+                          appointment: appoitments,
+                          status: 'Rejected',
+                          onTap: () {
+                            // Handle request review action here
+                          },
                         );
                       },
                     ).withExpanded(),
@@ -245,19 +221,13 @@ class _AcceptedTabState extends State<AcceptedTab> {
               ListView.builder(
                 itemCount: bookings.length,
                 itemBuilder: (context, index) {
-                  var booking = bookings[index];
-                  return Container(
-                    child: Column(
-                      children: [
-                        ListTile(
-                          title: const Text("New Boking"),
-                          subtitle: Text("${booking.code}"),
-                          trailing: Text(
-                            DateFormater.formatDate(booking.date),
-                          ),
-                        ),
-                      ],
-                    ),
+                  var appoitments = bookings[index];
+                  return buildAppointmentCard(
+                    appointment: appoitments,
+                    status: 'Rejected',
+                    onTap: () {
+                      // Handle request review action here
+                    },
                   );
                 },
               ).withExpanded(),
@@ -294,19 +264,13 @@ class _DeclinedTabState extends State<DeclinedTab> {
               ListView.builder(
                 itemCount: bookings.length,
                 itemBuilder: (context, index) {
-                  var booking = bookings[index];
-                  return Container(
-                    child: Column(
-                      children: [
-                        ListTile(
-                          title: const Text("New Boking"),
-                          subtitle: Text("${booking.code}"),
-                          trailing: Text(
-                            DateFormater.formatDate(booking.date),
-                          ),
-                        ),
-                      ],
-                    ),
+                  var appoitments = bookings[index];
+                  return buildAppointmentCard(
+                    appointment: appoitments,
+                    status: 'Rejected',
+                    onTap: () {
+                      // Handle request review action here
+                    },
                   );
                 },
               ).withExpanded(),
@@ -318,4 +282,65 @@ class _DeclinedTabState extends State<DeclinedTab> {
       },
     );
   }
+}
+
+Widget buildAppointmentCard({
+  required AppointmentModel appointment,
+  required VoidCallback onTap,
+  required String status,
+}) {
+  return Card(
+    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    child: Padding(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: CachedNetworkImage(
+                    height: 60,
+                    width: 60,
+                    fit: BoxFit.cover,
+                    imageUrl: appointment.profilePicture ?? ImageUtils.profile),
+              ),
+              SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(appointment.patientName,
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  // Text(appointment.areaOfSpecialization ?? "",
+                  //     style: TextStyle(color: Colors.grey[600])),
+                  Text("Day: ${appointment.schedule.dayOfWeekTitle}"),
+                  Text(
+                      "Time: ${DateFormater.formatTimeRange(appointment.schedule.startTime, appointment.schedule.endTime)}"),
+                  Text(
+                    status,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          // SizedBox(height: 16),
+          // CustomButton(label: "", onPressed: onPressed)
+          // ElevatedButton.icon(
+          //   onPressed: onTap,
+          //   icon: Icon(Icons.notifications, color: Colors.purple),
+          //   label: Text(actionText, style: TextStyle(color: Colors.purple)),
+          //   style: ElevatedButton.styleFrom(
+          //     primary: Colors.purple.withOpacity(0.1),
+          //     shape: RoundedRectangleBorder(
+          //         borderRadius: BorderRadius.circular(20)),
+          //     elevation: 0,
+          //   ),
+          // ),
+        ],
+      ),
+    ),
+  );
 }

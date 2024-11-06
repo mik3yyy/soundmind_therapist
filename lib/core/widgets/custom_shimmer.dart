@@ -534,4 +534,52 @@ class ComplexShimmer {
       fadeTheme: FadeTheme.light,
     );
   }
+
+  static Widget dashboardShimmer(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+      child: GridView.count(
+        crossAxisCount: 2,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        children: List.generate(4, (index) {
+          final delay = index * 100;
+          return Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF3EEFA),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FadeShimmer(
+                  height: 24,
+                  width: 30,
+                  radius: 4,
+                  millisecondsDelay: delay,
+                  fadeTheme: FadeTheme.light,
+                  baseColor: const Color(0xFFE0E0E0),
+                  highlightColor: const Color(0xFFF5F5F5),
+                ),
+                const SizedBox(height: 10),
+                FadeShimmer(
+                  height: 12,
+                  width: 100,
+                  radius: 4,
+                  millisecondsDelay: delay + 50,
+                  fadeTheme: FadeTheme.light,
+                  baseColor: const Color(0xFFE0E0E0),
+                  highlightColor: const Color(0xFFF5F5F5),
+                ),
+              ],
+            ),
+          );
+        }),
+      ),
+    );
+  }
 }

@@ -299,14 +299,37 @@ class Routes {
             path: referralsPath,
             name: referralsName,
             parentNavigatorKey: shellNavigatorKey,
-            builder: (context, state) =>
-                Placeholder(), // Replace with actual screen widget
+            pageBuilder: (context, state) {
+              return CustomTransitionPage(
+                key: state.pageKey,
+                child: Placeholder(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  );
+                },
+              );
+            },
           ),
           GoRoute(
             path: patientPath,
             name: patientName,
             parentNavigatorKey: shellNavigatorKey,
-            builder: (context, state) => PatientPage(),
+            pageBuilder: (context, state) {
+              return CustomTransitionPage(
+                key: state.pageKey,
+                child: PatientPage(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  );
+                },
+              );
+            },
             routes: [
               // GoRoute(path: path)
 

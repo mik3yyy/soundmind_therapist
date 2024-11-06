@@ -34,7 +34,10 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
       print(userData);
       if (userData['isEmailVerified']) {
         UserModel userModel = UserModel.fromJson(userData);
-
+        if (userModel.roles[0] == 'User') {
+          return Left(
+              ServerFailure("This is not a therapist account", data: userData));
+        }
         _authenticationHiveDataSource.saveUser(userModel: userModel);
         return Right(userModel);
       } else {

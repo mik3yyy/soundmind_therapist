@@ -12,7 +12,7 @@ class GetAcceptedAppointmentsInitial extends GetAcceptedAppointmentsState {}
 class GetAcceptedAppointmentsLoading extends GetAcceptedAppointmentsState {}
 
 class GetAcceptedAppointmentsSuccess extends GetAcceptedAppointmentsState {
-  final List<Booking> appointments;
+  final List<AppointmentModel> appointments;
 
   const GetAcceptedAppointmentsSuccess(this.appointments);
 

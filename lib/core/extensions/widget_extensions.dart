@@ -47,9 +47,11 @@ extension WidgetExtensions on Widget {
   }
 
   Widget withScrollView() {
-    return SingleChildScrollView(
-      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-      child: this,
+    return Scrollbar(
+      child: SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        child: this,
+      ),
     );
   }
 

@@ -44,6 +44,9 @@ class _VerifyEmailState extends State<VerifyEmail> with Validators {
           if (state is UserAccount) {
             context.goNamed(Routes.homeName);
           }
+          if (state is VeriftingAccountFailed) {
+            context.showSnackBar(state.message);
+          }
         },
         child: Scaffold(
           body: Column(

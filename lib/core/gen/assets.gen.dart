@@ -165,6 +165,10 @@ class $ApplicationAssetsSvgsGen {
   SvgGenImage get vector =>
       const SvgGenImage('application/assets/svgs/Vector.svg');
 
+  /// File path: application/assets/svgs/cancel.svg
+  SvgGenImage get cancel =>
+      const SvgGenImage('application/assets/svgs/cancel.svg');
+
   /// File path: application/assets/svgs/email.svg
   SvgGenImage get email =>
       const SvgGenImage('application/assets/svgs/email.svg');
@@ -185,8 +189,16 @@ class $ApplicationAssetsSvgsGen {
   SvgGenImage get question =>
       const SvgGenImage('application/assets/svgs/question.svg');
 
+  /// File path: application/assets/svgs/send_message.svg
+  SvgGenImage get sendMessage =>
+      const SvgGenImage('application/assets/svgs/send_message.svg');
+
   /// File path: application/assets/svgs/star.svg
   SvgGenImage get star => const SvgGenImage('application/assets/svgs/star.svg');
+
+  /// File path: application/assets/svgs/therapist_message.svg
+  SvgGenImage get therapistMessage =>
+      const SvgGenImage('application/assets/svgs/therapist_message.svg');
 
   /// File path: application/assets/svgs/upload.svg
   SvgGenImage get upload =>
@@ -199,12 +211,15 @@ class $ApplicationAssetsSvgsGen {
   /// List of all assets
   List<SvgGenImage> get values => [
         vector,
+        cancel,
         email,
         fi16973516,
         findTherapistSc,
         message,
         question,
+        sendMessage,
         star,
+        therapistMessage,
         upload,
         walletBg
       ];

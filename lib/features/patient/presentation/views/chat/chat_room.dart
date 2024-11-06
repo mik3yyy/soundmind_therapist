@@ -311,7 +311,7 @@ class _ChattRoomScreenState extends State<ChattRoomScreen> {
                     onPressed: () {
                       _sendMessage(controller.text);
                     },
-                    icon: Assets.application.assets.svgs.email.svg(),
+                    icon: Assets.application.assets.svgs.sendMessage.svg(),
                   )
                 ],
               ).toCenter().withCustomPadding(),

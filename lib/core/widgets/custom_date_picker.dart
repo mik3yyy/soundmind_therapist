@@ -3,7 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:soundmind_therapist/core/extensions/context_extensions.dart';
 
 // Enum to define date picker modes
-enum DatePMode { birth, license }
+enum DatePMode { birth, license, none }
 
 class CustomDatePicker extends StatefulWidget {
   final Function(DateTime) onDateChanged;
@@ -54,9 +54,11 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
     if (widget.mode == DatePMode.birth) {
       // Birth mode: Years from the current year down (past 100 years)
       return List<int>.generate(100, (index) => currentYear - index);
-    } else {
+    } else if (widget.mode == DatePMode.license) {
       // License mode: Years from the current year up (next 100 years)
       return List<int>.generate(100, (index) => currentYear + index);
+    } else {
+      return List<int>.generate(100, (index) => (currentYear + 10) - index);
     }
   }
 

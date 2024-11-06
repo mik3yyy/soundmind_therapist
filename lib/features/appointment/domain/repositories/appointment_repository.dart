@@ -10,11 +10,11 @@ abstract class AppointmentRepository {
 
   Future<Either<Failure, AppointmentModel>> getUpcomingAppointmentRequest();
 
-  Future<Either<Failure, List<Booking>>> getAcceptedAppointments();
+  Future<Either<Failure, List<AppointmentModel>>> getAcceptedAppointments();
 
-  Future<Either<Failure, List<Booking>>> getPendingAppointments();
+  Future<Either<Failure, List<AppointmentModel>>> getPendingAppointments();
 
-  Future<Either<Failure, List<Booking>>> getRejectedAppointments();
+  Future<Either<Failure, List<AppointmentModel>>> getRejectedAppointments();
 
   Future<Either<Failure, void>> approveAppointmentRequest(
       {required int bookingId});

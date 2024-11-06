@@ -20,17 +20,32 @@ class NotesWidget extends StatefulWidget {
 }
 
 class _NotesWidgetState extends State<NotesWidget> {
+  late bool access;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    var state = context.read<GetPatientDetailsCubit>().state
+        as GetPatientDetailsSuccess;
+    access = state.patient.hasNotesAccess;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AddNote(
-                        id: widget.id,
-                      )));
+          if (access) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AddNote(
+                          id: widget.id,
+                        )));
+          } else {
+            context
+                .showSnackBar("You do not have access to this patient notes");
+          }
         },
         backgroundColor: context.primaryColor,
         child: Icon(
@@ -45,14 +60,18 @@ class _NotesWidgetState extends State<NotesWidget> {
 
           if (state is RequestForPatientNotesLoading) {
             showDialog(
-                context: context, builder: (context) => const LoadingScreen());
+                useSafeArea: false,
+                context: context,
+                builder: (context) => const LoadingScreen());
           }
           if (state is RequestForPatientNotesSuccess) {
             context.pop();
             showDialog(
               context: context,
               builder: (context) => SuccessfulWidget(
-                onTap: () {},
+                onTap: () {
+                  context.pop();
+                },
                 message: "Notes Requested Successfully",
               ),
             );

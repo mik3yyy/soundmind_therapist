@@ -165,10 +165,10 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen>
             )
           ].addSpacer(const Gap(10)),
         )
-            .withScrollView()
             .withSafeArea()
             .withForm(signupForm)
-            .withPadding(const EdgeInsets.symmetric(horizontal: 20)),
+            .withPadding(const EdgeInsets.symmetric(horizontal: 20))
+            .withScrollView(),
       ),
     );
   }

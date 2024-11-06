@@ -54,4 +54,9 @@ class DateFormater {
         DateFormat(' MMM yyyy').format(dateTime);
     return formattedDate;
   }
+
+  static String formatTime(DateTime time) {
+    final DateFormat timeFormatter = DateFormat('hh:mm a');
+    return timeFormatter.format(time);
+  }
 }
