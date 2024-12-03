@@ -13,6 +13,7 @@ import 'package:soundmind_therapist/features/Authentication/data/repositories/Au
 import 'package:soundmind_therapist/features/Authentication/domain/repositories/Authentication_repository.dart';
 import 'package:soundmind_therapist/features/Authentication/domain/usecases/check_if_phone_and_email_exist.dart';
 import 'package:soundmind_therapist/features/Authentication/domain/usecases/create_account.dart';
+import 'package:soundmind_therapist/features/Authentication/domain/usecases/get_GAS.dart';
 import 'package:soundmind_therapist/features/Authentication/domain/usecases/log_out.dart';
 import 'package:soundmind_therapist/features/Authentication/domain/usecases/login.dart';
 import 'package:soundmind_therapist/features/Authentication/domain/usecases/resend_otp.dart';
@@ -20,6 +21,7 @@ import 'package:soundmind_therapist/features/Authentication/domain/usecases/veri
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/Authentication_bloc.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/check_user_data/check_if_phone_and_email_exist_cubit.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/cubit/resend_otp_cubit.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/blocs/cubit_gas/get_gas_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/data/datasources/appointment_hive_data_source.dart';
 import 'package:soundmind_therapist/features/appointment/data/datasources/appointment_remote_data_source.dart';
 import 'package:soundmind_therapist/features/appointment/data/repositories/appointment_repository_impl.dart';
@@ -105,6 +107,9 @@ Future<void> init() async {
     ..registerFactory(
         () => CheckIfPhoneAndEmailExistCubit(checkIfPhoneAndEmailExist: sl()))
     ..registerLazySingleton(() => CheckIfPhoneAndEmailExist(repository: sl()));
+  sl
+    ..registerFactory(() => GetGasCubit(sl()))
+    ..registerLazySingleton(() => GetGasUsecase(repository: sl()));
   sl
     ..registerFactory(() => ResendOtpCubit(resendVerificationOtp: sl()))
     ..registerLazySingleton(() => ResendVerificationOtp(repository: sl()));

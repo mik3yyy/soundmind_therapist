@@ -19,6 +19,7 @@ import 'package:soundmind_therapist/core/extensions/list_extensions.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/professional_info_model.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/qualification.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/Authentication_bloc.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/blocs/cubit_gas/get_gas_cubit.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/widgets/education_pop_up.dart';
 
 class ProfessionalInfoScreen extends StatefulWidget {
@@ -39,9 +40,19 @@ class _ProfessionalInfoScreenState extends State<ProfessionalInfoScreen>
   TextEditingController _proAffilations = TextEditingController();
   final signupForm = GlobalKey<FormState>();
   String? aoe;
-  List<String> aoes = ['a', 'b', 'c'];
+  // List<String> aoes = ['a', 'b', 'c'];
   String? licenseExpiryDate;
   List<Qualification> qualifications = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    var state = context.read<GetGasCubit>().state;
+    if (state is! GetgasSuccess) {
+      context.read<GetGasCubit>().getGas();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -138,12 +149,22 @@ class _ProfessionalInfoScreenState extends State<ProfessionalInfoScreen>
               );
             },
           ).toRight(),
-          CustomDropdown(
-            items: aoes,
-            title: "Area of specialization",
-            itemToString: (item) => item,
-            onChanged: (item) {
-              aoe = item;
+          BlocBuilder<GetGasCubit, GetGasState>(
+            builder: (context, state) {
+              if (state is GetgasSuccess) {
+                return CustomDropdown(
+                  items: state.gas,
+                  title: "Area of specialization",
+                  itemToString: (item) => item.name,
+                  onChanged: (item) {
+                    if (item != null) {
+                      aoe = item.id.toString();
+                    }
+                  },
+                );
+              } else {
+                return Container();
+              }
             },
           ),
           CustomTextField(

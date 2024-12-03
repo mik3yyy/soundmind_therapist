@@ -11,6 +11,7 @@ import 'package:soundmind_therapist/features/Authentication/domain/usecases/chec
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/Authentication_bloc.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/check_user_data/check_if_phone_and_email_exist_cubit.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/cubit/resend_otp_cubit.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/blocs/cubit_gas/get_gas_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/domain/usecases/get_rejected_appointment.dart';
 import 'package:soundmind_therapist/features/appointment/domain/usecases/get_user_metrics.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/approve_appointment_request/approve_appointment_request_cubit.dart';
@@ -147,6 +148,9 @@ class MyApp extends StatelessWidget {
         // GetReferralsCubit
         BlocProvider(
           create: (context) => sl<GetReferralsCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<GetGasCubit>(),
         ),
 
         // CreateReferralCubit

@@ -140,4 +140,16 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
       return const Left(CacheFailure("Error deleting cached appointments"));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> approveAppointment() {
+    // TODO: implement approveAppointment
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, void>> rejectAppointment() {
+    // TODO: implement rejectAppointment
+    throw UnimplementedError();
+  }
 }

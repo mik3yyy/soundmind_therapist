@@ -17,7 +17,13 @@ class GetUserChatRoomMessagesCubit extends Cubit<GetUserChatRoomMessagesState> {
     final result = await getUserChatRoomMessagesUseCase.call(chatRoomId);
 
     result.fold(
-      (failure) => emit(GetUserChatRoomMessagesError(message: failure.message)),
+      (failure) {
+        if (failure.message == "No Messages were found") {
+          emit(GetUserChatRoomMessagesSuccess([]));
+        } else {
+          emit(GetUserChatRoomMessagesError(message: failure.message));
+        }
+      },
       (messages) => emit(GetUserChatRoomMessagesSuccess(messages)),
     );
   }

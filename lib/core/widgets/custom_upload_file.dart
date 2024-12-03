@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
-import 'package:easy_pdf_viewer/easy_pdf_viewer.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -25,7 +24,6 @@ class _UploadfileState extends State<Uploadfile> {
   File? imageFile;
 
   File? pdfFile;
-  PDFDocument? pdfDocument;
   onImagePicker() async {
     imageFile = await ImageUtils.pickImage();
 
@@ -49,7 +47,7 @@ class _UploadfileState extends State<Uploadfile> {
         pdfFile = File(result.paths.first!);
         if (pdfFile != null) {
           imageFile = null;
-          pdfDocument = await PDFDocument.fromFile(File(pdfFile!.path));
+          // pdfDocument = await PDFDocument.fromFile(File(pdfFile!.path));
           setState(() {});
           widget.onTap(pdfFile, 1);
         }
@@ -60,18 +58,22 @@ class _UploadfileState extends State<Uploadfile> {
   @override
   Widget build(BuildContext context) {
     Widget loadDisplay() {
-      if (imageFile != null) {
-        return Image.asset(
-          imageFile!.path,
-          fit: BoxFit.cover,
-        );
-      } else if (pdfFile != null && pdfDocument != null) {
-        return PDFViewer(
-          document: pdfDocument!,
-        );
-      } else {
-        return EmptyUpload();
-      }
+      return Image.asset(
+        imageFile!.path,
+        fit: BoxFit.cover,
+      );
+      // if (imageFile != null) {
+      //   return Image.asset(
+      //     imageFile!.path,
+      //     fit: BoxFit.cover,
+      //   );
+      // } else if (pdfFile != null && pdfDocument != null) {
+      //   return PDFViewer(
+      //     document: pdfDocument!,
+      //   );
+      // } else {
+      //   return EmptyUpload();
+      // }
     }
 
     return Column(
@@ -124,29 +126,29 @@ class _UploadfileState extends State<Uploadfile> {
                       ],
                     ),
                     const Gap(50),
-                    Column(
-                      children: [
-                        Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            color: context.secondaryColor,
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: Icon(
-                            Icons.file_present,
-                            color: context.primaryColor,
-                            // size: 40,
-                          ).toCenter().withPadding(const EdgeInsets.all(10)),
-                        ).withOnTap(() {
-                          addFilePicker();
-                        }),
-                        Text(
-                          "Add File",
-                          style: context.textTheme.bodyLarge,
-                        )
-                      ],
-                    ),
+                    // Column(
+                    //   children: [
+                    //     Container(
+                    //       height: 50,
+                    //       width: 50,
+                    //       decoration: BoxDecoration(
+                    //         color: context.secondaryColor,
+                    //         borderRadius: BorderRadius.circular(50),
+                    //       ),
+                    //       child: Icon(
+                    //         Icons.file_present,
+                    //         color: context.primaryColor,
+                    //         // size: 40,
+                    //       ).toCenter().withPadding(const EdgeInsets.all(10)),
+                    //     ).withOnTap(() {
+                    //       addFilePicker();
+                    //     }),
+                    //     Text(
+                    //       "Add File",
+                    //       style: context.textTheme.bodyLarge,
+                    //     )
+                    //   ],
+                    // ),
                   ],
                 ),
               );

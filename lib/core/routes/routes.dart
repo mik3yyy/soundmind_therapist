@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:soundmind_therapist/features/Authentication/domain/usecases/create_account.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/views/create_account/create_account.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/views/create_account/personal_info.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/views/create_account/practice_info.dart';
@@ -13,12 +12,16 @@ import 'package:soundmind_therapist/features/Authentication/presentation/views/v
 import 'package:soundmind_therapist/features/Onboarding/presentation/views/Onboarding_page.dart';
 import 'package:soundmind_therapist/features/Onboarding/presentation/views/Splash_screen.dart';
 import 'package:soundmind_therapist/features/Onboarding/presentation/views/introduction.dart';
+import 'package:soundmind_therapist/features/appointment/data/models/appointment_model.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/views/appointment_page.dart';
 import 'package:soundmind_therapist/features/main/presentation/views/home_screen/home_screen.dart';
+import 'package:soundmind_therapist/features/main/presentation/views/home_screen/view_session.dart';
 import 'package:soundmind_therapist/features/main/presentation/views/main_page.dart';
+import 'package:soundmind_therapist/features/main/presentation/views/setting/settings_screen.dart';
 import 'package:soundmind_therapist/features/patient/data/models/chat_room.dart';
 import 'package:soundmind_therapist/features/patient/presentation/views/chat/chat_room.dart';
 import 'package:soundmind_therapist/features/patient/presentation/views/patient_page.dart';
+import 'package:soundmind_therapist/features/patient/presentation/views/referaals/referrals.dart';
 import 'package:soundmind_therapist/features/patient/presentation/views/view_patient.dart';
 import 'package:soundmind_therapist/features/wallet/presentation/views/wallet_page.dart';
 import 'package:soundmind_therapist/features/wallet/presentation/views/withdraw_amount.dart';
@@ -32,12 +35,10 @@ class Routes {
   static const String chat = '/chat';
   static const String settings = '/settings';
   static const String termsOfService = 'terms-of-services';
-
   static const String splashName = 'splash';
   static const String splashPath = '/';
   static const String pinhName = 'pin';
   static const String pinhPath = '/pin';
-
   static const String onboardingName = 'onboarding';
   static const String onboardingPath = 'onboarding';
   static const String referralsName = 'referrals';
@@ -82,6 +83,8 @@ class Routes {
 
   static const String patientPath = '/patient';
   static const String patientName = 'patient';
+  static const String view_sessionPath = 'view_session';
+  static const String view_sessionName = 'view_session';
 
   static const String view_patientPath = 'view_patient/:id';
   static const String view_patientName = 'view_patient';
@@ -113,6 +116,8 @@ class Routes {
   static final GoRouter router = GoRouter(
     navigatorKey: rootNavigatorKey,
     routes: [
+      //Governance, Initial  Question
+      //Genereric
       GoRoute(
         path: splashPath,
         name: splashName,
@@ -221,6 +226,14 @@ class Routes {
               //     HomeScreen(),
               routes: [
                 GoRoute(
+                  path: view_sessionPath,
+                  name: view_sessionName,
+                  parentNavigatorKey: rootNavigatorKey,
+                  builder: (context, state) => ViewSessionScreen(
+                    appointment: state.extra as AppointmentModel,
+                  ), // Replace with actual screen widget
+                ),
+                GoRoute(
                   path: notificationPath,
                   name: notificationName,
                   parentNavigatorKey: shellNavigatorKey,
@@ -233,7 +246,7 @@ class Routes {
                   name: settingsName,
                   parentNavigatorKey: rootNavigatorKey,
                   builder: (context, state) =>
-                      Placeholder(), // Replace with actual screen widget
+                      SettingPage(), // Replace with actual screen widget
                   routes: [
                     GoRoute(
                       path: termsOfService,
@@ -302,7 +315,7 @@ class Routes {
             pageBuilder: (context, state) {
               return CustomTransitionPage(
                 key: state.pageKey,
-                child: Placeholder(),
+                child: ReferallPage(),
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {
                   return FadeTransition(

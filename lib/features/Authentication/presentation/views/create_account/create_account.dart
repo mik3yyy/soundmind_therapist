@@ -30,18 +30,23 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
     super.dispose();
   }
 
+  int time = 10;
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
         if (state is PersonalInfoState) {
           context.goNamed(Routes.professioanlInfoName);
+          time = 20;
         }
         if (state is ProfessionalInfoState) {
           context.goNamed(Routes.practiceInfoName);
+          time = 30;
         }
         if (state is PracticalInfoState) {
           context.goNamed(Routes.verificationInfoName);
+          time = 45;
         }
         if (state is VerificationInfoState) {
           if (state.message != null) {
@@ -50,9 +55,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
           }
           context.goNamed(Routes.profileInfoName);
         }
-        // if (state is ProfileInfoState) {
-        //   context.goNamed(Routes.verificationInfoName);
-        // }
+        if (state is ProfileInfoState) {
+          time = 60;
+        }
+        setState(() {});
       },
       builder: (context, state) {
         return Scaffold(
@@ -71,8 +77,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
                 expandedProgressBarColor: context.primaryColor,
                 collapsedBufferedBarColor: context.primaryColor,
                 collapsedProgressBarColor: context.primaryColor,
-                progress: const Duration(seconds: 30),
-                buffered: const Duration(seconds: 30),
+                progress: Duration(seconds: time),
+                buffered: Duration(seconds: time),
                 total: const Duration(minutes: 1),
                 onSeek: (position) {},
               ).withClip(1000).withPadding(

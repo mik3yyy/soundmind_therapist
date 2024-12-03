@@ -65,28 +65,28 @@ class _MainPageState extends State<MainPage> {
     // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
     String path = widget.routeState.fullPath ?? "";
-    // if (path.contains(Routes.homeName)) {
-    //   setState(() {
-    //     _selectedIndex = 0;
-    //   });
-    // } else if (path.contains(Routes.findADocName)) {
-    //   print("object");
-    //   setState(() {
-    //     _selectedIndex = 1;
-    //   });
-    // } else if (path.contains(Routes.walletName)) {
-    //   setState(() {
-    //     _selectedIndex = 2;
-    //   });
-    // } else if (path.contains(Routes.chatNAme)) {
-    //   setState(() {
-    //     _selectedIndex = 3;
-    //   });
-    // } else if (path.contains(Routes.blogName)) {
-    //   setState(() {
-    //     _selectedIndex = 4;
-    //   });
-    // }
+    if (path.contains(Routes.homeName)) {
+      setState(() {
+        _selectedIndex = 0;
+      });
+    } else if (path.contains(Routes.appointmentName)) {
+      print("object");
+      setState(() {
+        _selectedIndex = 1;
+      });
+    } else if (path.contains(Routes.walletName)) {
+      setState(() {
+        _selectedIndex = 2;
+      });
+    } else if (path.contains(Routes.patientName)) {
+      setState(() {
+        _selectedIndex = 3;
+      });
+    } else if (path.contains(Routes.referralsName)) {
+      setState(() {
+        _selectedIndex = 4;
+      });
+    }
   }
 
   @override
@@ -116,7 +116,7 @@ class _MainPageState extends State<MainPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.library_books),
-            label: 'Blogs',
+            label: 'Referrals',
           ),
         ],
       ),

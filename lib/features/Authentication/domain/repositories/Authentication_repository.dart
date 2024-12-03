@@ -1,4 +1,5 @@
 import 'package:soundmind_therapist/core/utils/typedef.dart';
+import 'package:soundmind_therapist/features/Authentication/data/models/gas.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/personal_info_model.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/practical_info_model.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/professional_info_model.dart';
@@ -39,4 +40,5 @@ abstract class AuthenticationRepository {
   ResultFuture<DataMap> resendVerificationOtp({
     required String signupKey,
   });
+  ResultFuture<List<GASModel>> getGAS();
 }

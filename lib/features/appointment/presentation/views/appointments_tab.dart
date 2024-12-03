@@ -33,7 +33,6 @@ class AcceptedAppointmentsTab extends StatefulWidget {
 class _AcceptedAppointmentsTabState extends State<AcceptedAppointmentsTab> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     context.read<GetAcceptedAppointmentsCubit>().fetchAcceptedAppointments();
     context.read<GetRejectedAppointmentsCubit>().fetchRejectedAppointments();
@@ -51,7 +50,7 @@ class _AcceptedAppointmentsTabState extends State<AcceptedAppointmentsTab> {
             .read<GetRejectedAppointmentsCubit>()
             .fetchRejectedAppointments();
         context.read<GetPendingAppointmentsCubit>().fetchPendingAppointments();
-        Future.delayed(Duration(seconds: 4));
+        Future.delayed(const Duration(seconds: 4));
       },
       child: DefaultTabController(
         length: 3, // Number of tabs
@@ -90,7 +89,7 @@ class _AcceptedAppointmentsTabState extends State<AcceptedAppointmentsTab> {
               ),
             ),
           ),
-          body: TabBarView(
+          body: const TabBarView(
             children: [
               RequestsTab(),
               AcceptedTab(),
@@ -119,35 +118,17 @@ class _RequestsTabState extends State<RequestsTab> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<RejectAppointmentCubit, RejectAppointmentState>(
-      listener: (context, state) {
-        // TODO: implement listener
-        if (state is RejectAppointmentSuccess) {
-          showDialog(context: context, builder: (context) => LoadingScreen());
-        }
-        if (state is RejectAppointmentSuccess) {
-          context.pop();
-          context
-              .read<GetAcceptedAppointmentsCubit>()
-              .fetchAcceptedAppointments();
-          context
-              .read<GetRejectedAppointmentsCubit>()
-              .fetchRejectedAppointments();
-          context
-              .read<GetPendingAppointmentsCubit>()
-              .fetchPendingAppointments();
-        }
-        if (state is RejectAppointmentError) {
-          context.pop();
-        }
-      },
-      child: BlocListener<ApproveAppointmentCubit, ApproveAppointmentState>(
+    return BlocConsumer<ApproveAppointmentCubit, ApproveAppointmentState>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        return BlocListener<RejectAppointmentCubit, RejectAppointmentState>(
           listener: (context, state) {
-            if (state is ApproveAppointmentLoading) {
+            // TODO: implement listener
+            if (state is RejectAppointmentLoading) {
               showDialog(
                   context: context, builder: (context) => LoadingScreen());
             }
-            if (state is ApproveAppointmentSuccess) {
+            if (state is RejectAppointmentSuccess) {
               context.pop();
               context
                   .read<GetAcceptedAppointmentsCubit>()
@@ -159,41 +140,128 @@ class _RequestsTabState extends State<RequestsTab> {
                   .read<GetPendingAppointmentsCubit>()
                   .fetchPendingAppointments();
             }
-            if (state is ApproveAppointmentError) {
-              context.pop();
+            if (state is RejectAppointmentError) {
+              // context.pop();
             }
-            // TODO: implement listener
           },
-          child: BlocConsumer<GetPendingAppointmentsCubit,
-              GetPendingAppointmentsState>(
-            listener: (context, state) {
-              // TODO: implement listener
-            },
-            builder: (context, state) {
-              if (state is GetPendingAppointmentsSuccess) {
-                var bookings = state.appointments;
-                return Column(
-                  children: [
-                    ListView.builder(
-                      itemCount: bookings.length,
-                      itemBuilder: (context, index) {
-                        var appoitments = bookings[index];
-                        return buildAppointmentCard(
-                          appointment: appoitments,
-                          status: 'Rejected',
-                          onTap: () {
-                            // Handle request review action here
+          child: BlocListener<ApproveAppointmentCubit, ApproveAppointmentState>(
+              listener: (context, state) {
+                if (state is ApproveAppointmentLoading) {
+                  showDialog(
+                      context: context, builder: (context) => LoadingScreen());
+                }
+                if (state is ApproveAppointmentSuccess) {
+                  context.pop();
+                  context
+                      .read<GetAcceptedAppointmentsCubit>()
+                      .fetchAcceptedAppointments();
+                  context
+                      .read<GetRejectedAppointmentsCubit>()
+                      .fetchRejectedAppointments();
+                  context
+                      .read<GetPendingAppointmentsCubit>()
+                      .fetchPendingAppointments();
+                }
+                if (state is ApproveAppointmentError) {
+                  // context.pop();
+                }
+                // TODO: implement listener
+              },
+              child: BlocConsumer<GetPendingAppointmentsCubit,
+                  GetPendingAppointmentsState>(
+                listener: (context, state) {
+                  // TODO: implement listener
+                },
+                builder: (context, state) {
+                  if (state is GetPendingAppointmentsSuccess) {
+                    var bookings = state.appointments;
+                    return Column(
+                      children: [
+                        ListView.builder(
+                          itemCount: bookings.length,
+                          itemBuilder: (context, index) {
+                            var appoitments = bookings[index];
+                            return Card(
+                              // margin:
+                              //     EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                              child: Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: CachedNetworkImage(
+                                              height: 60,
+                                              width: 60,
+                                              fit: BoxFit.cover,
+                                              imageUrl:
+                                                  appoitments.profilePicture ??
+                                                      ImageUtils.profile),
+                                        ),
+                                        SizedBox(width: 12),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(appoitments.patientName,
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16)),
+                                            // Text(appoitments.areaOfSpecialization ?? "",
+                                            //     style: TextStyle(color: Colors.grey[600])),
+                                            Text(
+                                                "Day: ${appoitments.schedule.dayOfWeekTitle}"),
+                                            Text(
+                                                "Time: ${DateFormater.formatTimeRange(appoitments.schedule.startTime, appoitments.schedule.endTime)}"),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Gap(10),
+                                    Row(
+                                      children: [
+                                        CustomButton(
+                                          label: "Accept",
+                                          onPressed: () {
+                                            context
+                                                .read<ApproveAppointmentCubit>()
+                                                .approveAppointment(
+                                                    appoitments.booking.id);
+                                          },
+                                        ).withExpanded(),
+                                        Gap(10),
+                                        CustomSecondaryButton(
+                                          label: "Decline",
+                                          onPressed: () {
+                                            context
+                                                .read<RejectAppointmentCubit>()
+                                                .rejectAppointment(
+                                                    appoitments.booking.id);
+                                          },
+                                        ).withExpanded(),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
                           },
-                        );
-                      },
-                    ).withExpanded(),
-                  ],
-                );
-              } else {
-                return Container();
-              }
-            },
-          )),
+                        ).withExpanded(),
+                      ],
+                    );
+                  } else {
+                    return Container();
+                  }
+                },
+              )),
+        );
+      },
     );
   }
 }
@@ -224,7 +292,7 @@ class _AcceptedTabState extends State<AcceptedTab> {
                   var appoitments = bookings[index];
                   return buildAppointmentCard(
                     appointment: appoitments,
-                    status: 'Rejected',
+                    status: 'Accepted',
                     onTap: () {
                       // Handle request review action here
                     },

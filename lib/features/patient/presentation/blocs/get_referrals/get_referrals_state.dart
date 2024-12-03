@@ -11,6 +11,8 @@ class GetReferralsInitial extends GetReferralsState {}
 
 class GetReferralsLoading extends GetReferralsState {}
 
+class GetReferralsEmpty extends GetReferralsState {}
+
 class GetReferralsSuccess extends GetReferralsState {
   final List<Referral> referrals;
 

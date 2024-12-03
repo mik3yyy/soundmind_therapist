@@ -4,6 +4,7 @@ import 'package:soundmind_therapist/core/network/network.dart';
 import 'package:soundmind_therapist/core/utils/typedef.dart';
 import 'package:soundmind_therapist/features/Authentication/data/datasources/Authentication_hive_data_source.dart';
 import 'package:soundmind_therapist/features/Authentication/data/datasources/Authentication_remote_data_source.dart';
+import 'package:soundmind_therapist/features/Authentication/data/models/gas.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/personal_info_model.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/practical_info_model.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/professional_info_model.dart';
@@ -118,7 +119,7 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
     try {
       UserModel userModel = await _authenticationRemoteDataSource.verifyEmail(
           otp: otp, securityKey: securityKey);
-      _authenticationHiveDataSource.saveUser(userModel: userModel);
+      // _authenticationHiveDataSource.saveUser(userModel: userModel);
       return Right(userModel);
     } on ApiError catch (e) {
       return Left(ServerFailure(e.errorDescription));
@@ -154,6 +155,19 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
         signupKey: signupKey,
       );
       return Right(result);
+    } on ApiError catch (e) {
+      return Left(ServerFailure(e.errorDescription));
+    }
+  }
+
+  @override
+  ResultFuture<List<GASModel>> getGAS() async {
+    try {
+      DataMap result = await _authenticationRemoteDataSource.getGAS();
+      List<GASModel> appointments = (result['data'] as List)
+          .map((json) => GASModel.fromJson(json))
+          .toList();
+      return Right(appointments);
     } on ApiError catch (e) {
       return Left(ServerFailure(e.errorDescription));
     }

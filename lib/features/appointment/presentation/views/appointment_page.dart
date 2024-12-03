@@ -17,27 +17,28 @@ class _AppointmentPageState extends State<AppointmentPage> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Appointments'),
-          bottom: TabBar(
-            labelColor: context.primaryColor,
-            indicatorColor: context.primaryColor,
-            unselectedLabelColor: context.colors.black,
-            tabs: const [
-              Tab(text: 'Session'),
-              Tab(text: 'Appointments'),
-            ],
-          ),
+          // bottom: TabBar(
+          //   labelColor: context.primaryColor,
+          //   indicatorColor: context.primaryColor,
+          //   unselectedLabelColor: context.colors.black,
+          //   tabs: const [
+          //     Tab(text: 'Session'),
+          //     Tab(text: 'Appointments'),
+          //   ],
+          // ),
         ),
-        body: const TabBarView(
-          children: [
-            UpcomingAppointmentsTab(),
-            AcceptedAppointmentsTab(),
-          ],
-        ),
+        body: const AcceptedAppointmentsTab(),
       ),
     );
   }
 }
 
+// const TabBarView(
+//           children: [
+//             UpcomingAppointmentsTab(),
+//             AcceptedAppointmentsTab(),
+//           ],
+//         ),
 class UpcomingAppointmentsTab extends StatelessWidget {
   const UpcomingAppointmentsTab({super.key});
 

@@ -42,7 +42,7 @@ class _VerifyEmailState extends State<VerifyEmail> with Validators {
       child: BlocListener<AuthenticationBloc, AuthenticationState>(
         listener: (context, state) {
           if (state is UserAccount) {
-            context.goNamed(Routes.homeName);
+            context.goNamed(Routes.sucessSignupName);
           }
           if (state is VeriftingAccountFailed) {
             context.showSnackBar(state.message);

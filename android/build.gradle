@@ -1,3 +1,15 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // Update to the latest compatible Android Gradle Plugin version
+        classpath "com.android.tools.build:gradle:8.1.1"
+    }
+}
+
+// Existing allprojects block
 allprojects {
     repositories {
         google()
@@ -5,6 +17,7 @@ allprojects {
     }
 }
 
+// Existing configurations
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
@@ -13,6 +26,7 @@ subprojects {
     project.evaluationDependsOn(':app')
 }
 
+// Clean task
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }

@@ -34,6 +34,8 @@ abstract class AuthenticationRemoteDataSource {
     required String phoneNumber,
   });
 
+  Future<DataMap> getGAS();
+
   Future<DataMap> resendVerificationOtp({required String signupKey});
 }
 
@@ -107,7 +109,8 @@ class AuthenticationRemoteDataSourceImpl
           "yoe": professionalInfoModel.yoe,
           "professionalAffiliation":
               professionalInfoModel.professionalAffiliation,
-          "specialtyId": 1, //personalInfoModel.,
+          "specialtyId":
+              int.parse(professionalInfoModel.aos), //personalInfoModel.,
           "bio": profileInfoEvent.bio,
           "licenseNum": professionalInfoModel.licenseNum,
           "issuingAuthority": professionalInfoModel.issuingAuthority,
@@ -195,6 +198,15 @@ class AuthenticationRemoteDataSourceImpl
       data: {
         "signupKey": signupKey,
       },
+    );
+    return response.data;
+  }
+
+  @override
+  Future<DataMap> getGAS() async {
+    Response response = await _network.call(
+      "/Registration/GetAreasOfSpecialization",
+      RequestMethod.get,
     );
     return response.data;
   }

@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
@@ -11,6 +12,8 @@ import 'package:soundmind_therapist/core/extensions/list_extensions.dart';
 import 'package:soundmind_therapist/core/gen/assets.gen.dart';
 import 'package:soundmind_therapist/core/routes/routes.dart';
 import 'package:soundmind_therapist/core/widgets/custom_button.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/blocs/cubit_gas/get_gas_cubit.dart';
+import 'package:soundmind_therapist/features/patient/presentation/views/referaals/referrals.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -58,6 +61,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       fit: BoxFit.fill,
     ),
   ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    context.read<GetGasCubit>().getGas();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -234,7 +234,9 @@ class _WalletPageState extends State<WalletPage> {
                 if (state is GetBankTransactionsLoaded) {
                   print(state.transactions);
                   List<Map<String, dynamic>> transactions = state.transactions
-                      .where((e) => e['status'] == 1)
+                      .where((e) => e['status'] != 1)
+                      .toList()
+                      .reversed
                       .toList();
 
                   return ListView.builder(
