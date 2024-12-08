@@ -601,6 +601,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       onTap: () {
                                         context.goNamed(
                                           Routes.view_patientName,
+                                          extra: chatRoom,
                                           pathParameters: {
                                             'id': chatRoom.receiverID.toString()
                                           },

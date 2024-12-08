@@ -351,6 +351,7 @@ class Routes {
                 name: view_patientName,
                 parentNavigatorKey: rootNavigatorKey,
                 builder: (context, state) => ViewPatient(
+                  chatRoom: state.extra as ChatRoom,
                   id: state.pathParameters['id']!,
                 ), // Replace with actual screen widget
               ),

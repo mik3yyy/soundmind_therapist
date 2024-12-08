@@ -180,7 +180,7 @@ class _AddFundsPage2State extends State<AddFundsPage2> {
                   Text("Bank Name"),
                   Text(
                     "GT Bank",
-                    style: context.textTheme.displaySmall,
+                    style: context.textTheme.titleLarge,
                   ),
                 ],
               ),
@@ -202,7 +202,7 @@ class _AddFundsPage2State extends State<AddFundsPage2> {
                       Text("Account number"),
                       Text(
                         "07728468590",
-                        style: context.textTheme.displaySmall,
+                        style: context.textTheme.titleLarge,
                       ),
                     ],
                   ),
@@ -229,7 +229,7 @@ class _AddFundsPage2State extends State<AddFundsPage2> {
                   Text("Account name"),
                   Text(
                     "SoundMind inc",
-                    style: context.textTheme.displaySmall,
+                    style: context.textTheme.titleLarge,
                   ),
                 ],
               ),

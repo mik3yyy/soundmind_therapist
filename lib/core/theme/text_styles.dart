@@ -43,8 +43,8 @@ class _AppTextStyles {
       color: _Colors.black,
       height: 1.5);
   static const displaySmall = TextStyle(
-      fontSize: 18,
-      fontWeight: FontWeight.w600,
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
       color: _Colors.black,
       height: 1.5);
 

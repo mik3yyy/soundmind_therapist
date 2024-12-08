@@ -45,7 +45,7 @@ class ImageUtils {
 
   // Throws exception
   static Future<File?> pickImage([int quality = 50]) async {
-    ImageSource source = kDebugMode ? ImageSource.gallery : ImageSource.camera;
+    ImageSource source = ImageSource.gallery;
     XFile? file = await ImagePicker().pickImage(
       source: source,
       imageQuality: quality,

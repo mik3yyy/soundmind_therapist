@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:soundmind_therapist/core/extensions/context_extensions.dart';
@@ -58,22 +59,35 @@ class _UploadfileState extends State<Uploadfile> {
   @override
   Widget build(BuildContext context) {
     Widget loadDisplay() {
-      return Image.asset(
-        imageFile!.path,
-        fit: BoxFit.cover,
-      );
-      // if (imageFile != null) {
-      //   return Image.asset(
-      //     imageFile!.path,
-      //     fit: BoxFit.cover,
-      //   );
-      // } else if (pdfFile != null && pdfDocument != null) {
-      //   return PDFViewer(
-      //     document: pdfDocument!,
-      //   );
-      // } else {
-      //   return EmptyUpload();
-      // }
+      // return Image.asset(
+      //   imageFile!.path,
+      //   fit: BoxFit.cover,
+      // );
+      if (imageFile != null) {
+        return Image.asset(
+          imageFile!.path,
+          fit: BoxFit.cover,
+        );
+      } else if (pdfFile != null) {
+        return PDFView(
+          filePath: pdfFile!.path,
+          enableSwipe: true,
+          swipeHorizontal: true,
+          autoSpacing: false,
+          pageFling: false,
+          backgroundColor: Colors.grey,
+          onRender: (_pages) {},
+          onError: (error) {
+            print(error.toString());
+          },
+          onPageError: (page, error) {
+            print('$page: ${error.toString()}');
+          },
+          onViewCreated: (PDFViewController pdfViewController) {},
+        );
+      } else {
+        return EmptyUpload();
+      }
     }
 
     return Column(
@@ -126,29 +140,29 @@ class _UploadfileState extends State<Uploadfile> {
                       ],
                     ),
                     const Gap(50),
-                    // Column(
-                    //   children: [
-                    //     Container(
-                    //       height: 50,
-                    //       width: 50,
-                    //       decoration: BoxDecoration(
-                    //         color: context.secondaryColor,
-                    //         borderRadius: BorderRadius.circular(50),
-                    //       ),
-                    //       child: Icon(
-                    //         Icons.file_present,
-                    //         color: context.primaryColor,
-                    //         // size: 40,
-                    //       ).toCenter().withPadding(const EdgeInsets.all(10)),
-                    //     ).withOnTap(() {
-                    //       addFilePicker();
-                    //     }),
-                    //     Text(
-                    //       "Add File",
-                    //       style: context.textTheme.bodyLarge,
-                    //     )
-                    //   ],
-                    // ),
+                    Column(
+                      children: [
+                        Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            color: context.secondaryColor,
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Icon(
+                            Icons.file_present,
+                            color: context.primaryColor,
+                            // size: 40,
+                          ).toCenter().withPadding(const EdgeInsets.all(10)),
+                        ).withOnTap(() {
+                          addFilePicker();
+                        }),
+                        Text(
+                          "Add File",
+                          style: context.textTheme.bodyLarge,
+                        )
+                      ],
+                    ),
                   ],
                 ),
               );

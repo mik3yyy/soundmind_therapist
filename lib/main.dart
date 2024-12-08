@@ -152,7 +152,6 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => sl<GetGasCubit>(),
         ),
-
         // CreateReferralCubit
         BlocProvider(
           create: (context) => sl<CreateReferralCubit>(),

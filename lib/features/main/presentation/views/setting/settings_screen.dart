@@ -73,7 +73,7 @@ class _SettingPageState extends State<SettingPage> {
                         IconButton(
                             padding: EdgeInsets.zero,
                             onPressed: () {
-                              context.goNamed(Routes.personal_detailsName);
+                              // context.goNamed(Routes.personal_detailsName);
                             },
                             icon: Icon(Icons.chevron_right_rounded)),
                       ],

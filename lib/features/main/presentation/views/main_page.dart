@@ -104,15 +104,15 @@ class _MainPageState extends State<MainPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.search),
-            label: 'Find a doc',
+            label: 'Appointment',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.wallet),
             label: 'Wallet',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Chats',
+            icon: Icon(Icons.people),
+            label: 'Patients',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.library_books),

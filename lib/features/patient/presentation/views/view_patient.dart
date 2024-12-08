@@ -5,10 +5,12 @@ import 'package:go_router/go_router.dart';
 import 'package:soundmind_therapist/core/extensions/context_extensions.dart';
 import 'package:soundmind_therapist/core/extensions/widget_extensions.dart';
 import 'package:soundmind_therapist/core/gen/assets.gen.dart';
+import 'package:soundmind_therapist/core/routes/routes.dart';
 import 'package:soundmind_therapist/core/widgets/custom_button.dart';
 import 'package:soundmind_therapist/core/widgets/custom_dropdown_widget.dart';
 import 'package:soundmind_therapist/core/widgets/custom_shimmer.dart';
 import 'package:soundmind_therapist/core/widgets/error_screen.dart';
+import 'package:soundmind_therapist/features/patient/data/models/chat_room.dart';
 import 'package:soundmind_therapist/features/patient/presentation/blocs/create_referral/create_referral_cubit.dart';
 import 'package:soundmind_therapist/features/patient/presentation/blocs/get_patient_details/get_patient_details_cubit.dart';
 import 'package:soundmind_therapist/features/patient/presentation/blocs/get_referral_instituitions/get_referral_institutions_cubit.dart';
@@ -16,8 +18,9 @@ import 'package:soundmind_therapist/features/patient/presentation/widgets/notes.
 import 'package:soundmind_therapist/features/patient/presentation/widgets/referralls.dart';
 
 class ViewPatient extends StatefulWidget {
-  const ViewPatient({super.key, required this.id});
+  const ViewPatient({super.key, required this.id, required this.chatRoom});
   final String id;
+  final ChatRoom chatRoom;
   @override
   State<ViewPatient> createState() => _ViewPatientState();
 }
@@ -82,7 +85,15 @@ class _ViewPatientState extends State<ViewPatient> {
                           CustomButton(
                             label: "",
                             height: 40,
-                            onPressed: () {},
+                            onPressed: () {
+                              context.goNamed(
+                                Routes.chatRoomName,
+                                extra: widget.chatRoom,
+                                pathParameters: {
+                                  'id': widget.chatRoom.chatRoomID.toString()
+                                },
+                              );
+                            },
                             titleWidget: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

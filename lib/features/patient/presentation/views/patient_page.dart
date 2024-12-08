@@ -97,6 +97,7 @@ class _PatientPageState extends State<PatientPage> {
                         onTap: () {
                           context.goNamed(
                             Routes.view_patientName,
+                            extra: chatRoom,
                             pathParameters: {
                               'id': chatRoom.receiverID.toString()
                             },
@@ -144,9 +145,9 @@ class _PatientPageState extends State<PatientPage> {
               ).withCustomPadding(),
             );
           } else if (state is GetUserChatRoomsLoading) {
-            return ComplexShimmer.listShimmer(itemCount: 7)
-                .withExpanded()
-                .withCustomPadding();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           } else if (state is GetUserChatRoomsError) {
             return CustomErrorScreen(
               onTap: () {},

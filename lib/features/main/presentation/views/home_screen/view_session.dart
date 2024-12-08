@@ -73,7 +73,7 @@ class _ViewSessionScreenState extends State<ViewSessionScreen> {
                     DateFormater.formatTimeRange(
                         widget.appointment.schedule.startTime,
                         widget.appointment.schedule.endTime),
-                    style: context.textTheme.displaySmall,
+                    style: context.textTheme.titleLarge,
                   )
                 ],
               ),
@@ -97,7 +97,7 @@ class _ViewSessionScreenState extends State<ViewSessionScreen> {
                   Text(
                     DateFormater.formatDateTime(
                         widget.appointment.booking.date),
-                    style: context.textTheme.displaySmall,
+                    style: context.textTheme.titleLarge,
                   )
                 ],
               ),
@@ -126,7 +126,7 @@ class _ViewSessionScreenState extends State<ViewSessionScreen> {
                     maxLines: 1,
                     maxFontSize: 16,
                     minFontSize: 9,
-                    style: context.textTheme.displaySmall,
+                    style: context.textTheme.titleLarge,
                   ),
                   const Gap(10),
                   if (widget.appointment.booking.link?.isNotEmpty ?? false)

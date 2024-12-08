@@ -75,7 +75,7 @@ class _LoginscreenState extends State<Loginscreen> with Validators {
                   validator: validatePassword,
                   hintText: "",
                 ),
-                CustomTextButton(label: "Forgot Password?", onPressed: () {}),
+                // CustomTextButton(label: "Forgot Password?", onPressed: () {}),
               ],
             ),
             BlocBuilder<AuthenticationBloc, AuthenticationState>(

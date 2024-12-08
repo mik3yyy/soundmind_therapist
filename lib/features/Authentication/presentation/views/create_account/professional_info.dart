@@ -94,8 +94,8 @@ class _ProfessionalInfoScreenState extends State<ProfessionalInfoScreen>
           ),
           AutoSizeText(
             "Educational qualifications/Certification ",
-            style: context.textTheme.displaySmall,
-          ),
+            style: context.textTheme.titleLarge,
+          ).toRight(),
           Column(
             children: qualifications
                 .map<Widget>((qualification) {
@@ -109,7 +109,7 @@ class _ProfessionalInfoScreenState extends State<ProfessionalInfoScreen>
                     child: ListTile(
                       title: Text(
                         qualification.schoolName,
-                        style: context.textTheme.displaySmall,
+                        style: context.textTheme.titleLarge,
                       ),
                       subtitle: Text(qualification.degree),
                       trailing: IconButton(
@@ -171,12 +171,13 @@ class _ProfessionalInfoScreenState extends State<ProfessionalInfoScreen>
             controller: _Yoe,
             hintText: "E.g 12",
             titleText: "Years of experience",
+            keyboardType: TextInputType.number,
             validator: validateNumber,
           ),
           CustomTextField(
             controller: _proAffilations,
             hintText: "e.g ACA, AAC",
-            keyboardType: TextInputType.number,
+            keyboardType: TextInputType.name,
             titleText: "Professional affliations",
             validator: validateField,
           ),

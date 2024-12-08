@@ -46,7 +46,7 @@ class _EducationPopUpState extends State<EducationPopUp> {
               children: [
                 AutoSizeText(
                   "New education or certification",
-                  style: context.textTheme.displaySmall,
+                  style: context.textTheme.titleLarge,
                   minFontSize: 10,
                   maxLines: 1,
                 ).withExpanded(),
