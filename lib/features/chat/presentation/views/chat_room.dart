@@ -211,11 +211,6 @@ class _ChattRoomScreenState extends State<ChattRoomScreen> {
             children: [
               if (state is GetChatRoomMessagesLoading) ...[
                 ComplexShimmer.messagingShimmer(context).withExpanded()
-              ] else if (state is GetChatRoomMessagesError) ...[
-                CustomErrorScreen(
-                  onTap: () {},
-                  message: state.failure.message,
-                )
               ] else ...[
                 ListView.separated(
                   controller: _scrollController,

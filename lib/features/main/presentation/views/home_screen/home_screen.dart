@@ -139,6 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, state) {
                 if (state is UpcomingAppointmentsLoaded) {
                   var doc = state.upcomingAppointments;
+                  print("DATA: ${doc}");
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

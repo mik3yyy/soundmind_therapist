@@ -125,7 +125,7 @@ class _ViewSessionScreenState extends State<ViewSessionScreen> {
                         : "Link would be ready before the meeting time",
                     maxLines: 1,
                     maxFontSize: 16,
-                    minFontSize: 9,
+                    minFontSize: 12,
                     style: context.textTheme.titleLarge,
                   ),
                   const Gap(10),
@@ -160,6 +160,63 @@ class _ViewSessionScreenState extends State<ViewSessionScreen> {
                           // ignore: use_build_context_synchronously
                           .then((value) => context.showSnackBar("Copied"));
                     })
+                ],
+              ),
+            ),
+            Gap(20),
+            Container(
+              width: context.screenWidth * .9,
+              height: widget.appointment.booking.code?.isNotEmpty ?? false
+                  ? 120
+                  : 72,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              decoration: BoxDecoration(
+                  color: context.secondaryColor.withOpacity(.5),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: context.colors.white,
+                  )),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Code"),
+                  Text(
+                    widget.appointment.booking.code.toString(),
+                    style: context.textTheme.titleLarge,
+                  ),
+                  if (widget.appointment.booking.code?.isNotEmpty ?? false) ...[
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: context.secondaryColor,
+                        borderRadius: BorderRadius.circular(36),
+                      ),
+                      child: SizedBox(
+                        width: 100,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.copy,
+                              color: context.primaryColor,
+                              size: 20,
+                            ),
+                            Text(
+                              "Copy Link",
+                              style: context.textTheme.bodyMedium
+                                  ?.copyWith(color: context.primaryColor),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ).withOnTap(() {
+                      FlutterClipboard.copy(widget.appointment.booking.code!
+                              // ignore: avoid_print
+                              )
+                          // ignore: use_build_context_synchronously
+                          .then((value) => context.showSnackBar("Copied"));
+                    })
+                  ],
                 ],
               ),
             ),
