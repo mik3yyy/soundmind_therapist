@@ -111,6 +111,7 @@ class PatientRemoteDataSourceImpl extends PatientRemoteDataSource {
       '/Referral/GetReferrals',
       RequestMethod.get,
     );
+    print("RESPONSE" + response.data);
     return (response.data['data'] as List)
         .map((json) => Referral.fromJson(json))
         .toList();

@@ -31,6 +31,17 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
   }
 
   @override
+  Future<Either<Failure, void>> finalizeBooking(
+      {required int bookingId, required String code}) async {
+    try {
+      await _remoteDataSource.finalizeBooking(bookingId: bookingId, code: code);
+      return Right(null);
+    } on ApiError catch (e) {
+      return Left(ServerFailure(e.errorDescription));
+    }
+  }
+
+  @override
   ResultFuture<AppointmentModel> getUpcomingAppointmentRequest() async {
     try {
       final response = await _remoteDataSource.getUpcomingAppointmentRequest();

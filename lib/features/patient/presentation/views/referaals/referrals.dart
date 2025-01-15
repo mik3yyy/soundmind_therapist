@@ -116,9 +116,13 @@ class _ReferallPageState extends State<ReferallPage> {
               ).withCustomPadding(),
             );
           } else if (state is GetReferralsLoading) {
-            return ComplexShimmer.listShimmer(itemCount: 7)
-                .withExpanded()
-                .withCustomPadding();
+            return Container(
+              width: context.screenWidth,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [CircularProgressIndicator()],
+              ),
+            );
           } else if (state is GetReferralsEmpty) {
             return CustomEmptyScreen(
               onTap: () {},

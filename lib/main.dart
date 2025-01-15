@@ -15,6 +15,7 @@ import 'package:soundmind_therapist/features/Authentication/presentation/blocs/c
 import 'package:soundmind_therapist/features/appointment/domain/usecases/get_rejected_appointment.dart';
 import 'package:soundmind_therapist/features/appointment/domain/usecases/get_user_metrics.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/approve_appointment_request/approve_appointment_request_cubit.dart';
+import 'package:soundmind_therapist/features/appointment/presentation/bloc/finalize_booking/finalize_booking_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_accepted_appointments/get_accepted_appointments_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_pending_appointments/get_pending_appointments_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_rejected_appointments/get_rejected_appointments_cubit.dart';
@@ -158,6 +159,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => sl<CheckIfPhoneAndEmailExistCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<FinalizeBookingCubit>(),
         ),
       ],
       child: ScreenUtilInit(

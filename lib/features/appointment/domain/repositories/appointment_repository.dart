@@ -21,7 +21,8 @@ abstract class AppointmentRepository {
 
   Future<Either<Failure, void>> rejectAppointmentRequest(
       {required int bookingId});
-
+  Future<Either<Failure, void>> finalizeBooking(
+      {required int bookingId, required String code});
   Future<Either<Failure, AppointmentModel>> getCachedUpcomingAppointments();
 
   Future<Either<Failure, void>> deleteCachedAppointments();

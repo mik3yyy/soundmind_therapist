@@ -27,6 +27,7 @@ import 'package:soundmind_therapist/features/appointment/data/datasources/appoin
 import 'package:soundmind_therapist/features/appointment/data/repositories/appointment_repository_impl.dart';
 import 'package:soundmind_therapist/features/appointment/domain/repositories/appointment_repository.dart';
 import 'package:soundmind_therapist/features/appointment/domain/usecases/approve_appointment_request.dart';
+import 'package:soundmind_therapist/features/appointment/domain/usecases/finalize_booking.dart';
 import 'package:soundmind_therapist/features/appointment/domain/usecases/get_accepted_request.dart';
 import 'package:soundmind_therapist/features/appointment/domain/usecases/get_appointment_data.dart';
 import 'package:soundmind_therapist/features/appointment/domain/usecases/get_appointment_request.dart';
@@ -37,6 +38,7 @@ import 'package:soundmind_therapist/features/appointment/domain/usecases/get_use
 import 'package:soundmind_therapist/features/appointment/domain/usecases/reject_appointment_request.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/appointment_bloc.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/approve_appointment_request/approve_appointment_request_cubit.dart';
+import 'package:soundmind_therapist/features/appointment/presentation/bloc/finalize_booking/finalize_booking_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_accepted_appointments/get_accepted_appointments_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_pending_appointments/get_pending_appointments_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_rejected_appointments/get_rejected_appointments_cubit.dart';
@@ -159,6 +161,10 @@ Future<void> init() async {
         GetUserMetricsCubit(getUserMetricsUseCase: sl())) //GetUserMetricsCubit
     ..registerLazySingleton(() => GetUserMetrics(repository: sl()));
 
+  sl
+    ..registerFactory(() => FinalizeBookingCubit(
+        finalizeBookingUsecase: sl())) //GetUserMetricsCubit
+    ..registerLazySingleton(() => FinalizeBookingUsecase(repository: sl()));
   sl
     ..registerFactory(
         () => AppointmentBloc(getAppointmentData: sl())) //GetUserMetricsCubit
