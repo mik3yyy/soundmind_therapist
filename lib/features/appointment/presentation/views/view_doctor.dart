@@ -130,8 +130,8 @@ class _ViewDoctorPageState extends State<ViewDoctorPage> {
                               children: [
                                 AutoSizeText(
                                   "${detailModel.firstName} ${detailModel.lastName}"
-                                      .toLowerCase()
-                                      .capitalizeAllFirst,
+                                      .toLowerCase(),
+                                  // .capitalizeAllFirst,
                                   style: context.textTheme.bodyLarge
                                       ?.copyWith(fontWeight: FontWeight.bold),
                                 ),

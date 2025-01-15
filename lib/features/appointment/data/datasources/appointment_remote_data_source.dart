@@ -91,11 +91,10 @@ class AppointmentRemoteDataSourceImpl extends AppointmentRemoteDataSource {
   @override
   Future<AppointmentDto> getUpcomingAppointment() async {
     final response = await _network.call(
-      "/UserDashboard/GetUpcomingAppointment",
+      "/UserDashboard/GetUpcomingSessions",
       RequestMethod.get,
     );
-    print(response.data);
-    return AppointmentDto.fromJson(response.data['data']);
+    return AppointmentDto.fromJson(response.data['data'][0]);
   }
 
   @override

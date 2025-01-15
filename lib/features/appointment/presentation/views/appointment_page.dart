@@ -187,8 +187,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
               doctors = doctors.where((e) {
                 // Create the full name string
                 final fullName =
-                    ((e.firstName ?? "") + ' ' + (e.lastName ?? ""))
-                        .toLowerCase();
+                    ('${e.firstName ?? ""} ${e.lastName ?? ""}').toLowerCase();
 
                 // Get the search characters, ignoring spaces
                 final searchChars =
@@ -221,6 +220,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                       itemCount: doctors.length,
                       itemBuilder: (context, index) {
                         DoctorModel doctor = doctors[index];
+                        print("${doctor.lastName} ${doctor.firstName}");
                         return ListTile(
                           onTap: () {
                             context.goNamed(Routes.view_docName,
@@ -237,8 +237,8 @@ class _AppointmentPageState extends State<AppointmentPage> {
                             children: [
                               AutoSizeText(
                                 "${doctor.lastName} ${doctor.firstName}"
-                                    .toLowerCase()
-                                    .capitalizeAllFirst,
+                                    .toLowerCase(),
+                                // .capitalizeAllFirst,
                                 maxLines: 1,
                               ),
                               Row(
