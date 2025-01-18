@@ -145,44 +145,51 @@ class Routes {
           ),
         ],
       ),
-      ShellRoute(
-        navigatorKey: shellNavigatorKey2,
-        builder: (context, state, child) => CreateAccountScreen(
-          child: child,
-        ),
-        routes: [
-          GoRoute(
-            path: personal_infoPath,
-            name: personal_infoName,
-            builder: (context, state) => const PersonalInfoScreen(),
-            routes: [],
-          ),
-          GoRoute(
-            path: professioanlInfoPath,
-            name: professioanlInfoName,
-            builder: (context, state) => const ProfessionalInfoScreen(),
-            routes: [],
-          ),
-          GoRoute(
-            path: practiceInfoPath,
-            name: practiceInfoName,
-            builder: (context, state) => const PracticeInfoScreen(),
-            routes: [],
-          ),
-          GoRoute(
-            path: verificationInfoPath,
-            name: verificationInfoName,
-            builder: (context, state) => const VerificationInfoScreen(),
-            routes: [],
-          ),
-          GoRoute(
-            path: profileInfoPath,
-            name: profileInfoName,
-            builder: (context, state) => const ProfileInfoScreen(),
-            routes: [],
-          ),
-        ],
+      GoRoute(
+        path: personal_infoPath,
+        name: personal_infoName,
+        builder: (context, state) => const CreateAccountScreen(),
+        routes: [],
       ),
+      // ShellRoute(
+      //   navigatorKey: shellNavigatorKey2,
+      //   builder: (context, state, child) => CreateAccountScreen(
+      //     child: child,
+      //   ),
+      //   routes: [
+      //     GoRoute(
+      //       path: personal_infoPath,
+      //       name: personal_infoName,
+      //       builder: (context, state) => const PersonalInfoScreen(),
+      //       routes: [],
+      //     ),
+      //     GoRoute(
+      //       path: professioanlInfoPath,
+      //       name: professioanlInfoName,
+      //       builder: (context, state) => const ProfessionalInfoScreen(),
+      //       routes: [],
+      //     ),
+      //     GoRoute(
+      //       path: practiceInfoPath,
+      //       name: practiceInfoName,
+      //       builder: (context, state) => const PracticeInfoScreen(),
+      //       routes: [],
+      //     ),
+      //     GoRoute(
+      //       path: verificationInfoPath,
+      //       name: verificationInfoName,
+      //       builder: (context, state) => const VerificationInfoScreen(),
+      //       routes: [],
+      //     ),
+      //     GoRoute(
+      //       path: profileInfoPath,
+      //       name: profileInfoName,
+      //       builder: (context, state) => const ProfileInfoScreen(),
+      //       routes: [],
+      //     ),
+      //   ],
+      // ),
+
       GoRoute(
         path: verifyPath,
         name: verifyName,

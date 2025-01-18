@@ -27,7 +27,7 @@ class PersonalInfoScreen extends StatefulWidget {
 }
 
 class _PersonalInfoScreenState extends State<PersonalInfoScreen>
-    with Validators {
+    with Validators, AutomaticKeepAliveClientMixin {
   TextEditingController _firstName = TextEditingController();
   TextEditingController _lastName = TextEditingController();
   TextEditingController _emailController = TextEditingController();
@@ -39,9 +39,13 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen>
   String phoneNumber = '';
   final signupForm = GlobalKey<FormState>();
   String? dob;
+  @override
+  bool get wantKeepAlive => true; // Preserve state
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // Important!
+
     return BlocListener<CheckIfPhoneAndEmailExistCubit,
         CheckIfPhoneAndEmailExistState>(
       listener: (context, state) {
@@ -51,6 +55,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen>
         if (state is CheckIfPhoneAndEmailExistSuccess) {
           context.read<AuthenticationBloc>().add(
                 PersonalInfoEvent(
+                  page: 1,
                   personalInfoModel: PersonalInfoModel(
                     firstname: _firstName.text,
                     lastname: _lastName.text,

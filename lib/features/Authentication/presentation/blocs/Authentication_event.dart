@@ -18,55 +18,39 @@ class CheckUser extends AuthenticationEvent {}
 
 class PersonalInfoEvent extends AuthenticationEvent {
   final PersonalInfoModel personalInfoModel;
+  final int? page;
 
-  const PersonalInfoEvent({required this.personalInfoModel});
+  const PersonalInfoEvent({this.page, required this.personalInfoModel});
 }
 
 class ProfessionalInfoEvent extends AuthenticationEvent {
-  final PersonalInfoModel personalInfoModel;
   final ProfessionalInfoModel professionalInfoModel;
+  final int? page;
 
-  const ProfessionalInfoEvent(
-      {required this.personalInfoModel, required this.professionalInfoModel});
+  const ProfessionalInfoEvent({this.page, required this.professionalInfoModel});
 }
 
 class PracticalInfoEvent extends AuthenticationEvent {
-  final PersonalInfoModel personalInfoModel;
-  final ProfessionalInfoModel professionalInfoModel;
   final PracticalInfoModel practicalInfoModel;
+  final int? page;
 
-  const PracticalInfoEvent(
-      {required this.personalInfoModel,
-      required this.professionalInfoModel,
-      required this.practicalInfoModel});
+  const PracticalInfoEvent({this.page, required this.practicalInfoModel});
 }
 
 class VerificationInfoEvent extends AuthenticationEvent {
-  final PersonalInfoModel personalInfoModel;
-  final ProfessionalInfoModel professionalInfoModel;
-  final PracticalInfoModel practicalInfoModel;
+  final int? page;
+
   final VerificationInfoModel verificationInfoModel;
 
-  const VerificationInfoEvent(
-      {required this.personalInfoModel,
-      required this.professionalInfoModel,
-      required this.practicalInfoModel,
-      required this.verificationInfoModel});
+  const VerificationInfoEvent({this.page, required this.verificationInfoModel});
 }
 
 class ProfileInfoEvent extends AuthenticationEvent {
-  final PersonalInfoModel personalInfoModel;
-  final ProfessionalInfoModel professionalInfoModel;
-  final PracticalInfoModel practicalInfoModel;
-  final VerificationInfoModel verificationInfoModel;
+  final int? page;
+
   final ProfileInfoModel profileInfoEvent;
 
-  const ProfileInfoEvent(
-      {required this.personalInfoModel,
-      required this.professionalInfoModel,
-      required this.practicalInfoModel,
-      required this.verificationInfoModel,
-      required this.profileInfoEvent});
+  const ProfileInfoEvent({this.page, required this.profileInfoEvent});
 }
 
 class VerifyEmailEvent extends AuthenticationEvent {

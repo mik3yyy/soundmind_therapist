@@ -45,6 +45,7 @@ ThemeData _buildLightTheme() {
       behavior: SnackBarBehavior.floating,
       backgroundColor: _Colors.primaryColor,
       actionTextColor: _Colors.white,
+      actionBackgroundColor: _Colors.primaryColor,
       contentTextStyle: _AppTextStyles.bodyMedium.copyWith(color: Colors.white),
       insetPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
     ),

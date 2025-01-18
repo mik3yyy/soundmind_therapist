@@ -59,4 +59,29 @@ class DateFormater {
     final DateFormat timeFormatter = DateFormat('hh:mm a');
     return timeFormatter.format(time);
   }
+
+  static String formatTime2(DateTime time) {
+    final DateFormat timeFormatter = DateFormat('HH:mm:ss');
+    return timeFormatter.format(time);
+  }
+
+  static String? convertTime12hTo24h(String time12h) {
+    try {
+      // Define the input and output date formats
+      final DateFormat inputFormat = DateFormat('hh:mm a');
+      final DateFormat outputFormat = DateFormat('HH:mm:ss');
+
+      // Parse the input time string to a DateTime object
+      DateTime dateTime = inputFormat.parseStrict(time12h);
+
+      // Format the DateTime object to the desired output format
+      String time24h = outputFormat.format(dateTime);
+
+      return time24h;
+    } catch (e) {
+      // Handle parsing errors
+      print('Error parsing time "$time12h": $e');
+      return null;
+    }
+  }
 }

@@ -19,9 +19,13 @@ extension ContextExtensions on BuildContext {
   // Show a snackbar
   void showSnackBar(String message) {
     ScaffoldMessenger.of(this).showSnackBar(
-      SnackBar(content: Text(message)),
+      SnackBar(
+        content: Text(
+          message,
+          style: TextStyle(color: colors.white),
+        ),
+        backgroundColor: primaryColor,
+      ),
     );
   }
-
 }
-

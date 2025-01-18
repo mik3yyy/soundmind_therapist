@@ -23,19 +23,19 @@ class ProfileInfoScreen extends StatefulWidget {
   State<ProfileInfoScreen> createState() => _ProfileInfoScreenState();
 }
 
-class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
+class _ProfileInfoScreenState extends State<ProfileInfoScreen>
+    with AutomaticKeepAliveClientMixin {
   File? profilePicture;
   int proInt = 0;
   TextEditingController _controller = TextEditingController();
   @override
+  bool get wantKeepAlive => true; // Preserve state
+  @override
   Widget build(BuildContext context) {
+    super.build(context); // Important!
+
     return BlocListener<AuthenticationBloc, AuthenticationState>(
-      listener: (context, state) {
-        if (state is VerifyAccount) {
-          context.goNamed(Routes.verifyName,
-              extra: state.personalInfoModel.email);
-        }
-      },
+      listener: (context, state) {},
       child: Scaffold(
         body: Column(
           children: [
@@ -84,15 +84,9 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                 notifier: ValueNotifier(state is CreatingAccount),
                 enable: profilePicture != null && _controller.text.isNotEmpty,
                 onPressed: () {
-                  var state = context.read<AuthenticationBloc>().state
-                      as VerificationInfoState;
-
                   context.read<AuthenticationBloc>().add(
                         ProfileInfoEvent(
-                          personalInfoModel: state.personalInfoModel,
-                          professionalInfoModel: state.professionalInfoModel,
-                          practicalInfoModel: state.practicalInfoModel,
-                          verificationInfoModel: state.verificationInfoModel,
+                          page: 5,
                           profileInfoEvent: ProfileInfoModel(
                               bio: _controller.text,
                               profilePicture: Upload(

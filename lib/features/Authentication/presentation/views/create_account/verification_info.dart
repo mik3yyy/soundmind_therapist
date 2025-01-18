@@ -22,7 +22,8 @@ class VerificationInfoScreen extends StatefulWidget {
   State<VerificationInfoScreen> createState() => _VerificationInfoScreenState();
 }
 
-class _VerificationInfoScreenState extends State<VerificationInfoScreen> {
+class _VerificationInfoScreenState extends State<VerificationInfoScreen>
+    with AutomaticKeepAliveClientMixin {
   final signupForm = GlobalKey<FormState>();
   File? professionalUpload;
   int proInt = 0;
@@ -31,9 +32,12 @@ class _VerificationInfoScreenState extends State<VerificationInfoScreen> {
 
   File? Degree;
   int proDre = 0;
-
+  @override
+  bool get wantKeepAlive => true; // Preserve state
   @override
   Widget build(BuildContext context) {
+    super.build(context); // Important!
+
     return Scaffold(
       body: Column(
         children: [
@@ -94,14 +98,13 @@ class _VerificationInfoScreenState extends State<VerificationInfoScreen> {
               govIDUpload != null &&
               Degree != null,
           onPressed: () {
-            var state =
-                context.read<AuthenticationBloc>().state as PracticalInfoState;
+            var state = context.read<AuthenticationBloc>().state;
+            if (state is ProfileInfoState) {
+            } else {}
 
             context.read<AuthenticationBloc>().add(
                   VerificationInfoEvent(
-                      personalInfoModel: state.personalInfoModel,
-                      professionalInfoModel: state.professionalInfoModel,
-                      practicalInfoModel: state.practicalInfoModel,
+                      page: 4,
                       verificationInfoModel: VerificationInfoModel(
                         license: Upload(
                             path: professionalUpload!.path,

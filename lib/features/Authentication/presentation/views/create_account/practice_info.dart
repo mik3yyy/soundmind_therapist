@@ -5,6 +5,7 @@ import 'package:soundmind_therapist/core/extensions/context_extensions.dart';
 import 'package:soundmind_therapist/core/extensions/widget_extensions.dart';
 import 'package:soundmind_therapist/core/extensions/list_extensions.dart';
 import 'package:soundmind_therapist/core/gen/assets.gen.dart';
+import 'package:soundmind_therapist/core/utils/date_formater.dart';
 import 'package:soundmind_therapist/core/utils/validators.dart';
 import 'package:soundmind_therapist/core/widgets/custom_button.dart';
 import 'package:soundmind_therapist/core/widgets/custom_text_button.dart';
@@ -22,14 +23,19 @@ class PracticeInfoScreen extends StatefulWidget {
 }
 
 class _PracticeInfoScreenState extends State<PracticeInfoScreen>
-    with Validators {
+    with Validators, AutomaticKeepAliveClientMixin {
   final signupForm = GlobalKey<FormState>();
   TextEditingController _practiceName = TextEditingController();
   TextEditingController _rate = TextEditingController();
   List<ScheduleTEMP> schedules = [];
   // List<ScheduleTEMP> scheduleTempList = [];
+
+  @override
+  bool get wantKeepAlive => true; // Preserve state
   @override
   Widget build(BuildContext context) {
+    super.build(context); // Important!
+
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,9 +113,9 @@ class _PracticeInfoScreenState extends State<PracticeInfoScreen>
                     direction: DismissDirection.endToStart,
                     background: Container(
                       alignment: Alignment.centerRight,
-                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       color: Colors.red,
-                      child: Icon(Icons.delete, color: Colors.white),
+                      child: const Icon(Icons.delete, color: Colors.white),
                     ),
                     onDismissed: (direction) {
                       setState(() {
@@ -183,19 +189,28 @@ class _PracticeInfoScreenState extends State<PracticeInfoScreen>
                 return;
               }
             }
-            List<Schedule> schedules_real = [];
-            for (var s in schedules) {
-              print(s.toString());
-              s.dayOfWeek!.map((d) => schedules_real.add(Schedule(
-                  dayOfWeek: d, startTime: s.startTime!, endTime: s.endTime!)));
-            }
+            List<Schedule> schedules_real = schedules.expand((s) {
+              if (s.dayOfWeek != null &&
+                  s.dayOfWeek!.isNotEmpty &&
+                  s.startTime != null &&
+                  s.endTime != null) {
+                return s.dayOfWeek!.map((d) => Schedule(
+                      dayOfWeek: d,
+                      startTime:
+                          DateFormater.convertTime12hTo24h(s.startTime!)!,
+                      endTime: DateFormater.convertTime12hTo24h(s.endTime!)!,
+                    ));
+              } else {
+                // Optionally, handle or log invalid ScheduleTEMP instances
+                return const Iterable<Schedule>.empty();
+              }
+            }).toList();
 
-            var state = context.read<AuthenticationBloc>().state
-                as ProfessionalInfoState;
+            print("SCHEDULE: $schedules_real");
+
             context.read<AuthenticationBloc>().add(
                   PracticalInfoEvent(
-                    personalInfoModel: state.personalInfoModel,
-                    professionalInfoModel: state.professionalInfoModel,
+                    page: 2,
                     practicalInfoModel: PracticalInfoModel(
                       practiceAddress: _practiceName.text,
                       schedules: schedules_real,

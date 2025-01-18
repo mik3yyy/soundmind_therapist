@@ -30,7 +30,7 @@ class ProfessionalInfoScreen extends StatefulWidget {
 }
 
 class _ProfessionalInfoScreenState extends State<ProfessionalInfoScreen>
-    with Validators {
+    with Validators, AutomaticKeepAliveClientMixin {
   TextEditingController _lincenseNumber = TextEditingController();
 
   TextEditingController _issueAuthority = TextEditingController();
@@ -54,7 +54,11 @@ class _ProfessionalInfoScreenState extends State<ProfessionalInfoScreen>
   }
 
   @override
+  bool get wantKeepAlive => true; // Preserve state
+  @override
   Widget build(BuildContext context) {
+    super.build(context); // Important!
+
     return Scaffold(
       body: Column(
         children: [
@@ -198,14 +202,12 @@ class _ProfessionalInfoScreenState extends State<ProfessionalInfoScreen>
             if (licenseExpiryDate == null || aoe == null) {
               context.showSnackBar("Fill al fields");
             }
-            var state =
-                context.read<AuthenticationBloc>().state as PersonalInfoState;
             context.read<AuthenticationBloc>().add(ProfessionalInfoEvent(
-                personalInfoModel: state.personalInfoModel,
+                page: 3,
                 professionalInfoModel: ProfessionalInfoModel(
                     licenseNum: _lincenseNumber.text,
                     issuingAuthority: _issueAuthority.text,
-                    qualifications: [],
+                    qualifications: qualifications,
                     yoe: int.parse(_Yoe.text),
                     professionalAffiliation: _proAffilations.text,
                     aos: aoe!,

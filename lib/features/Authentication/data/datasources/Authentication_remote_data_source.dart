@@ -83,6 +83,44 @@ class AuthenticationRemoteDataSourceImpl
         picture == null) {
       throw ApiError(errorDescription: "Unable to upload Images or documents");
     }
+    print(
+      {
+        "email": personalInfoModel.email,
+        "firstName": personalInfoModel.firstname,
+        "lastName": personalInfoModel.lastname,
+        "password": personalInfoModel.password,
+        "phoneNumber": personalInfoModel.phoneNumber,
+        "passwordConfirmation": personalInfoModel.passwordConfirmation,
+        "dob": personalInfoModel.dob,
+        "gender": personalInfoModel.gender,
+        "qualifications": professionalInfoModel.qualifications
+            .map((e) => e.toJson())
+            .toList(),
+        "uploads": [
+          degree,
+          govID,
+          lincense,
+          picture,
+        ],
+        "schedules":
+            practicalInfoModel.schedules.map((e) => e.toJson()).toList(),
+        "physician": {
+          "yoe": professionalInfoModel.yoe,
+          "professionalAffiliation":
+              professionalInfoModel.professionalAffiliation,
+          "specialtyId":
+              int.parse(professionalInfoModel.aos), //personalInfoModel.,
+          "bio": profileInfoEvent.bio,
+          "licenseNum": professionalInfoModel.licenseNum,
+          "issuingAuthority": professionalInfoModel.issuingAuthority,
+          "licenseExpiryDate": professionalInfoModel.licenseExpiryDate,
+          "placeOfWork": practicalInfoModel.practiceAddress,
+          "clinicAddress": practicalInfoModel.practiceAddress,
+          "consultationRate": practicalInfoModel.consultationRate
+        }
+      },
+    );
+
     Response response = await _network.call(
       "/Registration/RegisterPhysician",
       RequestMethod.post,
@@ -104,7 +142,8 @@ class AuthenticationRemoteDataSourceImpl
           lincense,
           picture,
         ],
-        "schedules": practicalInfoModel.schedules,
+        "schedules":
+            practicalInfoModel.schedules.map((e) => e.toJson()).toList(),
         "physician": {
           "yoe": professionalInfoModel.yoe,
           "professionalAffiliation":

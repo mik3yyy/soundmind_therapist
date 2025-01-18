@@ -64,59 +64,155 @@ class AuthenticationBloc
   }
 
   _ProfileEvent(ProfileInfoEvent event, Emitter emit) async {
-    emit(CreatingAccount());
-    var result = await createAccount.call(
-      CreateAccountParams(
-          personalInfoModel: event.personalInfoModel,
-          professionalInfoModel: event.professionalInfoModel,
-          practicalInfoModel: event.practicalInfoModel,
-          verificationInfoModel: event.verificationInfoModel,
-          profileInfoEvent: event.profileInfoEvent),
-    );
+    if (state is ProfileInfoState) {
+      var current = state as ProfileInfoState;
 
-    result.fold((failure) {
-      emit(VerificationInfoState(
-        message: failure.message,
-        personalInfoModel: event.personalInfoModel,
-        professionalInfoModel: event.professionalInfoModel,
-        practicalInfoModel: event.practicalInfoModel,
-        verificationInfoModel: event.verificationInfoModel,
-      ));
-    }, (verify) {
-      emit(VerifyAccount(
-        personalInfoModel: event.personalInfoModel,
-        professionalInfoModel: event.professionalInfoModel,
-        practicalInfoModel: event.practicalInfoModel,
-        verificationInfoModel: event.verificationInfoModel,
-        profileInfoModel: event.profileInfoEvent,
-        verificationData: verify,
-      ));
-    });
+      emit(CreatingAccount());
+
+      if (current.personalInfoModel == null) {
+        emit(ProfileInfoState(
+          page: 4,
+          message: "Missing field on Personal Info Page",
+          personalInfoModel: current.personalInfoModel!,
+          professionalInfoModel: current.professionalInfoModel!,
+          practicalInfoModel: current.practicalInfoModel!,
+          verificationInfoModel: current.verificationInfoModel!,
+        ));
+        return;
+      }
+      if (current.professionalInfoModel == null) {
+        emit(ProfileInfoState(
+          page: 4,
+          message: "Missing field on Professional Info Page",
+          personalInfoModel: current.personalInfoModel!,
+          professionalInfoModel: current.professionalInfoModel!,
+          practicalInfoModel: current.practicalInfoModel!,
+          verificationInfoModel: current.verificationInfoModel!,
+        ));
+        return;
+      }
+      if (current.practicalInfoModel == null) {
+        emit(ProfileInfoState(
+          page: 4,
+          message: "Missing field on Pratcial Info Page",
+          personalInfoModel: current.personalInfoModel!,
+          professionalInfoModel: current.professionalInfoModel!,
+          practicalInfoModel: current.practicalInfoModel!,
+          verificationInfoModel: current.verificationInfoModel!,
+        ));
+        return;
+      }
+      if (current.verificationInfoModel == null) {
+        emit(ProfileInfoState(
+          page: 4,
+          message: "Missing field on Profile Info Page",
+          personalInfoModel: current.personalInfoModel!,
+          professionalInfoModel: current.professionalInfoModel!,
+          practicalInfoModel: current.practicalInfoModel!,
+          verificationInfoModel: current.verificationInfoModel!,
+        ));
+        return;
+      }
+
+      var result = await createAccount.call(
+        CreateAccountParams(
+            personalInfoModel: current.personalInfoModel!,
+            professionalInfoModel: current.professionalInfoModel!,
+            practicalInfoModel: current.practicalInfoModel!,
+            verificationInfoModel: current.verificationInfoModel!,
+            profileInfoEvent: event.profileInfoEvent),
+      );
+
+      result.fold((failure) {
+        emit(ProfileInfoState(
+          page: 4,
+          message: failure.message,
+          personalInfoModel: current.personalInfoModel!,
+          professionalInfoModel: current.professionalInfoModel!,
+          practicalInfoModel: current.practicalInfoModel!,
+          verificationInfoModel: current.verificationInfoModel!,
+        ));
+      }, (verify) {
+        emit(VerifyAccount(
+          personalInfoModel: current.personalInfoModel!,
+          professionalInfoModel: current.professionalInfoModel!,
+          practicalInfoModel: current.practicalInfoModel!,
+          verificationInfoModel: current.verificationInfoModel!,
+          profileInfoModel: event.profileInfoEvent,
+          verificationData: verify,
+        ));
+      });
+    }
   }
 
   _verification(VerificationInfoEvent event, Emitter emit) async {
-    emit(VerificationInfoState(
-        personalInfoModel: event.personalInfoModel,
-        professionalInfoModel: event.professionalInfoModel,
-        practicalInfoModel: event.practicalInfoModel,
-        verificationInfoModel: event.verificationInfoModel));
+    if (state is ProfileInfoState) {
+      var current = state as ProfileInfoState;
+
+      emit(ProfileInfoState(
+          personalInfoModel: current.personalInfoModel,
+          practicalInfoModel: current.practicalInfoModel,
+          professionalInfoModel: current.professionalInfoModel,
+          profileInfoModel: current.profileInfoModel,
+          page: event.page,
+          verificationInfoModel: event.verificationInfoModel));
+    } else {
+      emit(ProfileInfoState(
+          page: event.page,
+          verificationInfoModel: event.verificationInfoModel));
+    }
   }
 
   _PracticeInfo(PracticalInfoEvent event, Emitter emit) async {
-    emit(PracticalInfoState(
-        personalInfoModel: event.personalInfoModel,
-        professionalInfoModel: event.professionalInfoModel,
-        practicalInfoModel: event.practicalInfoModel));
+    if (state is ProfileInfoState) {
+      var current = state as ProfileInfoState;
+
+      emit(ProfileInfoState(
+          personalInfoModel: current.personalInfoModel,
+          practicalInfoModel: event.practicalInfoModel,
+          professionalInfoModel: current.professionalInfoModel,
+          profileInfoModel: current.profileInfoModel,
+          page: event.page,
+          verificationInfoModel: current.verificationInfoModel));
+    } else {
+      emit(ProfileInfoState(
+          page: event.page, practicalInfoModel: event.practicalInfoModel));
+    }
   }
 
   _professional(ProfessionalInfoEvent event, Emitter emit) async {
-    emit(ProfessionalInfoState(
-        personalInfoModel: event.personalInfoModel,
-        professionalInfoModel: event.professionalInfoModel));
+    if (state is ProfileInfoState) {
+      var current = state as ProfileInfoState;
+
+      emit(ProfileInfoState(
+          personalInfoModel: current.personalInfoModel,
+          practicalInfoModel: current.practicalInfoModel,
+          professionalInfoModel: event.professionalInfoModel,
+          profileInfoModel: current.profileInfoModel,
+          page: event.page,
+          verificationInfoModel: current.verificationInfoModel));
+    } else {
+      emit(ProfileInfoState(
+          page: event.page,
+          professionalInfoModel: event.professionalInfoModel));
+    }
   }
 
   _personalInfo(PersonalInfoEvent event, Emitter emit) async {
-    emit(PersonalInfoState(personalInfoModel: event.personalInfoModel));
+    if (state is ProfileInfoState) {
+      var current = state as ProfileInfoState;
+
+      emit(ProfileInfoState(
+          personalInfoModel: event.personalInfoModel,
+          practicalInfoModel: current.practicalInfoModel,
+          professionalInfoModel: current.professionalInfoModel,
+          profileInfoModel: current.profileInfoModel,
+          page: event.page,
+          verificationInfoModel: current.verificationInfoModel));
+    } else {
+      emit(ProfileInfoState(
+          page: event.page, personalInfoModel: event.personalInfoModel));
+    }
   }
 
   _checkUser(CheckUser event, Emitter emit) async {

@@ -78,7 +78,7 @@ class ScheduleTEMP extends Equatable {
 
   @override
   String toString() {
-    return '${dayOfWeek?.join('')}-${startTime}-${endTime}';
+    return '${dayOfWeek?.join(' ')}-${startTime}-${endTime}';
   }
 
   @override

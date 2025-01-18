@@ -7,10 +7,15 @@ import 'package:soundmind_therapist/core/extensions/widget_extensions.dart';
 import 'package:soundmind_therapist/core/gen/assets.gen.dart';
 import 'package:soundmind_therapist/core/routes/routes.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/Authentication_bloc.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/views/create_account/personal_info.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/views/create_account/practice_info.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/views/create_account/professional_info.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/views/create_account/profile_info.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/views/create_account/verification_info.dart';
 
 class CreateAccountScreen extends StatefulWidget {
-  const CreateAccountScreen({super.key, required this.child});
-  final Widget child;
+  const CreateAccountScreen({super.key});
+  // final Widget child;
   @override
   State<CreateAccountScreen> createState() => _CreateAccountScreenState();
 }
@@ -18,7 +23,7 @@ class CreateAccountScreen extends StatefulWidget {
 class _CreateAccountScreenState extends State<CreateAccountScreen>
     with TickerProviderStateMixin {
   late final ProgressBarController _controller;
-
+  PageController pageController = PageController();
   @override
   void initState() {
     super.initState();
@@ -31,34 +36,49 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
   }
 
   int time = 10;
-
+  int currentPage = 0;
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
-        if (state is PersonalInfoState) {
-          context.goNamed(Routes.professioanlInfoName);
-          time = 20;
-        }
-        if (state is ProfessionalInfoState) {
-          context.goNamed(Routes.practiceInfoName);
-          time = 30;
-        }
-        if (state is PracticalInfoState) {
-          context.goNamed(Routes.verificationInfoName);
-          time = 45;
-        }
-        if (state is VerificationInfoState) {
+        if (state is ProfileInfoState) {
+          var page = state.page ?? 0;
+          pageController.animateToPage(page,
+              duration: Duration(milliseconds: 500), curve: Curves.ease);
           if (state.message != null) {
             context.showSnackBar(state.message!);
-            return;
           }
-          context.goNamed(Routes.profileInfoName);
+          setState(() {
+            time = page * 20;
+          });
         }
-        if (state is ProfileInfoState) {
-          time = 60;
+        if (state is VerifyAccount) {
+          context.goNamed(Routes.verifyName,
+              extra: state.personalInfoModel.email);
         }
-        setState(() {});
+        // if (state is PersonalInfoState) {
+        //   context.goNamed(Routes.professioanlInfoName);
+        //   time = 20;
+        // }
+        // if (state is ProfessionalInfoState) {
+        //   context.goNamed(Routes.practiceInfoName);
+        //   time = 30;
+        // }
+        // if (state is PracticalInfoState) {
+        //   context.goNamed(Routes.verificationInfoName);
+        //   time = 45;
+        // }
+        // if (state is VerificationInfoState) {
+        //   if (state.message != null) {
+        // context.showSnackBar(state.message!);
+        // return;
+        //   }
+        //   context.goNamed(Routes.profileInfoName);
+        // }
+        // if (state is ProfileInfoState) {
+        //   time = 60;
+        // }
+        // setState(() {});
       },
       builder: (context, state) {
         return Scaffold(
@@ -85,7 +105,16 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
                   const EdgeInsetsDirectional.symmetric(horizontal: 8)),
             ),
           ),
-          body: widget.child,
+          body: PageView(
+            controller: pageController,
+            children: const [
+              PersonalInfoScreen(),
+              PracticeInfoScreen(),
+              ProfessionalInfoScreen(),
+              VerificationInfoScreen(),
+              ProfileInfoScreen(),
+            ],
+          ),
         );
       },
     );

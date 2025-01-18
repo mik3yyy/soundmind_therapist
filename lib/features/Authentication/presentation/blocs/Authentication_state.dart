@@ -4,7 +4,7 @@ abstract class AuthenticationState extends Equatable {
   const AuthenticationState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class AuthenticationInitial extends AuthenticationState {}
@@ -25,31 +25,6 @@ class UserAccount extends AuthenticationState {
 
 class SetUserState extends AuthenticationState {}
 
-class PersonalInfoState extends AuthenticationState {
-  final PersonalInfoModel personalInfoModel;
-
-  const PersonalInfoState({required this.personalInfoModel});
-}
-
-class ProfessionalInfoState extends AuthenticationState {
-  final PersonalInfoModel personalInfoModel;
-  final ProfessionalInfoModel professionalInfoModel;
-
-  const ProfessionalInfoState(
-      {required this.personalInfoModel, required this.professionalInfoModel});
-}
-
-class PracticalInfoState extends AuthenticationState {
-  final PersonalInfoModel personalInfoModel;
-  final ProfessionalInfoModel professionalInfoModel;
-  final PracticalInfoModel practicalInfoModel;
-
-  const PracticalInfoState(
-      {required this.personalInfoModel,
-      required this.professionalInfoModel,
-      required this.practicalInfoModel});
-}
-
 class VerificationInfoState extends AuthenticationState {
   final PersonalInfoModel personalInfoModel;
   final ProfessionalInfoModel professionalInfoModel;
@@ -65,19 +40,34 @@ class VerificationInfoState extends AuthenticationState {
 }
 
 class ProfileInfoState extends AuthenticationState {
-  final PersonalInfoModel personalInfoModel;
-  final ProfessionalInfoModel professionalInfoModel;
-  final PracticalInfoModel practicalInfoModel;
-  final VerificationInfoModel verificationInfoModel;
-  final ProfileInfoModel profileInfoModel;
+  final PersonalInfoModel? personalInfoModel;
+  final ProfessionalInfoModel? professionalInfoModel;
+  final PracticalInfoModel? practicalInfoModel;
+  final VerificationInfoModel? verificationInfoModel;
+  final ProfileInfoModel? profileInfoModel;
   final String? message;
-  const ProfileInfoState(
-      {required this.personalInfoModel,
-      required this.professionalInfoModel,
-      required this.practicalInfoModel,
-      required this.verificationInfoModel,
-      this.message,
-      required this.profileInfoModel});
+  final int? page;
+
+  const ProfileInfoState({
+    this.personalInfoModel,
+    this.professionalInfoModel,
+    this.practicalInfoModel,
+    this.verificationInfoModel,
+    this.profileInfoModel,
+    this.message,
+    this.page,
+  });
+
+  @override
+  List<Object?> get props => [
+        personalInfoModel,
+        professionalInfoModel,
+        practicalInfoModel,
+        verificationInfoModel,
+        profileInfoModel,
+        message,
+        page,
+      ];
 }
 
 class CreatingAccount extends AuthenticationState {}
