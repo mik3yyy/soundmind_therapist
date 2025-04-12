@@ -8,7 +8,7 @@ import 'package:sound_mind/features/appointment/data/models/doctor_detail.dart';
 import 'package:sound_mind/features/appointment/data/models/physician_schedule.dart';
 
 abstract class AppointmentRepository {
-  ResultFuture<AppointmentDto> getUpcomingAppointment();
+  ResultFuture<List<AppointmentDto>> getUpcomingAppointment();
   ResultFuture<List<AppointmentDto>> getAcceptedAppointments();
   ResultFuture<List<AppointmentDto>> getPendingAppointments();
   ResultFuture<List<AppointmentDto>> getRejectedAppointments();

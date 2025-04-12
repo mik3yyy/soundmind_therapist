@@ -5,12 +5,14 @@ import 'package:sound_mind/features/appointment/data/models/appointment.dart';
 
 import '../../../appointment/domain/repositories/appointment_repository.dart';
 
-class GetUpcomingAppointments extends UsecaseWithoutParams<AppointmentDto> {
+class GetUpcomingAppointments
+    extends UsecaseWithoutParams<List<AppointmentDto>> {
   final AppointmentRepository repository;
 
   GetUpcomingAppointments({required this.repository});
   // : _repository = repository;
 
   @override
-  ResultFuture<AppointmentDto> call() => repository.getUpcomingAppointment();
+  ResultFuture<List<AppointmentDto>> call() =>
+      repository.getUpcomingAppointment();
 }

@@ -138,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
             BlocBuilder<UpcomingAppointmentCubit, UpcomingAppointmentState>(
               builder: (context, state) {
                 if (state is UpcomingAppointmentsLoaded) {
-                  var doc = state.upcomingAppointments;
+                  var doc = state.upcomingAppointments[0];
                   print("DATA: ${doc}");
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -262,17 +262,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 } else if (state is UpcomingAppointmentLoading) {
                   return ComplexShimmer.cardShimmer(
                           itemCount: 1,
-                          margin: EdgeInsets.symmetric(vertical: 20))
+                          margin: const EdgeInsets.symmetric(vertical: 20))
                       .withCustomPadding();
                 } else if (state is UpcomingAppointmentError) {
-                  return CustomErrorScreen(
-                    message: state.message,
-                    onTap: () {
-                      context
-                          .read<UpcomingAppointmentCubit>()
-                          .fetchUpcomingAppointments();
-                    },
-                  );
+                  return SizedBox.fromSize();
+                  // return CustomErrorScreen(
+                  //   message: state.message,
+                  //   onTap: () {
+                  //     context
+                  //         .read<UpcomingAppointmentCubit>()
+                  //         .fetchUpcomingAppointments();
+                  //   },
+                  // );
                 } else if (state is UpcomingAppointmentEmpty) {
                   return Container();
                 } else {

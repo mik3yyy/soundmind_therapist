@@ -15,7 +15,7 @@ class AppointmentLoading extends AppointmentState {}
 
 // Individual Loaded States for each appointment type
 class UpcomingAppointmentsLoaded extends AppointmentState {
-  final AppointmentDto upcomingAppointments;
+  final List<AppointmentDto> upcomingAppointments;
 
   const UpcomingAppointmentsLoaded({required this.upcomingAppointments});
 

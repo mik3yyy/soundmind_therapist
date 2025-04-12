@@ -49,7 +49,7 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
   }
 
   @override
-  ResultFuture<AppointmentDto> getUpcomingAppointment() async {
+  ResultFuture<List<AppointmentDto>> getUpcomingAppointment() async {
     try {
       final appointment = await _remoteDataSource.getUpcomingAppointment();
       return Right(appointment);

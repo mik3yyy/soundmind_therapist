@@ -11,7 +11,7 @@ import 'package:sound_mind/features/appointment/data/models/doctor_detail.dart';
 import 'package:sound_mind/features/appointment/data/models/physician_schedule.dart';
 
 abstract class AppointmentRemoteDataSource {
-  Future<AppointmentDto> getUpcomingAppointment();
+  Future<List<AppointmentDto>> getUpcomingAppointment();
   Future<List<AppointmentDto>> getAcceptedAppointments();
   Future<List<AppointmentDto>> getPendingAppointments();
   Future<List<AppointmentDto>> getRejectedAppointments();
@@ -89,12 +89,15 @@ class AppointmentRemoteDataSourceImpl extends AppointmentRemoteDataSource {
   }
 
   @override
-  Future<AppointmentDto> getUpcomingAppointment() async {
+  Future<List<AppointmentDto>> getUpcomingAppointment() async {
     final response = await _network.call(
       "/UserDashboard/GetUpcomingSessions",
       RequestMethod.get,
     );
-    return AppointmentDto.fromJson(response.data['data'][0]);
+    List<AppointmentDto> appointments = (response.data['data'] as List)
+        .map((json) => AppointmentDto.fromJson(json))
+        .toList();
+    return appointments;
   }
 
   @override

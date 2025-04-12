@@ -24,7 +24,7 @@ class DoctorLoaded extends DoctorState {
   const DoctorLoaded(
       {required this.doctors,
       this.sort,
-      this.display = Display.list,
+      this.display = Display.grid,
       this.search = ''});
 
   @override

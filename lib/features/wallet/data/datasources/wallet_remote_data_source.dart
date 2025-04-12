@@ -58,7 +58,10 @@ class WalletRemoteDataSourceImpl extends WalletRemoteDataSource {
       RequestMethod.post,
       data: json.encode({
         "transactionReference": transactionReference,
-        "flutterwaveTransactionID": flutterwaveTransactionID,
+        "iSFlutterWave": false,
+        "paystackTransactionID": flutterwaveTransactionID,
+
+        // "flutterwaveTransactionID": flutterwaveTransactionID,
       }),
     );
   }
