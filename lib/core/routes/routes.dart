@@ -86,6 +86,8 @@ class Routes {
   static const String view_sessionPath = 'view_session';
   static const String view_sessionName = 'view_session';
 
+  static const String view_sessionPath2 = 'view_session2';
+  static const String view_sessionName2 = 'view_session2';
   static const String view_patientPath = 'view_patient/:id';
   static const String view_patientName = 'view_patient';
 
@@ -104,12 +106,9 @@ class Routes {
   static const String verifyPath = '/verify';
   static const String verifyName = 'verify';
   // Navigator keys for nested navigation
-  static final GlobalKey<NavigatorState> rootNavigatorKey =
-      GlobalKey<NavigatorState>();
-  static final GlobalKey<NavigatorState> shellNavigatorKey =
-      GlobalKey<NavigatorState>();
-  static final GlobalKey<NavigatorState> shellNavigatorKey2 =
-      GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> shellNavigatorKey2 = GlobalKey<NavigatorState>();
 // ChattRoomScreen(
 //                                     chat_id: chatRoom.chatRoomID,
 //                                     user_id: chatRoom.receiverID),
@@ -121,14 +120,12 @@ class Routes {
       GoRoute(
         path: splashPath,
         name: splashName,
-        builder: (context, state) =>
-            const SplashScreen(), // Replace with actual screen widget
+        builder: (context, state) => const SplashScreen(), // Replace with actual screen widget
         routes: [
           GoRoute(
             path: onboardingPath,
             name: onboardingName,
-            builder: (context, state) =>
-                const OnboardingScreen(), // Replace with actual screen widget
+            builder: (context, state) => const OnboardingScreen(), // Replace with actual screen widget
             routes: [
               GoRoute(
                 path: introPath,
@@ -151,6 +148,24 @@ class Routes {
         builder: (context, state) => const CreateAccountScreen(),
         routes: [],
       ),
+      GoRoute(
+        path: professioanlInfoPath,
+        name: professioanlInfoName,
+        builder: (context, state) => const ProfessionalInfoScreen(),
+        routes: [],
+      ),
+      GoRoute(
+        path: practiceInfoPath,
+        name: practiceInfoName,
+        builder: (context, state) => const PracticeInfoScreen(),
+        routes: [],
+      ),
+      GoRoute(
+        path: verificationInfoPath,
+        name: verificationInfoName,
+        builder: (context, state) => const VerificationInfoScreen(),
+        routes: [],
+      ),
       // ShellRoute(
       //   navigatorKey: shellNavigatorKey2,
       //   builder: (context, state, child) => CreateAccountScreen(
@@ -163,24 +178,24 @@ class Routes {
       //       builder: (context, state) => const PersonalInfoScreen(),
       //       routes: [],
       //     ),
-      //     GoRoute(
-      //       path: professioanlInfoPath,
-      //       name: professioanlInfoName,
-      //       builder: (context, state) => const ProfessionalInfoScreen(),
-      //       routes: [],
-      //     ),
-      //     GoRoute(
-      //       path: practiceInfoPath,
-      //       name: practiceInfoName,
-      //       builder: (context, state) => const PracticeInfoScreen(),
-      //       routes: [],
-      //     ),
-      //     GoRoute(
-      //       path: verificationInfoPath,
-      //       name: verificationInfoName,
-      //       builder: (context, state) => const VerificationInfoScreen(),
-      //       routes: [],
-      //     ),
+      // GoRoute(
+      //   path: professioanlInfoPath,
+      //   name: professioanlInfoName,
+      //   builder: (context, state) => const ProfessionalInfoScreen(),
+      //   routes: [],
+      // ),
+      // GoRoute(
+      //   path: practiceInfoPath,
+      //   name: practiceInfoName,
+      //   builder: (context, state) => const PracticeInfoScreen(),
+      //   routes: [],
+      // ),
+      // GoRoute(
+      //   path: verificationInfoPath,
+      //   name: verificationInfoName,
+      //   builder: (context, state) => const VerificationInfoScreen(),
+      //   routes: [],
+      // ),
       //     GoRoute(
       //       path: profileInfoPath,
       //       name: profileInfoName,
@@ -220,8 +235,7 @@ class Routes {
                 return CustomTransitionPage(
                   key: state.pageKey,
                   child: HomeScreen(),
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) {
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
                     return FadeTransition(
                       opacity: animation,
                       child: child,
@@ -245,21 +259,18 @@ class Routes {
                   name: notificationName,
                   parentNavigatorKey: shellNavigatorKey,
 
-                  builder: (context, state) =>
-                      Placeholder(), // Replace with actual screen widget
+                  builder: (context, state) => Placeholder(), // Replace with actual screen widget
                 ),
                 GoRoute(
                   path: settingsPath,
                   name: settingsName,
                   parentNavigatorKey: rootNavigatorKey,
-                  builder: (context, state) =>
-                      SettingPage(), // Replace with actual screen widget
+                  builder: (context, state) => SettingPage(), // Replace with actual screen widget
                   routes: [
                     GoRoute(
                       path: termsOfService,
                       parentNavigatorKey: rootNavigatorKey,
-                      builder: (context, state) =>
-                          Placeholder(), // Replace with actual screen widget
+                      builder: (context, state) => Placeholder(), // Replace with actual screen widget
                     ),
                     GoRoute(
                       path: personal_detailsPath,
@@ -285,8 +296,7 @@ class Routes {
               return CustomTransitionPage(
                 key: state.pageKey,
                 child: Placeholder(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
                   return FadeTransition(
                     opacity: animation,
                     child: child,
@@ -303,8 +313,7 @@ class Routes {
               return CustomTransitionPage(
                 key: state.pageKey,
                 child: AppointmentPage(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
                   return FadeTransition(
                     opacity: animation,
                     child: child,
@@ -312,8 +321,18 @@ class Routes {
                 },
               );
             },
+
             // builder: (context, state) => AppointmentPage(),
-            routes: [],
+            routes: [
+              GoRoute(
+                path: view_sessionPath2,
+                name: view_sessionName2,
+                parentNavigatorKey: rootNavigatorKey,
+                builder: (context, state) => ViewSessionScreen(
+                  appointment: state.extra as AppointmentModel,
+                ), // Replace with actual screen widget
+              ),
+            ],
           ),
           GoRoute(
             path: referralsPath,
@@ -323,8 +342,7 @@ class Routes {
               return CustomTransitionPage(
                 key: state.pageKey,
                 child: ReferallPage(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
                   return FadeTransition(
                     opacity: animation,
                     child: child,
@@ -341,8 +359,7 @@ class Routes {
               return CustomTransitionPage(
                 key: state.pageKey,
                 child: PatientPage(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
                   return FadeTransition(
                     opacity: animation,
                     child: child,
@@ -383,8 +400,7 @@ class Routes {
                 return CustomTransitionPage(
                   key: state.pageKey,
                   child: WalletPage(),
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) {
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
                     return FadeTransition(
                       opacity: animation,
                       child: child,
@@ -397,15 +413,13 @@ class Routes {
                   path: addFundPath,
                   name: addFundName,
                   parentNavigatorKey: rootNavigatorKey,
-                  builder: (context, state) =>
-                      const AddFundsPage(), // Replace with actual screen widget
+                  builder: (context, state) => const AddFundsPage(), // Replace with actual screen widget
                 ),
                 GoRoute(
                     path: withdrawPath,
                     name: withdrawName,
                     parentNavigatorKey: rootNavigatorKey,
-                    builder: (context, state) =>
-                        const WithdrawPage(), // Replace with actual screen widget
+                    builder: (context, state) => const WithdrawPage(), // Replace with actual screen widget
                     routes: [
                       GoRoute(
                         path: add_amountPath,

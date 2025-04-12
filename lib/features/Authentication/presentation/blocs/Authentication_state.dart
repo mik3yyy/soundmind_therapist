@@ -23,6 +23,10 @@ class UserAccount extends AuthenticationState {
   UserAccount({required this.userModel});
 }
 
+class CreatingAccount extends AuthenticationState {}
+
+class CreatingAccountFailed extends AuthenticationState {}
+
 class SetUserState extends AuthenticationState {}
 
 class VerificationInfoState extends AuthenticationState {
@@ -70,24 +74,11 @@ class ProfileInfoState extends AuthenticationState {
       ];
 }
 
-class CreatingAccount extends AuthenticationState {}
-
 class VerifyAccount extends AuthenticationState {
   final Map<String, dynamic> verificationData;
+  final PersonalInfoModel? personalInfoModel;
 
-  final PersonalInfoModel personalInfoModel;
-  final ProfessionalInfoModel professionalInfoModel;
-  final PracticalInfoModel practicalInfoModel;
-  final VerificationInfoModel verificationInfoModel;
-  final ProfileInfoModel profileInfoModel;
-
-  VerifyAccount(
-      {required this.verificationData,
-      required this.personalInfoModel,
-      required this.professionalInfoModel,
-      required this.practicalInfoModel,
-      required this.verificationInfoModel,
-      required this.profileInfoModel});
+  VerifyAccount({required this.verificationData, required this.personalInfoModel});
 }
 
 class VerifyingAccount extends AuthenticationState {}

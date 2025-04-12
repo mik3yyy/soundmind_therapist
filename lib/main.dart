@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:soundmind_therapist/core/routes/routes.dart';
-import 'package:soundmind_therapist/core/services/injection_container.dart'
-    as di;
+import 'package:soundmind_therapist/core/services/injection_container.dart' as di;
 import 'package:soundmind_therapist/core/services/injection_container.dart';
 import 'package:soundmind_therapist/core/theme/theme.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,6 +11,7 @@ import 'package:soundmind_therapist/features/Authentication/presentation/blocs/A
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/check_user_data/check_if_phone_and_email_exist_cubit.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/cubit/resend_otp_cubit.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/cubit_gas/get_gas_cubit.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/blocs/therapist_profile/therapist_profile_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/domain/usecases/get_rejected_appointment.dart';
 import 'package:soundmind_therapist/features/appointment/domain/usecases/get_user_metrics.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/approve_appointment_request/approve_appointment_request_cubit.dart';
@@ -77,12 +77,10 @@ class MyApp extends StatelessWidget {
           create: (context) => sl<GetRejectedAppointmentsCubit>(),
         ),
         BlocProvider(
-          create: (context) => sl<
-              GetUpcomingAppointmentRequestCubit>(), //GetPendingAppointmentsCubit
+          create: (context) => sl<GetUpcomingAppointmentRequestCubit>(), //GetPendingAppointmentsCubit
         ),
         BlocProvider(
-          create: (context) =>
-              sl<GetPendingAppointmentsCubit>(), //GetPendingAppointmentsCubit
+          create: (context) => sl<GetPendingAppointmentsCubit>(), //GetPendingAppointmentsCubit
         ),
         BlocProvider(
           create: (context) => sl<ResolveBankAccountCubit>(),
@@ -94,8 +92,7 @@ class MyApp extends StatelessWidget {
           create: (context) => sl<WalletBloc>(), //UpcomingAppointmentCubit
         ),
         BlocProvider(
-          create: (context) =>
-              sl<WithdrawToBankCubit>(), //UpcomingAppointmentCubit
+          create: (context) => sl<WithdrawToBankCubit>(), //UpcomingAppointmentCubit
         ),
         BlocProvider(
           create: (context) => sl<GetBanksCubit>(), //UpcomingAppointmentCubit
@@ -162,6 +159,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => sl<FinalizeBookingCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<TherapistProfileCubit>(),
         ),
       ],
       child: ScreenUtilInit(

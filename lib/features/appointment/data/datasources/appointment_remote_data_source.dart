@@ -28,7 +28,7 @@ class AppointmentRemoteDataSourceImpl extends AppointmentRemoteDataSource {
       RequestMethod.get,
     );
     print(response.data['data']);
-    return response.data['data'][0];
+    return response.data;
   }
 
   @override

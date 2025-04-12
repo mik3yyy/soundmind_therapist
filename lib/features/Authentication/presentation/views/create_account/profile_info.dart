@@ -23,11 +23,7 @@ class ProfileInfoScreen extends StatefulWidget {
   State<ProfileInfoScreen> createState() => _ProfileInfoScreenState();
 }
 
-class _ProfileInfoScreenState extends State<ProfileInfoScreen>
-    with AutomaticKeepAliveClientMixin {
-  File? profilePicture;
-  int proInt = 0;
-  TextEditingController _controller = TextEditingController();
+class _ProfileInfoScreenState extends State<ProfileInfoScreen> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true; // Preserve state
   @override
@@ -56,47 +52,43 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen>
             Uploadfile(
               title: 'Professional License upload',
               onTap: (File? file, int type) {
-                setState(() {
-                  profilePicture = file;
-                  proInt = type;
-                });
+                // setState(() {
+                //   profilePicture = file;
+                //   proInt = type;
+                // });
               },
             ),
-            const Gap(10),
-            CustomTextField(
-              controller: _controller,
-              titleText: "Bio",
-              hintText: "Enter a bio about yourself",
-              maxLines: 10,
-              onChanged: (value) {
-                setState(() {});
-              },
-            )
           ],
         ).withSafeArea().withCustomPadding().withScrollView(),
-        bottomNavigationBar:
-            BlocBuilder<AuthenticationBloc, AuthenticationState>(
+        bottomNavigationBar: BlocBuilder<AuthenticationBloc, AuthenticationState>(
           builder: (context, state) {
             return SizedBox(
               height: 150,
-              child: CustomButton(
-                label: "Next",
-                notifier: ValueNotifier(state is CreatingAccount),
-                enable: profilePicture != null && _controller.text.isNotEmpty,
-                onPressed: () {
-                  context.read<AuthenticationBloc>().add(
-                        ProfileInfoEvent(
-                          page: 5,
-                          profileInfoEvent: ProfileInfoModel(
-                              bio: _controller.text,
-                              profilePicture: Upload(
-                                  path: profilePicture!.path,
-                                  type: proInt,
-                                  purpose: 3)),
-                        ),
-                      );
-                },
-              ).toCenter(),
+              child: Row(
+                children: [
+                  CustomButton(
+                    label: "Go Back",
+                    onPressed: () {
+                      context.read<AuthenticationBloc>().add(GoBack());
+                    },
+                  ).withExpanded(),
+                  Gap(5),
+                  // CustomButton(
+                  //   label: "Finish",
+                  //   notifier: ValueNotifier(state is CreatingAccount),
+                  //   enable: profilePicture != null,
+                  //   onPressed: () {
+                  //     context.read<AuthenticationBloc>().add(
+                  //           ProfileInfoEvent(
+                  //             page: 5,
+                  //             profileInfoEvent: ProfileInfoModel(
+                  //                 profilePicture: Upload(path: profilePicture!.path, type: proInt, purpose: 3)),
+                  //           ),
+                  //         );
+                  //   },
+                  // ).withExpanded(),
+                ],
+              ).withCustomPadding(),
             );
           },
         ),

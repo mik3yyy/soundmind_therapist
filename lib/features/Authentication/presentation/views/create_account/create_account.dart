@@ -20,8 +20,7 @@ class CreateAccountScreen extends StatefulWidget {
   State<CreateAccountScreen> createState() => _CreateAccountScreenState();
 }
 
-class _CreateAccountScreenState extends State<CreateAccountScreen>
-    with TickerProviderStateMixin {
+class _CreateAccountScreenState extends State<CreateAccountScreen> with TickerProviderStateMixin {
   late final ProgressBarController _controller;
   PageController pageController = PageController();
   @override
@@ -43,8 +42,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
       listener: (context, state) {
         if (state is ProfileInfoState) {
           var page = state.page ?? 0;
-          pageController.animateToPage(page,
-              duration: Duration(milliseconds: 500), curve: Curves.ease);
+          pageController.animateToPage(page, duration: const Duration(milliseconds: 500), curve: Curves.ease);
           if (state.message != null) {
             context.showSnackBar(state.message!);
           }
@@ -53,8 +51,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
           });
         }
         if (state is VerifyAccount) {
-          context.goNamed(Routes.verifyName,
-              extra: state.personalInfoModel.email);
+          context.goNamed(Routes.verifyName, extra: state.personalInfoModel?.email);
         }
         // if (state is PersonalInfoState) {
         //   context.goNamed(Routes.professioanlInfoName);
@@ -88,31 +85,30 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
                   height: 40,
                   width: 40,
                 )
-                .withPadding(
-                    const EdgeInsetsDirectional.symmetric(horizontal: 8)),
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(20),
-              child: ProgressBar(
-                controller: _controller,
-                expandedProgressBarColor: context.primaryColor,
-                collapsedBufferedBarColor: context.primaryColor,
-                collapsedProgressBarColor: context.primaryColor,
-                progress: Duration(seconds: time),
-                buffered: Duration(seconds: time),
-                total: const Duration(minutes: 1),
-                onSeek: (position) {},
-              ).withClip(1000).withPadding(
-                  const EdgeInsetsDirectional.symmetric(horizontal: 8)),
-            ),
+                .withPadding(const EdgeInsetsDirectional.symmetric(horizontal: 8)),
+            // bottom: PreferredSize(
+            //   preferredSize: const Size.fromHeight(20),
+            //   child: ProgressBar(
+            //     controller: _controller,
+            //     expandedProgressBarColor: context.primaryColor,
+            //     collapsedBufferedBarColor: context.primaryColor,
+            //     collapsedProgressBarColor: context.primaryColor,
+            //     progress: Duration(seconds: time),
+            //     buffered: Duration(seconds: time),
+            //     total: const Duration(minutes: 1),
+            //     onSeek: (position) {},
+            //   ).withClip(1000).withPadding(
+            //       const EdgeInsetsDirectional.symmetric(horizontal: 8)),
+            // ),
           ),
           body: PageView(
             controller: pageController,
             children: const [
               PersonalInfoScreen(),
-              PracticeInfoScreen(),
-              ProfessionalInfoScreen(),
-              VerificationInfoScreen(),
-              ProfileInfoScreen(),
+              // PracticeInfoScreen(),
+              // ProfessionalInfoScreen(),
+              // VerificationInfoScreen(),
+              // ProfileInfoScreen(),
             ],
           ),
         );

@@ -17,8 +17,7 @@ import 'package:soundmind_therapist/features/Authentication/domain/usecases/veri
 part 'Authentication_event.dart';
 part 'Authentication_state.dart';
 
-class AuthenticationBloc
-    extends Bloc<AuthenticationEvent, AuthenticationState> {
+class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   final Login login;
   final CheckUserUseCase checkUser;
 
@@ -41,109 +40,145 @@ class AuthenticationBloc
     on<ProfessionalInfoEvent>(_professional);
     on<PracticalInfoEvent>(_PracticeInfo);
     on<VerificationInfoEvent>(_verification);
-    on<ProfileInfoEvent>(_ProfileEvent);
+    // on<ProfileInfoEvent>(_ProfileEvent);
     on<PersonalInfoEvent>(_personalInfo);
     on<VerifyEmailEvent>(_verifyEmail);
     on<ResendOtpEvent>(_resendOtp); // Add this line
-  }
-  _resendOtp(ResendOtpEvent event, Emitter emit) async {}
-
-  _verifyEmail(VerifyEmailEvent event, Emitter emit) async {
-    emit(VerifyingAccount());
-    var result = await verifyEmail.call(
-      VerifyEmailParams(
-          otp: event.otp, securityKey: event.verificationData['data']),
-    );
-
-    result.fold((failure) {
-      emit(VeriftingAccountFailed(
-          message: failure.message, verificationData: event.verificationData));
-    }, (UserModel) {
-      emit(UserAccount(userModel: UserModel));
-    });
+    on<GoBack>(_goBack); // Add this line
   }
 
-  _ProfileEvent(ProfileInfoEvent event, Emitter emit) async {
+  _personalInfo(PersonalInfoEvent event, Emitter emit) async {
     if (state is ProfileInfoState) {
       var current = state as ProfileInfoState;
 
       emit(CreatingAccount());
 
-      if (current.personalInfoModel == null) {
-        emit(ProfileInfoState(
-          page: 4,
-          message: "Missing field on Personal Info Page",
-          personalInfoModel: current.personalInfoModel!,
-          professionalInfoModel: current.professionalInfoModel!,
-          practicalInfoModel: current.practicalInfoModel!,
-          verificationInfoModel: current.verificationInfoModel!,
-        ));
-        return;
-      }
-      if (current.professionalInfoModel == null) {
-        emit(ProfileInfoState(
-          page: 4,
-          message: "Missing field on Professional Info Page",
-          personalInfoModel: current.personalInfoModel!,
-          professionalInfoModel: current.professionalInfoModel!,
-          practicalInfoModel: current.practicalInfoModel!,
-          verificationInfoModel: current.verificationInfoModel!,
-        ));
-        return;
-      }
-      if (current.practicalInfoModel == null) {
-        emit(ProfileInfoState(
-          page: 4,
-          message: "Missing field on Pratcial Info Page",
-          personalInfoModel: current.personalInfoModel!,
-          professionalInfoModel: current.professionalInfoModel!,
-          practicalInfoModel: current.practicalInfoModel!,
-          verificationInfoModel: current.verificationInfoModel!,
-        ));
-        return;
-      }
-      if (current.verificationInfoModel == null) {
-        emit(ProfileInfoState(
-          page: 4,
-          message: "Missing field on Profile Info Page",
-          personalInfoModel: current.personalInfoModel!,
-          professionalInfoModel: current.professionalInfoModel!,
-          practicalInfoModel: current.practicalInfoModel!,
-          verificationInfoModel: current.verificationInfoModel!,
-        ));
-        return;
-      }
-
       var result = await createAccount.call(
         CreateAccountParams(
-            personalInfoModel: current.personalInfoModel!,
-            professionalInfoModel: current.professionalInfoModel!,
-            practicalInfoModel: current.practicalInfoModel!,
-            verificationInfoModel: current.verificationInfoModel!,
-            profileInfoEvent: event.profileInfoEvent),
+          personalInfoModel: current.personalInfoModel!,
+        ),
       );
 
       result.fold((failure) {
-        emit(ProfileInfoState(
-          page: 4,
-          message: failure.message,
-          personalInfoModel: current.personalInfoModel!,
-          professionalInfoModel: current.professionalInfoModel!,
-          practicalInfoModel: current.practicalInfoModel!,
-          verificationInfoModel: current.verificationInfoModel!,
-        ));
+        emit(CreatingAccountFailed());
       }, (verify) {
-        emit(VerifyAccount(
-          personalInfoModel: current.personalInfoModel!,
-          professionalInfoModel: current.professionalInfoModel!,
-          practicalInfoModel: current.practicalInfoModel!,
-          verificationInfoModel: current.verificationInfoModel!,
-          profileInfoModel: event.profileInfoEvent,
-          verificationData: verify,
-        ));
+        emit(VerifyAccount(verificationData: verify, personalInfoModel: event.personalInfoModel));
       });
+    } else {
+      emit(ProfileInfoState(page: event.page, personalInfoModel: event.personalInfoModel));
     }
   }
+
+  _goBack(GoBack event, Emitter emit) async {
+    if (state is ProfileInfoState) {
+      var current = state as ProfileInfoState;
+
+      emit(ProfileInfoState(
+          personalInfoModel: current.personalInfoModel,
+          practicalInfoModel: current.practicalInfoModel,
+          professionalInfoModel: current.professionalInfoModel,
+          profileInfoModel: current.profileInfoModel,
+          page: (current.page == 0 && current.page == null) ? 0 : (current.page! - 1),
+          verificationInfoModel: current.verificationInfoModel));
+    }
+  }
+
+  _resendOtp(ResendOtpEvent event, Emitter emit) async {}
+
+  _verifyEmail(VerifyEmailEvent event, Emitter emit) async {
+    emit(VerifyingAccount());
+    var result = await verifyEmail.call(
+      VerifyEmailParams(otp: event.otp, securityKey: event.verificationData['data']),
+    );
+
+    result.fold((failure) {
+      emit(VeriftingAccountFailed(message: failure.message, verificationData: event.verificationData));
+    }, (UserModel) {
+      emit(UserAccount(userModel: UserModel));
+    });
+  }
+
+  // _ProfileEvent(ProfileInfoEvent event, Emitter emit) async {
+  //   if (state is ProfileInfoState) {
+  //     var current = state as ProfileInfoState;
+
+  //     emit(CreatingAccount());
+
+  //     if (current.personalInfoModel == null) {
+  //       emit(ProfileInfoState(
+  //         page: 4,
+  //         message: "Missing field on Personal Info Page",
+  //         personalInfoModel: current.personalInfoModel!,
+  //         professionalInfoModel: current.professionalInfoModel!,
+  //         practicalInfoModel: current.practicalInfoModel!,
+  //         verificationInfoModel: current.verificationInfoModel!,
+  //       ));
+  //       return;
+  //     }
+  //     if (current.professionalInfoModel == null) {
+  //       emit(ProfileInfoState(
+  //         page: 4,
+  //         message: "Missing field on Professional Info Page",
+  //         personalInfoModel: current.personalInfoModel!,
+  //         professionalInfoModel: current.professionalInfoModel!,
+  //         practicalInfoModel: current.practicalInfoModel!,
+  //         verificationInfoModel: current.verificationInfoModel!,
+  //       ));
+  //       return;
+  //     }
+  //     if (current.practicalInfoModel == null) {
+  //       emit(ProfileInfoState(
+  //         page: 4,
+  //         message: "Missing field on Pratcial Info Page",
+  //         personalInfoModel: current.personalInfoModel!,
+  //         professionalInfoModel: current.professionalInfoModel!,
+  //         practicalInfoModel: current.practicalInfoModel!,
+  //         verificationInfoModel: current.verificationInfoModel!,
+  //       ));
+  //       return;
+  //     }
+  //     if (current.verificationInfoModel == null) {
+  //       emit(ProfileInfoState(
+  //         page: 4,
+  //         message: "Missing field on Profile Info Page",
+  //         personalInfoModel: current.personalInfoModel!,
+  //         professionalInfoModel: current.professionalInfoModel!,
+  //         practicalInfoModel: current.practicalInfoModel!,
+  //         verificationInfoModel: current.verificationInfoModel!,
+  //       ));
+  //       return;
+  //     }
+
+  //     var result = await createAccount.call(
+  //       CreateAccountParams(
+  //           personalInfoModel: current.personalInfoModel!,
+  //           professionalInfoModel: current.professionalInfoModel!,
+  //           practicalInfoModel: current.practicalInfoModel!,
+  //           verificationInfoModel: current.verificationInfoModel!,
+  //           profileInfoEvent: event.profileInfoEvent),
+  //     );
+
+  //     result.fold((failure) {
+  //       emit(ProfileInfoState(
+  //         page: 4,
+  //         message: failure.message,
+  //         personalInfoModel: current.personalInfoModel!,
+  //         professionalInfoModel: current.professionalInfoModel!,
+  //         practicalInfoModel: current.practicalInfoModel!,
+  //         verificationInfoModel: current.verificationInfoModel!,
+  //       ));
+  //     }, (verify) {
+  //       emit(VerifyAccount(
+  //         personalInfoModel: current.personalInfoModel!,
+  //         professionalInfoModel: current.professionalInfoModel!,
+  //         practicalInfoModel: current.practicalInfoModel!,
+  //         verificationInfoModel: current.verificationInfoModel!,
+  //         profileInfoModel: event.profileInfoEvent,
+  //         verificationData: verify,
+  //       ));
+  //     });
+  //   }
+  // }
 
   _verification(VerificationInfoEvent event, Emitter emit) async {
     if (state is ProfileInfoState) {
@@ -157,9 +192,7 @@ class AuthenticationBloc
           page: event.page,
           verificationInfoModel: event.verificationInfoModel));
     } else {
-      emit(ProfileInfoState(
-          page: event.page,
-          verificationInfoModel: event.verificationInfoModel));
+      emit(ProfileInfoState(page: event.page, verificationInfoModel: event.verificationInfoModel));
     }
   }
 
@@ -175,8 +208,7 @@ class AuthenticationBloc
           page: event.page,
           verificationInfoModel: current.verificationInfoModel));
     } else {
-      emit(ProfileInfoState(
-          page: event.page, practicalInfoModel: event.practicalInfoModel));
+      emit(ProfileInfoState(page: event.page, practicalInfoModel: event.practicalInfoModel));
     }
   }
 
@@ -192,26 +224,7 @@ class AuthenticationBloc
           page: event.page,
           verificationInfoModel: current.verificationInfoModel));
     } else {
-      emit(ProfileInfoState(
-          page: event.page,
-          professionalInfoModel: event.professionalInfoModel));
-    }
-  }
-
-  _personalInfo(PersonalInfoEvent event, Emitter emit) async {
-    if (state is ProfileInfoState) {
-      var current = state as ProfileInfoState;
-
-      emit(ProfileInfoState(
-          personalInfoModel: event.personalInfoModel,
-          practicalInfoModel: current.practicalInfoModel,
-          professionalInfoModel: current.professionalInfoModel,
-          profileInfoModel: current.profileInfoModel,
-          page: event.page,
-          verificationInfoModel: current.verificationInfoModel));
-    } else {
-      emit(ProfileInfoState(
-          page: event.page, personalInfoModel: event.personalInfoModel));
+      emit(ProfileInfoState(page: event.page, professionalInfoModel: event.professionalInfoModel));
     }
   }
 
@@ -229,8 +242,7 @@ class AuthenticationBloc
   onLoginHandler(LoginEvent event, Emitter emit) async {
     emit(LoginLoading());
 
-    var result = await login
-        .call(LoginParams(email: event.email, password: event.password));
+    var result = await login.call(LoginParams(email: event.email, password: event.password));
 
     result.fold(
       (failure) {

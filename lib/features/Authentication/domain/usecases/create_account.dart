@@ -8,34 +8,20 @@ import 'package:soundmind_therapist/features/Authentication/data/models/verifica
 import 'package:soundmind_therapist/features/Authentication/domain/repositories/Authentication_repository.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/Authentication_bloc.dart';
 
-class CreateAccountUseCase
-    extends UsecaseWithParams<DataMap, CreateAccountParams> {
+class CreateAccountUseCase extends UsecaseWithParams<DataMap, CreateAccountParams> {
   final AuthenticationRepository _repository;
 
-  CreateAccountUseCase({required AuthenticationRepository repository})
-      : _repository = repository;
+  CreateAccountUseCase({required AuthenticationRepository repository}) : _repository = repository;
   @override
-  ResultFuture<DataMap> call(CreateAccountParams params) =>
-      _repository.createAccount(
+  ResultFuture<DataMap> call(CreateAccountParams params) => _repository.createAccount(
         personalInfoModel: params.personalInfoModel,
-        professionalInfoModel: params.professionalInfoModel,
-        practicalInfoModel: params.practicalInfoModel,
-        verificationInfoModel: params.verificationInfoModel,
-        profileInfoEvent: params.profileInfoEvent,
       );
 }
 
 class CreateAccountParams {
   final PersonalInfoModel personalInfoModel;
-  final ProfessionalInfoModel professionalInfoModel;
-  final PracticalInfoModel practicalInfoModel;
-  final VerificationInfoModel verificationInfoModel;
-  final ProfileInfoModel profileInfoEvent;
 
-  CreateAccountParams(
-      {required this.personalInfoModel,
-      required this.professionalInfoModel,
-      required this.practicalInfoModel,
-      required this.verificationInfoModel,
-      required this.profileInfoEvent});
+  CreateAccountParams({
+    required this.personalInfoModel,
+  });
 }

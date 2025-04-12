@@ -20,7 +20,9 @@ import 'package:soundmind_therapist/features/Authentication/data/models/professi
 import 'package:soundmind_therapist/features/Authentication/data/models/qualification.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/Authentication_bloc.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/cubit_gas/get_gas_cubit.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/blocs/therapist_profile/therapist_profile_cubit.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/widgets/education_pop_up.dart';
+import 'package:soundmind_therapist/features/wallet/presentation/widgets/succesful.dart';
 
 class ProfessionalInfoScreen extends StatefulWidget {
   const ProfessionalInfoScreen({super.key});
@@ -38,11 +40,14 @@ class _ProfessionalInfoScreenState extends State<ProfessionalInfoScreen>
   TextEditingController _Yoe = TextEditingController();
 
   TextEditingController _proAffilations = TextEditingController();
+  TextEditingController _controller = TextEditingController();
+
+  TextEditingController _practiceName = TextEditingController();
+  TextEditingController _rate = TextEditingController();
   final signupForm = GlobalKey<FormState>();
   String? aoe;
   // List<String> aoes = ['a', 'b', 'c'];
   String? licenseExpiryDate;
-  List<Qualification> qualifications = [];
   @override
   void initState() {
     // TODO: implement initState
@@ -60,6 +65,14 @@ class _ProfessionalInfoScreenState extends State<ProfessionalInfoScreen>
     super.build(context); // Important!
 
     return Scaffold(
+      appBar: AppBar(
+        leading: BackButton(
+          color: Colors.black,
+          onPressed: () {
+            context.pop();
+          },
+        ),
+      ),
       body: Column(
         children: [
           Column(
@@ -96,63 +109,6 @@ class _ProfessionalInfoScreenState extends State<ProfessionalInfoScreen>
             title: "License expiry date",
             mode: DatePMode.license,
           ),
-          AutoSizeText(
-            "Educational qualifications/Certification ",
-            style: context.textTheme.titleLarge,
-          ).toRight(),
-          Column(
-            children: qualifications
-                .map<Widget>((qualification) {
-                  return Container(
-                    // height: 50,
-                    width: context.screenWidth * .9,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Color(0xFFF1F1F1),
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        qualification.schoolName,
-                        style: context.textTheme.titleLarge,
-                      ),
-                      subtitle: Text(qualification.degree),
-                      trailing: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            qualifications.remove(qualification);
-                          });
-                        },
-                        icon: Icon(
-                          Icons.cancel,
-                          color: context.colors.black,
-                          size: 30,
-                        ),
-                      ),
-                    ),
-                  );
-                })
-                .toList()
-                .addSpacer(Gap(10)),
-          ),
-          CustomTextButton(
-            label: "Add New",
-            textStyle: context.textTheme.bodyMedium?.copyWith(
-              color: context.primaryColor,
-            ),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => EducationPopUp(
-                  onSubmit: (qualification) {
-                    setState(() {
-                      qualifications.add(qualification);
-                    });
-                    context.pop();
-                  },
-                ),
-              );
-            },
-          ).toRight(),
           BlocBuilder<GetGasCubit, GetGasState>(
             builder: (context, state) {
               if (state is GetgasSuccess) {
@@ -185,35 +141,94 @@ class _ProfessionalInfoScreenState extends State<ProfessionalInfoScreen>
             titleText: "Professional affliations",
             validator: validateField,
           ),
+          const Gap(10),
+          CustomTextField(
+            controller: _controller,
+            titleText: "Bio",
+            hintText: "Enter a bio about yourself",
+            maxLines: 10,
+            onChanged: (value) {
+              setState(() {});
+            },
+          ),
+          CustomTextField(
+            controller: _rate,
+            titleText: "Rate/hr",
+            hintText: "e.g \$60",
+            validator: validateNumber,
+            keyboardType: TextInputType.number,
+            onChanged: (valur) {
+              setState(() {});
+            },
+          ),
+          CustomTextField(
+            controller: _practiceName,
+            hintText: "Enter your  address",
+            titleText: "Practice Address",
+            validator: validateField,
+            onChanged: (valur) {
+              setState(() {});
+            },
+          ),
         ].addSpacer(const Gap(10)),
-      )
-          .withSafeArea()
-          .withCustomPadding()
-          .withForm(signupForm)
-          .withScrollView(),
+      ).withSafeArea().withCustomPadding().withForm(signupForm).withScrollView(),
       bottomNavigationBar: Container(
         height: 150,
-        child: CustomButton(
-          label: "Continue",
-          onPressed: () {
-            if (!signupForm.currentState!.validate()) {
-              return;
-            }
-            if (licenseExpiryDate == null || aoe == null) {
-              context.showSnackBar("Fill al fields");
-            }
-            context.read<AuthenticationBloc>().add(ProfessionalInfoEvent(
-                page: 3,
-                professionalInfoModel: ProfessionalInfoModel(
-                    licenseNum: _lincenseNumber.text,
-                    issuingAuthority: _issueAuthority.text,
-                    qualifications: qualifications,
-                    yoe: int.parse(_Yoe.text),
-                    professionalAffiliation: _proAffilations.text,
-                    aos: aoe!,
-                    licenseExpiryDate: licenseExpiryDate!)));
-          },
-        ),
+        child: Row(
+          children: [
+            Gap(5),
+            BlocConsumer<TherapistProfileCubit, TherapistProfileState>(
+              listener: (context, state) {
+                if (state is TherapistProfileSuccess) {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false, // User must tap button to close dialog
+                    builder: (BuildContext context) {
+                      return SuccessfulWidget(
+                        message: "Your professional info has been successfully updated!",
+                        onTap: () {
+                          // Close the dialog
+                          Navigator.of(context).pop();
+                          context.pop();
+                        },
+                      );
+                    },
+                  );
+                }
+                if (state is TherapistProfileFailue) {
+                  context.showSnackBar(state.message);
+                }
+              },
+              builder: (context, state) {
+                return CustomButton(
+                  label: "Submit",
+                  notifier: ValueNotifier(state is TherapistProfileLoading),
+                  onPressed: () {
+                    if (!signupForm.currentState!.validate()) {
+                      return;
+                    }
+                    if (licenseExpiryDate == null || aoe == null && _controller.text.isNotEmpty) {
+                      context.showSnackBar("Fill al fields");
+                    }
+                    context.read<TherapistProfileCubit>().uploadProfessionalInfo(
+                          ProfessionalInfoModel(
+                            licenseNum: _lincenseNumber.text,
+                            issuingAuthority: _issueAuthority.text,
+                            yoe: int.parse(_Yoe.text),
+                            professionalAffiliation: _proAffilations.text,
+                            aos: aoe!,
+                            licenseExpiryDate: licenseExpiryDate!,
+                            consultationRate: int.parse(_rate.text),
+                            bio: _controller.text,
+                            practiceAddress: _practiceName.text,
+                          ),
+                        );
+                  },
+                );
+              },
+            ).withExpanded(),
+          ],
+        ).withCustomPadding(),
       ),
     );
   }

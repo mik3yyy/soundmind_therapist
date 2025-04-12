@@ -1,37 +1,32 @@
 import 'package:equatable/equatable.dart';
+import 'package:soundmind_therapist/features/Authentication/data/models/qualification.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/schedule.dart';
 
 class PracticalInfoModel extends Equatable {
-  final String practiceAddress; // Practice address of the professional
   final List<Schedule> schedules; // List of schedules for the week
-  final int consultationRate; // Consultation rate as an integer
+  final List<Qualification> qualifications;
 
   PracticalInfoModel({
-    required this.practiceAddress,
     required this.schedules,
-    required this.consultationRate,
+    required this.qualifications,
   });
 
   // Convert PracticalInfoModel to JSON (Map)
   Map<String, dynamic> toJson() {
     return {
-      'practiceAddress': practiceAddress,
       'schedules': schedules.map((schedule) => schedule.toJson()).toList(),
-      'consultationRate': consultationRate,
+      'qualifications': qualifications.map((q) => q.toJson()).toList(),
     };
   }
 
-  // Create PracticalInfoModel from JSON (Map)
-  factory PracticalInfoModel.fromJson(Map<String, dynamic> json) {
-    return PracticalInfoModel(
-      practiceAddress: json['practiceAddress'] ?? '',
-      schedules: (json['schedules'] as List)
-          .map((item) => Schedule.fromJson(item))
-          .toList(),
-      consultationRate: json['consultationRate'] ?? 0,
-    );
-  }
+  // // Create PracticalInfoModel from JSON (Map)
+  // factory PracticalInfoModel.fromJson(Map<String, dynamic> json) {
+  //   return PracticalInfoModel(
+
+  //     schedules: (json['schedules'] as List).map((item) => Schedule.fromJson(item)).toList(),
+  //   );
+  // }
 
   @override
-  List<Object> get props => [practiceAddress, schedules, consultationRate];
+  List<Object> get props => [schedules];
 }

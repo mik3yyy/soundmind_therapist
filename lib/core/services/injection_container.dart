@@ -22,6 +22,7 @@ import 'package:soundmind_therapist/features/Authentication/presentation/blocs/A
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/check_user_data/check_if_phone_and_email_exist_cubit.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/cubit/resend_otp_cubit.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/cubit_gas/get_gas_cubit.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/blocs/therapist_profile/therapist_profile_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/data/datasources/appointment_hive_data_source.dart';
 import 'package:soundmind_therapist/features/appointment/data/datasources/appointment_remote_data_source.dart';
 import 'package:soundmind_therapist/features/appointment/data/repositories/appointment_repository_impl.dart';
@@ -106,8 +107,7 @@ Future<void> init() async {
   final box = Hive.box('userBox');
   sl.registerSingleton<Box>(box);
   sl
-    ..registerFactory(
-        () => CheckIfPhoneAndEmailExistCubit(checkIfPhoneAndEmailExist: sl()))
+    ..registerFactory(() => CheckIfPhoneAndEmailExistCubit(checkIfPhoneAndEmailExist: sl()))
     ..registerLazySingleton(() => CheckIfPhoneAndEmailExist(repository: sl()));
   sl
     ..registerFactory(() => GetGasCubit(sl()))
@@ -127,28 +127,24 @@ Future<void> init() async {
     ..registerLazySingleton(() => LogOutUsecase(repository: sl()))
     ..registerLazySingleton(() => VerifyEmail(repository: sl()))
     ..registerLazySingleton(() => CheckUserUseCase(repository: sl()))
-    ..registerLazySingleton(() => Login(repository: sl()))
-
+    ..registerLazySingleton(() => Login(repository: sl()));
+  sl
+    ..registerFactory(() => TherapistProfileCubit(repository: sl()))
     // AuthenticationHiveDataSource
-    ..registerLazySingleton<AuthenticationRepository>(() =>
-        AuthenticationRepositoryImpl(
-            authenticationRemoteDataSource: sl(),
-            authenticationHiveDataSource: sl()))
+    ..registerLazySingleton<AuthenticationRepository>(
+        () => AuthenticationRepositoryImpl(authenticationRemoteDataSource: sl(), authenticationHiveDataSource: sl()))
     ..registerLazySingleton<AuthenticationRemoteDataSource>(
       () => AuthenticationRemoteDataSourceImpl(network: sl()),
     )
-    ..registerLazySingleton<AuthenticationHiveDataSource>(
-        () => AuthenticationHiveDataSourceImpl(box: sl()))
-    ..registerLazySingleton(
-        () => Network(baseUrl: UrlConfig.baseUrl, showLog: true));
+    ..registerLazySingleton<AuthenticationHiveDataSource>(() => AuthenticationHiveDataSourceImpl(box: sl()))
+    ..registerLazySingleton(() => Network(baseUrl: UrlConfig.baseUrl, showLog: true));
 
   sl
     ..registerFactory(() => MainBloc(getMainData: sl()))
     ..registerLazySingleton(() => GetMainData(repository: sl()))
 
     // AuthenticationHiveDataSource
-    ..registerLazySingleton<MainRepository>(
-        () => MainRepositoryImpl(remoteDataSource: sl(), hiveDataSource: sl()))
+    ..registerLazySingleton<MainRepository>(() => MainRepositoryImpl(remoteDataSource: sl(), hiveDataSource: sl()))
     ..registerLazySingleton<MainRemoteDataSource>(
       () => MainRemoteDataSourceImpl(network: sl()),
     )
@@ -157,22 +153,19 @@ Future<void> init() async {
     );
 
   sl
-    ..registerFactory(() =>
-        GetUserMetricsCubit(getUserMetricsUseCase: sl())) //GetUserMetricsCubit
+    ..registerFactory(() => GetUserMetricsCubit(getUserMetricsUseCase: sl())) //GetUserMetricsCubit
     ..registerLazySingleton(() => GetUserMetrics(repository: sl()));
 
   sl
-    ..registerFactory(() => FinalizeBookingCubit(
-        finalizeBookingUsecase: sl())) //GetUserMetricsCubit
+    ..registerFactory(() => FinalizeBookingCubit(finalizeBookingUsecase: sl())) //GetUserMetricsCubit
     ..registerLazySingleton(() => FinalizeBookingUsecase(repository: sl()));
   sl
-    ..registerFactory(
-        () => AppointmentBloc(getAppointmentData: sl())) //GetUserMetricsCubit
+    ..registerFactory(() => AppointmentBloc(getAppointmentData: sl())) //GetUserMetricsCubit
     ..registerLazySingleton(() => GetAppointmentData(repository: sl()))
 
     // AuthenticationHiveDataSource
-    ..registerLazySingleton<AppointmentRepository>(() =>
-        AppointmentRepositoryImpl(remoteDataSource: sl(), hiveDataSource: sl()))
+    ..registerLazySingleton<AppointmentRepository>(
+        () => AppointmentRepositoryImpl(remoteDataSource: sl(), hiveDataSource: sl()))
     ..registerLazySingleton<AppointmentRemoteDataSource>(
       () => AppointmentRemoteDataSourceImpl(network: sl()),
     )
@@ -181,48 +174,38 @@ Future<void> init() async {
     );
 
   sl
-    ..registerFactory(() =>
-        GetAcceptedAppointmentsCubit(getAcceptedAppointmentsUseCase: sl()))
+    ..registerFactory(() => GetAcceptedAppointmentsCubit(getAcceptedAppointmentsUseCase: sl()))
     ..registerLazySingleton(() => GetAcceptedAppointments(repository: sl()));
 
   sl
-    ..registerFactory(
-        () => GetPendingAppointmentsCubit(getPendingAppointmentsUseCase: sl()))
+    ..registerFactory(() => GetPendingAppointmentsCubit(getPendingAppointmentsUseCase: sl()))
     ..registerLazySingleton(() => GetPendingAppointments(repository: sl()));
 
   sl
-    ..registerFactory(
-        () => ApproveAppointmentCubit(approveAppointmentRequestUseCase: sl()))
+    ..registerFactory(() => ApproveAppointmentCubit(approveAppointmentRequestUseCase: sl()))
     ..registerLazySingleton(() => ApproveAppointmentRequest(repository: sl()));
 
   sl
-    ..registerFactory(() =>
-        GetRejectedAppointmentsCubit(getRejectedAppointmentsUseCase: sl()))
+    ..registerFactory(() => GetRejectedAppointmentsCubit(getRejectedAppointmentsUseCase: sl()))
     ..registerLazySingleton(() => GetRejectedAppointments(repository: sl()));
 
   sl
-    ..registerFactory(
-        () => RejectAppointmentCubit(rejectAppointmentRequestUseCase: sl()))
+    ..registerFactory(() => RejectAppointmentCubit(rejectAppointmentRequestUseCase: sl()))
     ..registerLazySingleton(() => RejectAppointmentRequest(repository: sl()));
 
   sl
-    ..registerFactory(() => GetUpcomingAppointmentRequestCubit(
-        getUpcomingAppointmentRequestUseCase: sl()))
-    ..registerLazySingleton(() => GetUpcomingAppointmentRequest(
-        repository: sl())); //GetUpcomingAppointmentsCubit
+    ..registerFactory(() => GetUpcomingAppointmentRequestCubit(getUpcomingAppointmentRequestUseCase: sl()))
+    ..registerLazySingleton(() => GetUpcomingAppointmentRequest(repository: sl())); //GetUpcomingAppointmentsCubit
   sl
-    ..registerFactory(() =>
-        GetUpcomingAppointmentsCubit(getUpcomingAppointmentsUseCase: sl()))
+    ..registerFactory(() => GetUpcomingAppointmentsCubit(getUpcomingAppointmentsUseCase: sl()))
     ..registerLazySingleton(() => GetUpcomingAppointments(repository: sl()));
   sl
-    ..registerFactory(
-        () => TopUpCubit(initiateWalletTopUp: sl(), confirmWalletTopUp: sl()))
+    ..registerFactory(() => TopUpCubit(initiateWalletTopUp: sl(), confirmWalletTopUp: sl()))
     ..registerLazySingleton(() => InitiateWalletTopUp(repository: sl()))
     ..registerLazySingleton(() => ConfirmWalletTopUp(repository: sl()));
 
   sl
-    ..registerFactory(
-        () => GetBankTransactionsCubit(getUserWalletTransactions: sl()))
+    ..registerFactory(() => GetBankTransactionsCubit(getUserWalletTransactions: sl()))
     ..registerLazySingleton(() => GetUserWalletTransactions(repository: sl()));
   sl
     ..registerFactory(() => GetBanksCubit(getBanks: sl()))
@@ -251,8 +234,8 @@ Future<void> init() async {
     ..registerLazySingleton(() => GetPatientData(repository: sl()))
 
     // AuthenticationHiveDataSource
-    ..registerLazySingleton<PatientRepository>(() =>
-        PatientRepositoryImpl(remoteDataSource: sl(), hiveDataSource: sl()))
+    ..registerLazySingleton<PatientRepository>(
+        () => PatientRepositoryImpl(remoteDataSource: sl(), hiveDataSource: sl()))
     ..registerLazySingleton<PatientRemoteDataSource>(
       () => PatientRemoteDataSourceImpl(network: sl()),
     )
@@ -267,28 +250,23 @@ Future<void> init() async {
     ..registerLazySingleton(() => AddUserNote(repository: sl()))
 
     // GetPatientDetails
-    ..registerFactory(
-        () => GetPatientDetailsCubit(getPatientDetailsUseCase: sl()))
+    ..registerFactory(() => GetPatientDetailsCubit(getPatientDetailsUseCase: sl()))
     ..registerLazySingleton(() => GetPatientDetails(repository: sl()))
 
     // RequestForPatientNotes
-    ..registerFactory(
-        () => RequestForPatientNotesCubit(requestForPatientNotesUseCase: sl()))
+    ..registerFactory(() => RequestForPatientNotesCubit(requestForPatientNotesUseCase: sl()))
     ..registerLazySingleton(() => RequestForPatientNotes(repository: sl()))
 
     // GetUserChatRooms
-    ..registerFactory(
-        () => GetUserChatRoomsCubit(getUserChatRoomsUseCase: sl()))
+    ..registerFactory(() => GetUserChatRoomsCubit(getUserChatRoomsUseCase: sl()))
     ..registerLazySingleton(() => GetUserChatRooms(repository: sl()))
 
     // GetUserChatRoomMessages
-    ..registerFactory(() =>
-        GetUserChatRoomMessagesCubit(getUserChatRoomMessagesUseCase: sl()))
+    ..registerFactory(() => GetUserChatRoomMessagesCubit(getUserChatRoomMessagesUseCase: sl()))
     ..registerLazySingleton(() => GetUserChatRoomMessages(repository: sl()))
 
     // GetReferralInstitutions
-    ..registerFactory(() =>
-        GetReferralInstitutionsCubit(getReferralInstitutionsUseCase: sl()))
+    ..registerFactory(() => GetReferralInstitutionsCubit(getReferralInstitutionsUseCase: sl()))
     ..registerLazySingleton(() => GetReferralInstitutions(repository: sl()))
 
     // GetReferrals

@@ -6,7 +6,7 @@ import 'package:soundmind_therapist/features/appointment/data/models/metrics_mod
 import '../../../../core/error/failures.dart';
 
 abstract class AppointmentRepository {
-  Future<Either<Failure, AppointmentModel>> getUpcomingAppointments();
+  Future<Either<Failure, List<AppointmentModel>>> getUpcomingAppointments();
 
   Future<Either<Failure, AppointmentModel>> getUpcomingAppointmentRequest();
 

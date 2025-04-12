@@ -16,6 +16,8 @@ class LoginEvent extends AuthenticationEvent {
 
 class CheckUser extends AuthenticationEvent {}
 
+class GoBack extends AuthenticationEvent {}
+
 class PersonalInfoEvent extends AuthenticationEvent {
   final PersonalInfoModel personalInfoModel;
   final int? page;

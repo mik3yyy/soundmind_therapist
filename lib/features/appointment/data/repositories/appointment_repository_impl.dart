@@ -19,12 +19,15 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
         _hiveDataSource = hiveDataSource;
 
   @override
-  ResultFuture<AppointmentModel> getUpcomingAppointments() async {
+  ResultFuture<List<AppointmentModel>> getUpcomingAppointments() async {
     try {
       final response = await _remoteDataSource.getUpcomingAppointments();
       AppointmentModel appointment = AppointmentModel.fromJson(response);
-      await _hiveDataSource.saveUpcomingAppointments(appointment: appointment);
-      return Right(appointment);
+      List<AppointmentModel> appointments = (response['data'] as List)
+          .map((json) => AppointmentModel.fromJson(json))
+          .toList();
+      // await _hiveDataSource.saveUpcomingAppointments(appointment: appointment);
+      return Right(appointments);
     } on ApiError catch (e) {
       return Left(ServerFailure(e.errorDescription));
     }

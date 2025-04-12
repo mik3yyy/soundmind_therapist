@@ -15,6 +15,7 @@ import 'package:soundmind_therapist/core/widgets/custom_shimmer.dart';
 import 'package:soundmind_therapist/core/widgets/custom_text_button.dart';
 import 'package:soundmind_therapist/core/widgets/error_screen.dart';
 import 'package:soundmind_therapist/features/Authentication/presentation/blocs/Authentication_bloc.dart';
+import 'package:soundmind_therapist/features/Authentication/presentation/blocs/therapist_profile/therapist_profile_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/approve_appointment_request/approve_appointment_request_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_accepted_appointments/get_accepted_appointments_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_pending_appointments/get_pending_appointments_cubit.dart';
@@ -24,6 +25,7 @@ import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_u
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/get_user_metrics/get_user_metrics_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/bloc/reject_appointment_request/reject_appointment_request_cubit.dart';
 import 'package:soundmind_therapist/features/appointment/presentation/widgets/loding.dart';
+import 'package:soundmind_therapist/features/main/presentation/views/home_screen/complete_profile.dart';
 import 'package:soundmind_therapist/features/patient/presentation/blocs/get_user_chat_room/get_user_chat_rooms_cubit.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -41,10 +43,10 @@ class _HomeScreenState extends State<HomeScreen> {
     var state = context.read<GetUpcomingAppointmentsCubit>().state;
     var reqState = context.read<GetUpcomingAppointmentRequestCubit>().state;
     var metricState = context.read<GetUserMetricsCubit>().state;
+
+    context.read<TherapistProfileCubit>().getData();
     if (reqState is! GetUpcomingAppointmentRequestSuccess) {
-      context
-          .read<GetUpcomingAppointmentRequestCubit>()
-          .fetchUpcomingAppointmentRequests();
+      context.read<GetUpcomingAppointmentRequestCubit>().fetchUpcomingAppointmentRequests();
     }
     if (state is! GetUpcomingAppointmentsSuccess) {
       context.read<GetUpcomingAppointmentsCubit>().fetchUpcomingAppointments();
@@ -66,9 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: RefreshIndicator(
         onRefresh: () async {
           context.read<GetUserMetricsCubit>().fetchUserMetrics();
-          context
-              .read<GetUpcomingAppointmentsCubit>()
-              .fetchUpcomingAppointments();
+          context.read<GetUpcomingAppointmentsCubit>().fetchUpcomingAppointments();
         },
         child: SingleChildScrollView(
           child: Column(
@@ -113,38 +113,63 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                      BlocBuilder<GetUpcomingAppointmentsCubit,
-                          GetUpcomingAppointmentsState>(
+                      BlocConsumer<TherapistProfileCubit, TherapistProfileState>(
+                        listener: (context, state) {
+                          print(context.read<TherapistProfileCubit>().profileData);
+
+                          setState(() {});
+                        },
+                        builder: (context, state) {
+                          if ((context.read<TherapistProfileCubit>().profileData != null &&
+                              context.read<TherapistProfileCubit>().falseFields! != 0)) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Complete your profile',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF2E2E2E),
+                                  ),
+                                ),
+                                const SizedBox(height: 3),
+                                ProfileCompletionCard(
+                                  profileData: context.read<TherapistProfileCubit>().profileData!,
+                                ),
+                              ],
+                            );
+                          } else {
+                            return SizedBox();
+                          }
+                        },
+                      ),
+                      BlocBuilder<GetUpcomingAppointmentsCubit, GetUpcomingAppointmentsState>(
                         builder: (context, state) {
                           if (state is GetUpcomingAppointmentsSuccess) {
-                            var doc = state.appointments;
+                            var doc = state.appointments[0];
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   "Upcoming session",
-                                  style: context.textTheme.bodyLarge
-                                      ?.copyWith(fontWeight: FontWeight.w500),
+                                  style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
                                 ),
                                 Gap(10),
                                 GestureDetector(
                                   onTap: () {
-                                    context.goNamed(Routes.view_sessionName,
-                                        extra: doc);
+                                    context.goNamed(Routes.view_sessionName, extra: doc);
                                   },
                                   child: Container(
                                     padding: EdgeInsets.all(10),
                                     width: context.screenWidth * .9,
                                     decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
-                                        color: context.primaryColor),
+                                        borderRadius: BorderRadius.circular(16), color: context.primaryColor),
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
                                             doc.profilePicture != null
                                                 ? Image.network(
@@ -155,16 +180,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ).withClip(4)
                                                 : Container(),
                                             Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   doc.patientName,
-                                                  style: context
-                                                      .textTheme.displayMedium
-                                                      ?.copyWith(
+                                                  style: context.textTheme.displayMedium?.copyWith(
                                                     color: context.colors.white,
                                                   ),
                                                 ),
@@ -177,14 +198,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                           height: 40,
                                           padding: EdgeInsets.all(10),
                                           decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(28),
-                                            color: Colors.purple[900]
-                                                ?.withOpacity(.5),
+                                            borderRadius: BorderRadius.circular(28),
+                                            color: Colors.purple[900]?.withOpacity(.5),
                                           ),
                                           child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               Row(
                                                 children: [
@@ -194,17 +212,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ),
                                                   const Gap(5),
                                                   Text(
-                                                    DateFormater
-                                                        .formatTimeRange(
-                                                            doc.schedule
-                                                                .startTime,
-                                                            doc.schedule
-                                                                .endTime),
-                                                    style: context
-                                                        .textTheme.bodyMedium
-                                                        ?.copyWith(
-                                                      color:
-                                                          context.colors.white,
+                                                    DateFormater.formatTimeRange(
+                                                        doc.schedule.startTime, doc.schedule.endTime),
+                                                    style: context.textTheme.bodyMedium?.copyWith(
+                                                      color: context.colors.white,
                                                     ),
                                                   ),
                                                 ],
@@ -220,11 +231,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     DateFormater.formatDateTime(
                                                       doc.booking.date,
                                                     ),
-                                                    style: context
-                                                        .textTheme.bodyMedium
-                                                        ?.copyWith(
-                                                      color:
-                                                          context.colors.white,
+                                                    style: context.textTheme.bodyMedium?.copyWith(
+                                                      color: context.colors.white,
                                                     ),
                                                   ),
                                                 ],
@@ -239,9 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             );
                           } else if (state is GetUpcomingAppointmentsLoading) {
-                            return ComplexShimmer.cardShimmer(
-                                    itemCount: 1,
-                                    margin: EdgeInsets.symmetric(vertical: 20))
+                            return ComplexShimmer.cardShimmer(itemCount: 1, margin: EdgeInsets.symmetric(vertical: 20))
                                 .withCustomPadding();
                           } else {
                             return Container();
@@ -249,83 +255,55 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       ),
                       const Gap(10),
-                      BlocListener<RejectAppointmentCubit,
-                              RejectAppointmentState>(
+                      BlocListener<RejectAppointmentCubit, RejectAppointmentState>(
                           listener: (context, state) {
                             // TODO: implement listener
                             if (state is RejectAppointmentSuccess) {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => LoadingScreen());
+                              showDialog(context: context, builder: (context) => LoadingScreen());
                             }
                             if (state is RejectAppointmentSuccess) {
                               context.pop();
-                              context
-                                  .read<GetAcceptedAppointmentsCubit>()
-                                  .fetchAcceptedAppointments();
-                              context
-                                  .read<GetRejectedAppointmentsCubit>()
-                                  .fetchRejectedAppointments();
-                              context
-                                  .read<GetPendingAppointmentsCubit>()
-                                  .fetchPendingAppointments();
-                              context
-                                  .read<GetUpcomingAppointmentRequestCubit>()
-                                  .fetchUpcomingAppointmentRequests();
+                              context.read<GetAcceptedAppointmentsCubit>().fetchAcceptedAppointments();
+                              context.read<GetRejectedAppointmentsCubit>().fetchRejectedAppointments();
+                              context.read<GetPendingAppointmentsCubit>().fetchPendingAppointments();
+                              context.read<GetUpcomingAppointmentRequestCubit>().fetchUpcomingAppointmentRequests();
                             }
                             if (state is RejectAppointmentError) {
                               context.pop();
                             }
                             // TODO: implement listener
                           },
-                          child: BlocListener<ApproveAppointmentCubit,
-                                  ApproveAppointmentState>(
+                          child: BlocListener<ApproveAppointmentCubit, ApproveAppointmentState>(
                               listener: (context, state) {
                                 // TODO: implement listener
                                 if (state is ApproveAppointmentLoading) {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) => LoadingScreen());
+                                  showDialog(context: context, builder: (context) => LoadingScreen());
                                 }
                                 if (state is ApproveAppointmentSuccess) {
                                   context.pop();
-                                  context
-                                      .read<GetAcceptedAppointmentsCubit>()
-                                      .fetchAcceptedAppointments();
-                                  context
-                                      .read<GetRejectedAppointmentsCubit>()
-                                      .fetchRejectedAppointments();
-                                  context
-                                      .read<GetPendingAppointmentsCubit>()
-                                      .fetchPendingAppointments();
-                                  context
-                                      .read<
-                                          GetUpcomingAppointmentRequestCubit>()
-                                      .fetchUpcomingAppointmentRequests();
+                                  context.read<GetAcceptedAppointmentsCubit>().fetchAcceptedAppointments();
+                                  context.read<GetRejectedAppointmentsCubit>().fetchRejectedAppointments();
+                                  context.read<GetPendingAppointmentsCubit>().fetchPendingAppointments();
+                                  context.read<GetUpcomingAppointmentRequestCubit>().fetchUpcomingAppointmentRequests();
                                 }
                                 if (state is ApproveAppointmentError) {
                                   context.pop();
                                 }
                               },
-                              child: BlocConsumer<
-                                  GetUpcomingAppointmentRequestCubit,
-                                  GetUpcomingAppointmentRequestState>(
+                              child:
+                                  BlocConsumer<GetUpcomingAppointmentRequestCubit, GetUpcomingAppointmentRequestState>(
                                 listener: (context, state) {
                                   // TODO: implement listener
                                 },
                                 builder: (context, state) {
-                                  if (state
-                                      is GetUpcomingAppointmentRequestSuccess) {
+                                  if (state is GetUpcomingAppointmentRequestSuccess) {
                                     var appointment = state.appointments;
                                     return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           "Appointment request",
-                                          style: context.textTheme.bodyLarge
-                                              ?.copyWith(
-                                                  fontWeight: FontWeight.w500),
+                                          style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
                                         ),
                                         const Gap(5),
                                         Container(
@@ -334,18 +312,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                           padding: EdgeInsets.all(10),
                                           decoration: BoxDecoration(
                                             color: context.colors.black,
-                                            borderRadius:
-                                                BorderRadius.circular(28),
+                                            borderRadius: BorderRadius.circular(28),
                                           ),
                                           child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 appointment.patientName,
-                                                style: context
-                                                    .textTheme.displayMedium
-                                                    ?.copyWith(
+                                                style: context.textTheme.displayMedium?.copyWith(
                                                   color: context.colors.white,
                                                 ),
                                               ),
@@ -353,37 +327,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    DateFormater
-                                                        .formatTimeRange(
-                                                            appointment.schedule
-                                                                .startTime,
-                                                            appointment.schedule
-                                                                .endTime),
-                                                    style: context
-                                                        .textTheme.bodyMedium
-                                                        ?.copyWith(
-                                                      color:
-                                                          context.colors.white,
+                                                    DateFormater.formatTimeRange(
+                                                        appointment.schedule.startTime, appointment.schedule.endTime),
+                                                    style: context.textTheme.bodyMedium?.copyWith(
+                                                      color: context.colors.white,
                                                     ),
                                                   ),
                                                   Text(
                                                     " | ",
-                                                    style: context
-                                                        .textTheme.bodyMedium
-                                                        ?.copyWith(
-                                                      color:
-                                                          context.colors.white,
+                                                    style: context.textTheme.bodyMedium?.copyWith(
+                                                      color: context.colors.white,
                                                     ),
                                                   ),
                                                   Text(
-                                                    DateFormater.formatDateTime(
-                                                        appointment
-                                                            .booking.date),
-                                                    style: context
-                                                        .textTheme.bodyMedium
-                                                        ?.copyWith(
-                                                      color:
-                                                          context.colors.white,
+                                                    DateFormater.formatDateTime(appointment.booking.date),
+                                                    style: context.textTheme.bodyMedium?.copyWith(
+                                                      color: context.colors.white,
                                                     ),
                                                   ),
                                                 ],
@@ -394,15 +353,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   CustomButton(
                                                     label: "Accept",
                                                     color: context.colors.white,
-                                                    textColor:
-                                                        context.colors.black,
+                                                    textColor: context.colors.black,
                                                     onPressed: () {
                                                       context
-                                                          .read<
-                                                              ApproveAppointmentCubit>()
-                                                          .approveAppointment(
-                                                              appointment
-                                                                  .booking.id);
+                                                          .read<ApproveAppointmentCubit>()
+                                                          .approveAppointment(appointment.booking.id);
                                                     },
                                                   ).withExpanded(),
                                                   const Gap(10),
@@ -410,16 +365,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     label: "Decline",
                                                     onPressed: () {
                                                       context
-                                                          .read<
-                                                              RejectAppointmentCubit>()
-                                                          .rejectAppointment(
-                                                              appointment
-                                                                  .booking.id);
+                                                          .read<RejectAppointmentCubit>()
+                                                          .rejectAppointment(appointment.booking.id);
                                                     },
-                                                    color:
-                                                        const Color(0xFF24262B),
-                                                    textColor:
-                                                        context.colors.white,
+                                                    color: const Color(0xFF24262B),
+                                                    textColor: context.colors.white,
                                                   ).withExpanded(),
                                                 ],
                                               )
@@ -429,12 +379,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                         const Gap(5),
                                       ],
                                     );
-                                  } else if (state
-                                      is GetUpcomingAppointmentRequestLoading) {
+                                  } else if (state is GetUpcomingAppointmentRequestLoading) {
                                     return ComplexShimmer.cardShimmer(
-                                            itemCount: 1,
-                                            margin: EdgeInsets.symmetric(
-                                                vertical: 20))
+                                            itemCount: 1, margin: EdgeInsets.symmetric(vertical: 20))
                                         .withCustomPadding();
                                   } else {
                                     return Container();
@@ -451,22 +398,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                   children: [
                                     Container(
                                       height: 88,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20),
+                                      padding: const EdgeInsets.symmetric(horizontal: 20),
                                       decoration: BoxDecoration(
                                         color: context.secondaryColor,
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Text(
                                             state.metrics.patients.toString(),
-                                            style:
-                                                context.textTheme.displayMedium,
+                                            style: context.textTheme.displayMedium,
                                           ),
                                           const Text("Patients")
                                         ],
@@ -481,16 +424,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            state.metrics.appointments
-                                                .toString(),
-                                            style:
-                                                context.textTheme.displayMedium,
+                                            state.metrics.appointments.toString(),
+                                            style: context.textTheme.displayMedium,
                                           ),
                                           const Text("Appointments")
                                         ],
@@ -503,23 +442,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                   children: [
                                     Container(
                                       height: 88,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20),
+                                      padding: const EdgeInsets.symmetric(horizontal: 20),
                                       decoration: BoxDecoration(
                                         color: context.secondaryColor,
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            state.metrics.reSchedules
-                                                .toString(),
-                                            style:
-                                                context.textTheme.displayMedium,
+                                            state.metrics.reSchedules.toString(),
+                                            style: context.textTheme.displayMedium,
                                           ),
                                           const Text("Reschedules")
                                         ],
@@ -534,16 +468,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            state.metrics.referredPatients
-                                                .toString(),
-                                            style:
-                                                context.textTheme.displayMedium,
+                                            state.metrics.referredPatients.toString(),
+                                            style: context.textTheme.displayMedium,
                                           ),
                                           const Text("Referred Patients")
                                         ],
@@ -551,12 +481,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ).withExpanded(),
                                   ],
                                 ),
-                              ] else if (state
-                                  is GetUpcomingAppointmentRequestLoading) ...[
-                                ComplexShimmer.cardShimmer(
-                                        itemCount: 1,
-                                        margin:
-                                            EdgeInsets.symmetric(vertical: 20))
+                              ] else if (state is GetUpcomingAppointmentRequestLoading) ...[
+                                ComplexShimmer.cardShimmer(itemCount: 1, margin: EdgeInsets.symmetric(vertical: 20))
                                     .withCustomPadding()
                               ] else ...[
                                 Container()
@@ -566,8 +492,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                       ),
-                      BlocConsumer<GetUserChatRoomsCubit,
-                          GetUserChatRoomsState>(
+                      BlocConsumer<GetUserChatRoomsCubit, GetUserChatRoomsState>(
                         listener: (context, state) {},
                         builder: (context, state) {
                           if (state is GetUserChatRoomsSuccess) {
@@ -575,8 +500,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "Chats",
@@ -602,32 +526,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                         context.goNamed(
                                           Routes.view_patientName,
                                           extra: chatRoom,
-                                          pathParameters: {
-                                            'id': chatRoom.receiverID.toString()
-                                          },
+                                          pathParameters: {'id': chatRoom.receiverID.toString()},
                                         );
                                       },
                                       contentPadding: EdgeInsets.zero,
                                       leading: CircleAvatar(
                                         radius: 20,
-                                        backgroundColor:
-                                            context.colors.greyDecor,
+                                        backgroundColor: context.colors.greyDecor,
                                         child: CachedNetworkImage(
                                           imageUrl: chatRoom.senderProfilePhoto,
                                           height: 40,
                                           width: 40,
                                           fit: BoxFit.cover,
                                           errorWidget: (context, url, error) =>
-                                              CachedNetworkImage(
-                                                  imageUrl: ImageUtils.profile),
+                                              CachedNetworkImage(imageUrl: ImageUtils.profile),
                                         ),
                                       ).withClip(20),
                                       subtitle: Text(
                                         "Tap to open patient",
                                         style: context.textTheme.bodySmall
-                                            ?.copyWith(
-                                                fontSize: 8,
-                                                fontWeight: FontWeight.w700),
+                                            ?.copyWith(fontSize: 8, fontWeight: FontWeight.w700),
                                       ),
                                       trailing: IconButton(
                                           onPressed: () {
@@ -636,15 +554,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             context.goNamed(
                                               Routes.chatRoomName,
                                               extra: chatRoom,
-                                              pathParameters: {
-                                                'id': chatRoom.chatRoomID
-                                                    .toString()
-                                              },
+                                              pathParameters: {'id': chatRoom.chatRoomID.toString()},
                                             );
                                           },
-                                          icon: Assets.application.assets.svgs
-                                              .therapistMessage
-                                              .svg()),
+                                          icon: Assets.application.assets.svgs.therapistMessage.svg()),
                                       title: Text(chatRoom.senderName),
                                     );
                                   },
@@ -654,8 +567,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           } else if (state is GetUserChatRoomsLoading) {
                             return Container(
                               height: 400,
-                              child: ComplexShimmer.listShimmer(itemCount: 7)
-                                  .withCustomPadding(),
+                              child: ComplexShimmer.listShimmer(itemCount: 7).withCustomPadding(),
                             );
                           } else if (state is GetUserChatRoomsError) {
                             return CustomErrorScreen(

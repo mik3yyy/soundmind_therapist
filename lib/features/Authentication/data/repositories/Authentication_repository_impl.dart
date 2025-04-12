@@ -8,6 +8,7 @@ import 'package:soundmind_therapist/features/Authentication/data/models/gas.dart
 import 'package:soundmind_therapist/features/Authentication/data/models/personal_info_model.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/practical_info_model.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/professional_info_model.dart';
+import 'package:soundmind_therapist/features/Authentication/data/models/profile_data.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/profile_info_model.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/user.dart';
 import 'package:soundmind_therapist/features/Authentication/data/models/verification_model.dart';
@@ -25,8 +26,7 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
         _authenticationHiveDataSource = authenticationHiveDataSource;
 
   @override
-  ResultFuture<UserModel> login(
-      {required String email, required String password}) async {
+  ResultFuture<UserModel> login({required String email, required String password}) async {
     try {
       DataMap userData = await _authenticationRemoteDataSource.login(
         email: email,
@@ -36,8 +36,7 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
       if (userData['isEmailVerified']) {
         UserModel userModel = UserModel.fromJson(userData);
         if (userModel.roles[0] == 'User') {
-          return Left(
-              ServerFailure("This is not a therapist account", data: userData));
+          return Left(ServerFailure("This is not a therapist account", data: userData));
         }
         _authenticationHiveDataSource.saveUser(userModel: userModel);
         return Right(userModel);
@@ -52,19 +51,11 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
   @override
   ResultFuture<DataMap> createAccount({
     required PersonalInfoModel personalInfoModel,
-    required ProfessionalInfoModel professionalInfoModel,
-    required PracticalInfoModel practicalInfoModel,
-    required VerificationInfoModel verificationInfoModel,
-    required ProfileInfoModel profileInfoEvent,
   }) async {
     try {
-      var verificationData =
-          await _authenticationRemoteDataSource.createAccount(
-              personalInfoModel: personalInfoModel,
-              professionalInfoModel: professionalInfoModel,
-              practicalInfoModel: practicalInfoModel,
-              verificationInfoModel: verificationInfoModel,
-              profileInfoEvent: profileInfoEvent);
+      var verificationData = await _authenticationRemoteDataSource.createAccount(
+        personalInfoModel: personalInfoModel,
+      );
       return Right(verificationData);
     } on ApiError catch (e) {
       return Left(ServerFailure(e.errorDescription));
@@ -85,9 +76,7 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
 
   @override
   ResultFuture<void> changePassword(
-      {required String old,
-      required String newPassword,
-      required String confirmPassword}) async {
+      {required String old, required String newPassword, required String confirmPassword}) async {
     // TODO: implement changePassword
     try {
       await _authenticationRemoteDataSource.changePassword(
@@ -113,12 +102,10 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
   }
 
   @override
-  ResultFuture<UserModel> verifyEmail(
-      {required String otp, required String securityKey}) async {
+  ResultFuture<UserModel> verifyEmail({required String otp, required String securityKey}) async {
     // TODO: implement verifyEmail
     try {
-      UserModel userModel = await _authenticationRemoteDataSource.verifyEmail(
-          otp: otp, securityKey: securityKey);
+      UserModel userModel = await _authenticationRemoteDataSource.verifyEmail(otp: otp, securityKey: securityKey);
       // _authenticationHiveDataSource.saveUser(userModel: userModel);
       return Right(userModel);
     } on ApiError catch (e) {
@@ -134,8 +121,7 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
     required String phoneNumber,
   }) async {
     try {
-      DataMap result =
-          await _authenticationRemoteDataSource.checkIfPhoneAndEmailExist(
+      DataMap result = await _authenticationRemoteDataSource.checkIfPhoneAndEmailExist(
         email: email,
         phoneNumber: phoneNumber,
       );
@@ -150,8 +136,7 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
     required String signupKey,
   }) async {
     try {
-      DataMap result =
-          await _authenticationRemoteDataSource.resendVerificationOtp(
+      DataMap result = await _authenticationRemoteDataSource.resendVerificationOtp(
         signupKey: signupKey,
       );
       return Right(result);
@@ -164,10 +149,55 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
   ResultFuture<List<GASModel>> getGAS() async {
     try {
       DataMap result = await _authenticationRemoteDataSource.getGAS();
-      List<GASModel> appointments = (result['data'] as List)
-          .map((json) => GASModel.fromJson(json))
-          .toList();
+      List<GASModel> appointments = (result['data'] as List).map((json) => GASModel.fromJson(json)).toList();
       return Right(appointments);
+    } on ApiError catch (e) {
+      return Left(ServerFailure(e.errorDescription));
+    }
+  }
+
+  @override
+  ResultFuture<ProfileData> getProfileData() async {
+    try {
+      DataMap result = await _authenticationRemoteDataSource.getProfileData();
+      ProfileData data = ProfileData.fromJson(result);
+      return Right(data);
+    } on ApiError catch (e) {
+      return Left(ServerFailure(e.errorDescription));
+    }
+  }
+
+  @override
+  ResultFuture<void> uploadPracticalInfo({required PracticalInfoModel practicalInfoModel}) async {
+    try {
+      await _authenticationRemoteDataSource.uploadPracticalInfo(practicalInfoModel: practicalInfoModel);
+
+      return Right(null);
+    } on ApiError catch (e) {
+      return Left(ServerFailure(e.errorDescription));
+    }
+  }
+
+  @override
+  ResultFuture<void> uploadProfessionalInfo({required ProfessionalInfoModel professionalInfoModel}) async {
+    try {
+      await _authenticationRemoteDataSource.uploadProfessionalInfo(professionalInfoModel: professionalInfoModel);
+
+      return Right(null);
+    } on ApiError catch (e) {
+      return Left(ServerFailure(e.errorDescription));
+    }
+  }
+
+  @override
+  ResultFuture<void> uploadVerificarionInfo({required VerificationInfoModel verification_info}) async {
+    try {
+      UserModel userModel = await _authenticationHiveDataSource.getUser();
+
+      await _authenticationRemoteDataSource.uploadVerificarionInfo(
+          verificationInfoModel: verification_info, email: userModel.email);
+
+      return Right(null);
     } on ApiError catch (e) {
       return Left(ServerFailure(e.errorDescription));
     }

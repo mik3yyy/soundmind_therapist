@@ -26,8 +26,7 @@ class PersonalInfoScreen extends StatefulWidget {
   State<PersonalInfoScreen> createState() => _PersonalInfoScreenState();
 }
 
-class _PersonalInfoScreenState extends State<PersonalInfoScreen>
-    with Validators, AutomaticKeepAliveClientMixin {
+class _PersonalInfoScreenState extends State<PersonalInfoScreen> with Validators, AutomaticKeepAliveClientMixin {
   TextEditingController _firstName = TextEditingController();
   TextEditingController _lastName = TextEditingController();
   TextEditingController _emailController = TextEditingController();
@@ -46,8 +45,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen>
   Widget build(BuildContext context) {
     super.build(context); // Important!
 
-    return BlocListener<CheckIfPhoneAndEmailExistCubit,
-        CheckIfPhoneAndEmailExistState>(
+    return BlocListener<CheckIfPhoneAndEmailExistCubit, CheckIfPhoneAndEmailExistState>(
       listener: (context, state) {
         if (state is CheckIfPhoneAndEmailExistFailure) {
           context.showSnackBar(state.error);
@@ -115,8 +113,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen>
             CustomTextField(
               controller: _cpasswordController,
               isPasswordField: true,
-              validator: (value) => validateConfirmPassword(
-                  passowrd: _passwordController.text, confirmPassword: value),
+              validator: (value) => validateConfirmPassword(passowrd: _passwordController.text, confirmPassword: value),
               titleText: "Confirm Password",
               hintText: "",
             ),
@@ -145,12 +142,10 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen>
               },
             ),
             const Gap(2),
-            BlocBuilder<CheckIfPhoneAndEmailExistCubit,
-                CheckIfPhoneAndEmailExistState>(
+            BlocBuilder<CheckIfPhoneAndEmailExistCubit, CheckIfPhoneAndEmailExistState>(
               builder: (context, state) {
                 return CustomButton(
-                  notifier:
-                      ValueNotifier(state is CheckIfPhoneAndEmailExistLoading),
+                  notifier: ValueNotifier(state is CheckIfPhoneAndEmailExistLoading || state is CreatingAccount),
                   label: "Next",
                   onPressed: () {
                     if (!signupForm.currentState!.validate()) {
@@ -162,18 +157,13 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen>
                     }
                     context
                         .read<CheckIfPhoneAndEmailExistCubit>()
-                        .checkIfPhoneAndEmailExist(
-                            _emailController.text, phoneNumber);
+                        .checkIfPhoneAndEmailExist(_emailController.text, phoneNumber);
                   },
                 );
               },
             )
           ].addSpacer(const Gap(10)),
-        )
-            .withSafeArea()
-            .withForm(signupForm)
-            .withPadding(const EdgeInsets.symmetric(horizontal: 20))
-            .withScrollView(),
+        ).withSafeArea().withForm(signupForm).withPadding(const EdgeInsets.symmetric(horizontal: 20)).withScrollView(),
       ),
     );
   }
