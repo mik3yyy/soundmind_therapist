@@ -45,12 +45,14 @@ class _ProfileCompletionCardState extends State<ProfileCompletionCard> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'You are ${count} steps away from meeting\nyour first patient✨',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF6E50C1),
+                    Expanded(
+                      child: AutoSizeText(
+                        'You are ${count} steps away from meeting your first patient✨',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF6E50C1),
+                        ),
                       ),
                     ),
                     _buildProgressIndicator(count),

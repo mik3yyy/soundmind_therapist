@@ -42,7 +42,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> with TickerPr
       listener: (context, state) {
         if (state is ProfileInfoState) {
           var page = state.page ?? 0;
-          pageController.animateToPage(page, duration: const Duration(milliseconds: 500), curve: Curves.ease);
+          // pageController.animateToPage(page, duration: const Duration(milliseconds: 500), curve: Curves.ease);
           if (state.message != null) {
             context.showSnackBar(state.message!);
           }

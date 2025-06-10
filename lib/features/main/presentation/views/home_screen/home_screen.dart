@@ -549,8 +549,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                       trailing: IconButton(
                                           onPressed: () {
-                                            print(chatRoom.receiverID);
-                                            print(chatRoom.chatRoomID);
                                             context.goNamed(
                                               Routes.chatRoomName,
                                               extra: chatRoom,
@@ -569,15 +567,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               height: 400,
                               child: ComplexShimmer.listShimmer(itemCount: 7).withCustomPadding(),
                             );
-                          } else if (state is GetUserChatRoomsError) {
-                            return CustomErrorScreen(
-                              onTap: () {},
-                              message: state.message,
-                            );
                           } else {
-                            return const Center(
-                              child: Text('Welcome to the Patient feature!'),
-                            );
+                            return SizedBox();
                           }
                         },
                       ),

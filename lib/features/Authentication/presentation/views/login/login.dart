@@ -30,9 +30,9 @@ class _LoginscreenState extends State<Loginscreen> with Validators {
   Widget build(BuildContext context) {
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
-        // if (state is UserAccount) {
-        //   context.replaceNamed(Routes.securityName);
-        // }
+        if (state is UserAccount) {
+          context.replaceNamed(Routes.homeName);
+        }
 
         if (state is LoginFailed) {
           context.showSnackBar(state.message);
@@ -43,9 +43,7 @@ class _LoginscreenState extends State<Loginscreen> with Validators {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Assets.application.assets.images.logoPurple
-                .image(width: 132, height: 132)
-                .toCenter(),
+            Assets.application.assets.images.logoPurple.image(width: 132, height: 132).toCenter(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -85,16 +83,16 @@ class _LoginscreenState extends State<Loginscreen> with Validators {
                   label: "Login",
                   onPressed: () {
                     if (!loginForm.currentState!.validate()) return;
-                    context.read<AuthenticationBloc>().add(LoginEvent(
-                        email: _emailController.text,
-                        password: _passwordController.text));
+                    context
+                        .read<AuthenticationBloc>()
+                        .add(LoginEvent(email: _emailController.text, password: _passwordController.text));
                   },
                 );
               },
             ),
             RichText(
               text: TextSpan(
-                text: "By continuing you are agreeing to Sound Mind’s ",
+                text: "By continuffing you are agreeing to Sound Mind’s ",
                 style: context.textTheme.bodyMedium,
                 children: [
                   TextSpan(

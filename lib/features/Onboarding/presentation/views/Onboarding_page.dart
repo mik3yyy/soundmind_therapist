@@ -30,18 +30,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   List<Map<String, dynamic>> welcomeTexts = [
     {
       'title': 'Welcome! Let SoundMind help personlize your experience',
-      'subTitle':
-          'We will be asking you a series of questions to help us better understand you and your health',
+      'subTitle': 'We will be asking you a series of questions to help us better understand you and your health',
     },
     {
       'title': 'Welcome! Let SoundMind help personlize your experience',
-      'subTitle':
-          'We will be asking you a series of questions to help us better understand you and your health'
+      'subTitle': 'We will be asking you a series of questions to help us better understand you and your health'
     },
     {
       'title': 'Welcome! Let SoundMind help personlize your experience',
-      'subTitle':
-          'We will be asking you a series of questions to help us better understand you and your health',
+      'subTitle': 'We will be asking you a series of questions to help us better understand you and your health',
     },
   ];
   List<Widget> images = [
@@ -156,8 +153,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         onPressed: () {
                           currentPage++;
                           _pageController.animateToPage(currentPage,
-                              duration: Duration(milliseconds: 500),
-                              curve: Curves.decelerate);
+                              duration: Duration(milliseconds: 500), curve: Curves.decelerate);
                           // context.replaceNamed(Routes.auth);
                         },
                       ),
@@ -180,9 +176,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     curve: Curves.easeInOut,
                   );
                 },
-                child: Text("Skip",
-                    style: context.textTheme.titleMedium
-                        ?.copyWith(color: context.colors.white)),
+                child: Text("Skip", style: context.textTheme.titleMedium?.copyWith(color: context.colors.white)),
               ),
             ),
           Positioned(
@@ -244,9 +238,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   child: Center(
                     child: AutoSizeText(
                       title,
+                      maxLines: 2,
+                      minFontSize: 5,
                       textAlign: TextAlign.center,
-                      style: context.textTheme.displayLarge
-                          ?.copyWith(color: context.colors.white),
+                      style: context.textTheme.displayLarge?.copyWith(color: context.colors.white),
                     ),
                   ),
                 ),
@@ -255,8 +250,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   child: AutoSizeText(
                     body,
                     textAlign: TextAlign.center,
-                    style: context.textTheme.bodyMedium
-                        ?.copyWith(color: context.colors.white),
+                    style: context.textTheme.bodyMedium?.copyWith(color: context.colors.white),
                   ),
                 )
               ].addSpacer(const Gap(20)),
