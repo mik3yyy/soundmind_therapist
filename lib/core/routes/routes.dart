@@ -124,11 +124,10 @@ class Routes {
 
   static const String view_bookingName = 'view_booking';
   static const String view_bookingPath = 'view_booking';
+
   // Navigator keys for nested navigation
-  static final GlobalKey<NavigatorState> rootNavigatorKey =
-      GlobalKey<NavigatorState>();
-  static final GlobalKey<NavigatorState> shellNavigatorKey =
-      GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
 
   static final GoRouter router = GoRouter(
     navigatorKey: rootNavigatorKey,
@@ -136,8 +135,7 @@ class Routes {
       GoRoute(
         path: splashPath,
         name: splashName,
-        builder: (context, state) =>
-            const SplashScreen(), // Replace with actual screen widget
+        builder: (context, state) => const SplashScreen(), // Replace with actual screen widget
         routes: [
           GoRoute(
             path: onboardingPath,
@@ -188,18 +186,13 @@ class Routes {
           email: state.extra as String,
         ),
       ),
-      GoRoute(
-          path: securityPath,
-          name: securityName,
-          builder: (context, state) => const SecurityScreen(),
-          routes: [
-            GoRoute(
-              path: setPinPath,
-              name: setPinName,
-              builder: (context, state) =>
-                  SetPinPage(), // Replace with actual screen widget
-            ),
-          ]),
+      GoRoute(path: securityPath, name: securityName, builder: (context, state) => const SecurityScreen(), routes: [
+        GoRoute(
+          path: setPinPath,
+          name: setPinName,
+          builder: (context, state) => SetPinPage(), // Replace with actual screen widget
+        ),
+      ]),
       ShellRoute(
         navigatorKey: shellNavigatorKey,
         builder: (context, state, child) => MainPage(
@@ -215,8 +208,7 @@ class Routes {
                 return CustomTransitionPage(
                   key: state.pageKey,
                   child: const HomeScreen(),
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) {
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
                     return FadeTransition(
                       opacity: animation,
                       child: child,
@@ -240,36 +232,31 @@ class Routes {
                   name: view_bookingName,
                   parentNavigatorKey: rootNavigatorKey,
 
-                  builder: (context, state) =>
-                      ViewBookingScreen(), // Replace with actual screen widget
+                  builder: (context, state) => ViewBookingScreen(), // Replace with actual screen widget
                 ),
                 GoRoute(
                   path: notificationPath,
                   name: notificationName,
                   parentNavigatorKey: rootNavigatorKey,
 
-                  builder: (context, state) =>
-                      NotificationPage(), // Replace with actual screen widget
+                  builder: (context, state) => NotificationPage(), // Replace with actual screen widget
                 ),
                 GoRoute(
                   path: settingsPath,
                   name: settingsName,
                   parentNavigatorKey: rootNavigatorKey,
-                  builder: (context, state) =>
-                      SettingPage(), // Replace with actual screen widget
+                  builder: (context, state) => SettingPage(), // Replace with actual screen widget
                   routes: [
                     GoRoute(
                       path: termsOfService,
                       parentNavigatorKey: rootNavigatorKey,
-                      builder: (context, state) =>
-                          Placeholder(), // Replace with actual screen widget
+                      builder: (context, state) => Placeholder(), // Replace with actual screen widget
                     ),
                     GoRoute(
                       path: personal_detailsPath,
                       name: personal_detailsName,
                       parentNavigatorKey: rootNavigatorKey,
-                      builder: (context, state) =>
-                          const PersonalDetailsScreen(),
+                      builder: (context, state) => const PersonalDetailsScreen(),
                     ),
                     GoRoute(
                       path: change_passwordPath,
@@ -301,8 +288,7 @@ class Routes {
                 return CustomTransitionPage(
                   key: state.pageKey,
                   child: const ChatPage(),
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) {
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
                     return FadeTransition(
                       opacity: animation,
                       child: child,
@@ -329,8 +315,7 @@ class Routes {
               return CustomTransitionPage(
                 key: state.pageKey,
                 child: AppointmentPage(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
                   return FadeTransition(
                     opacity: animation,
                     child: child,
@@ -362,8 +347,7 @@ class Routes {
                             parentNavigatorKey: rootNavigatorKey,
                             builder: (context, state) => SelectTimePage(
                                   id: state.extra,
-                                  day: state.uri.queryParameters['day']
-                                      as String,
+                                  day: state.uri.queryParameters['day'] as String,
                                 ),
                             // Replace with actual screen widget
                             routes: [
@@ -385,8 +369,7 @@ class Routes {
             path: blogPath,
             name: blogName,
             parentNavigatorKey: shellNavigatorKey,
-            builder: (context, state) =>
-                Placeholder(), // Replace with actual screen widget
+            builder: (context, state) => Placeholder(), // Replace with actual screen widget
           ),
           GoRoute(
               path: walletPath,
@@ -398,8 +381,7 @@ class Routes {
                 return CustomTransitionPage(
                   key: state.pageKey,
                   child: WalletPage(),
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) {
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
                     return FadeTransition(
                       opacity: animation,
                       child: child,
@@ -412,15 +394,13 @@ class Routes {
                   path: addFundPath,
                   name: addFundName,
                   parentNavigatorKey: rootNavigatorKey,
-                  builder: (context, state) =>
-                      const AddFundsPage(), // Replace with actual screen widget
+                  builder: (context, state) => const AddFundsPage(), // Replace with actual screen widget
                 ),
                 GoRoute(
                     path: withdrawPath,
                     name: withdrawName,
                     parentNavigatorKey: rootNavigatorKey,
-                    builder: (context, state) =>
-                        const WithdrawPage(), // Replace with actual screen widget
+                    builder: (context, state) => const WithdrawPage(), // Replace with actual screen widget
                     routes: [
                       GoRoute(
                         path: add_amountPath,

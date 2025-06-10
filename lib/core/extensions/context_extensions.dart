@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sound_mind/core/theme/theme.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 extension ContextExtensions on BuildContext {
   // Access the screen width
@@ -15,13 +17,16 @@ extension ContextExtensions on BuildContext {
 
   // Access the text theme
   TextTheme get textTheme => Theme.of(this).textTheme;
-  AppColorExtension get colors =>
-      Theme.of(this).extension<AppColorExtension>()!;
+  AppColorExtension get colors => Theme.of(this).extension<AppColorExtension>()!;
 
-  // Show a snackbar
+  /// Shows a “snackbar” at the *top* using a MaterialBanner.
   void showSnackBar(String message) {
-    ScaffoldMessenger.of(this).showSnackBar(
-      SnackBar(content: Text(message)),
+    showTopSnackBar(
+      Overlay.of(this),
+      CustomSnackBar.info(
+        message: "Something went wrong. Please check your credentials and try again",
+        backgroundColor: primaryColor,
+      ),
     );
   }
 }

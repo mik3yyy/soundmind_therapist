@@ -1,0 +1,2 @@
+/Users/michael/Desktop/Programming projects/soundmind-mobile-app/android/app/.cxx/RelWithDebInfo/26401s46/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/michael/Desktop/Programming projects/soundmind-mobile-app/android/app/.cxx/RelWithDebInfo/26401s46/arm64-v8a/CMakeFiles/rebuild_cache.dir

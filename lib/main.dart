@@ -11,8 +11,10 @@ import 'package:sound_mind/features/Authentication/presentation/blocs/cubit/rese
 import 'package:sound_mind/features/Authentication/presentation/blocs/update_user/update_user_cubit.dart';
 import 'package:sound_mind/features/Security/presentation/blocs/Security_bloc.dart';
 import 'package:sound_mind/features/Security/presentation/blocs/change_pin/change_pin_cubit.dart';
+import 'package:sound_mind/features/appointment/domain/usecases/get_blogs.dart';
 import 'package:sound_mind/features/appointment/domain/usecases/get_pending_appointment.dart';
 import 'package:sound_mind/features/appointment/presentation/blocs/appointment_bloc.dart';
+import 'package:sound_mind/features/appointment/presentation/blocs/blogs/blogs_cubit.dart';
 import 'package:sound_mind/features/appointment/presentation/blocs/booking/booking_cubit.dart';
 import 'package:sound_mind/features/appointment/presentation/blocs/doctor/doctor_cubit.dart';
 import 'package:sound_mind/features/appointment/presentation/blocs/doctor_details/doctor_details_cubit.dart';
@@ -36,8 +38,7 @@ import 'package:sound_mind/features/wallet/presentation/blocs/wallet_bloc.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await dotenv.load(
-      fileName: '.env'); // Load environment variables from application folder
+  await dotenv.load(fileName: '.env'); // Load environment variables from application folder
   await di.init(); // Initialize dependency injection
   runApp(const MyApp());
 }
@@ -69,23 +70,19 @@ class MyApp extends StatelessWidget {
           create: (context) => sl<DoctorDetailsCubit>(),
         ),
         BlocProvider(
-          create: (context) =>
-              sl<PhysicianScheduleCubit>(), //CreateBookingCubit
+          create: (context) => sl<PhysicianScheduleCubit>(), //CreateBookingCubit
         ),
         BlocProvider(
-          create: (context) =>
-              sl<CreateBookingCubit>(), //UpcomingAppointmentCubit
+          create: (context) => sl<CreateBookingCubit>(), //UpcomingAppointmentCubit
         ),
         BlocProvider(
-          create: (context) =>
-              sl<UpcomingAppointmentCubit>(), //UpcomingAppointmentCubit
+          create: (context) => sl<UpcomingAppointmentCubit>(), //UpcomingAppointmentCubit
         ),
         BlocProvider(
           create: (context) => sl<WalletBloc>(), //UpcomingAppointmentCubit
         ),
         BlocProvider(
-          create: (context) =>
-              sl<WithdrawToBankCubit>(), //UpcomingAppointmentCubit
+          create: (context) => sl<WithdrawToBankCubit>(), //UpcomingAppointmentCubit
         ),
         BlocProvider(
           //ResendOtpCubit
@@ -100,6 +97,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => sl<GetBankTransactionsCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<BlogsCubit>(),
         ),
         BlocProvider(
           create: (context) => sl<ChangePasswordCubit>(),

@@ -27,9 +27,7 @@ class _SelectDayPageState extends State<SelectDayPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    context
-        .read<PhysicianScheduleCubit>()
-        .fetchPhysicianSchedule(widget.id as int);
+    context.read<PhysicianScheduleCubit>().fetchPhysicianSchedule(widget.id as int);
   }
 
   int currentIndex = -1;
@@ -51,11 +49,9 @@ class _SelectDayPageState extends State<SelectDayPage> {
           if (state is PhysicianScheduleLoaded) {
             var physicianSchedule = state.schedules;
 
-            List<String> availableDays = physicianSchedule
-                .where((element) => element.isTaken == false)
-                .map((e) => e.dayOfWeekTitle)
-                .toList();
-
+            List<String> availableDays =
+                physicianSchedule.where((element) => element.isTaken == false).map((e) => e.dayOfWeekTitle).toList();
+            print(availableDays);
             List<String> days = [];
 
             for (String day in availableDays) {
@@ -88,11 +84,8 @@ class _SelectDayPageState extends State<SelectDayPage> {
                             Column(
                               children: [
                                 AutoSizeText(
-                                  "${detailModel.firstName} ${detailModel.lastName}"
-                                      .toLowerCase()
-                                      .capitalizeAllFirst,
-                                  style: context.textTheme.bodyLarge
-                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                  "${detailModel.firstName} ${detailModel.lastName}".toLowerCase().capitalizeAllFirst,
+                                  style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                                 ),
                                 // Text(detailModel.)
                               ],
@@ -104,8 +97,7 @@ class _SelectDayPageState extends State<SelectDayPage> {
                         const Gap(15),
                         Text(
                           "Therapist available days at the selected time ",
-                          style: context.textTheme.bodyLarge
-                              ?.copyWith(fontWeight: FontWeight.bold),
+                          style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         Gap(10),
                         Expanded(
@@ -121,42 +113,30 @@ class _SelectDayPageState extends State<SelectDayPage> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: currentIndex == index
-                                        ? context.secondaryColor
-                                        : context.colors.greyOutline,
+                                    color: currentIndex == index ? context.secondaryColor : context.colors.greyOutline,
                                     border: Border.all(
-                                      color: currentIndex == index
-                                          ? context.primaryColor
-                                          : context.colors.greyOutline,
+                                      color: currentIndex == index ? context.primaryColor : context.colors.greyOutline,
                                     ),
                                     borderRadius: BorderRadius.circular(38),
                                   ),
                                   padding: EdgeInsets.all(8),
                                   child: ListTile(
                                     leading: Transform.scale(
-                                      scale:
-                                          1.5, // Increase the scale to make the checkbox larger
+                                      scale: 1.5, // Increase the scale to make the checkbox larger
                                       child: Checkbox(
                                         value: currentIndex == index,
                                         shape: const CircleBorder(),
-                                        fillColor: WidgetStateProperty
-                                            .resolveWith<Color>(
-                                                (Set<WidgetState> states) {
-                                          if (states
-                                              .contains(WidgetState.selected)) {
-                                            return context
-                                                .primaryColor; // Color when the checkbox is checked
+                                        fillColor: WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+                                          if (states.contains(WidgetState.selected)) {
+                                            return context.primaryColor; // Color when the checkbox is checked
                                           }
-                                          return Colors
-                                              .grey; // Color when the checkbox is unchecked
+                                          return Colors.grey; // Color when the checkbox is unchecked
                                         }),
-                                        activeColor: Colors
-                                            .grey, // Set the background color when checked
+                                        activeColor: Colors.grey, // Set the background color when checked
                                         onChanged: (value) {},
                                       ),
                                     ),
-                                    titleAlignment:
-                                        ListTileTitleAlignment.titleHeight,
+                                    titleAlignment: ListTileTitleAlignment.titleHeight,
                                     title: Text(days[index]),
                                   ),
                                 ),
@@ -173,10 +153,7 @@ class _SelectDayPageState extends State<SelectDayPage> {
                           label: "Proceed to select time",
                           onPressed: () {
                             context.goNamed(Routes.viewTimeName,
-                                extra: widget.id,
-                                queryParameters: {
-                                  'day': availableDays[currentIndex]
-                                });
+                                extra: widget.id, queryParameters: {'day': availableDays[currentIndex]});
                           },
                           enable: currentIndex != -1,
                         ),
@@ -191,9 +168,7 @@ class _SelectDayPageState extends State<SelectDayPage> {
           } else if (state is PhysicianScheduleError) {
             return CustomErrorScreen(
               onTap: () {
-                context
-                    .read<PhysicianScheduleCubit>()
-                    .fetchPhysicianSchedule(widget.id as int);
+                context.read<PhysicianScheduleCubit>().fetchPhysicianSchedule(widget.id as int);
               },
               message: state.message,
             );

@@ -1,12 +1,12 @@
 class Constants {
-  static List<String> genders = ["male", "female", "others"];
+  static List<String> genders = ["Male", "Female", "Others"];
   static int convertGender(String gender) {
     switch (gender) {
-      case 'male':
+      case 'Male':
         return 1;
-      case 'female':
+      case 'Female':
         return 2;
-      case 'others':
+      case 'Others':
         return 3;
       default:
         return 1;

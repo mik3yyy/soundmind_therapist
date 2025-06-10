@@ -32,6 +32,8 @@ class _LoginscreenState extends State<Loginscreen> with Validators {
       listener: (context, state) {
         if (state is UserAccount) {
           context.replaceNamed(Routes.securityName);
+        } else if (state is LoginAccoiuntFailure) {
+          context.showSnackBar(state.message);
         }
       },
       builder: (BuildContext context, AuthenticationState state) {
@@ -40,9 +42,7 @@ class _LoginscreenState extends State<Loginscreen> with Validators {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Assets.application.assets.images.logoPurple
-                  .image(width: 132, height: 132)
-                  .toCenter(),
+              Assets.application.assets.images.logoPurple.image(width: 132, height: 132).toCenter(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -82,9 +82,9 @@ class _LoginscreenState extends State<Loginscreen> with Validators {
                 notifier: ValueNotifier(state is LoginingAccount),
                 onPressed: () {
                   if (!loginForm.currentState!.validate()) return;
-                  context.read<AuthenticationBloc>().add(LoginEvent(
-                      email: _emailController.text,
-                      password: _passwordController.text));
+                  context
+                      .read<AuthenticationBloc>()
+                      .add(LoginEvent(email: _emailController.text, password: _passwordController.text));
                   setState(() {});
                 },
               ),

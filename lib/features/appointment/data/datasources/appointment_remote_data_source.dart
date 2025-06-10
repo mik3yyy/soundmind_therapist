@@ -6,6 +6,7 @@ import 'package:sound_mind/features/Appointment/data/models/appointment_model.da
 import 'package:sound_mind/features/appointment/data/models/CreateBookingReq.dart';
 import 'package:sound_mind/features/appointment/data/models/MakePaymentBookingReq.dart';
 import 'package:sound_mind/features/appointment/data/models/appointment.dart';
+import 'package:sound_mind/features/appointment/data/models/blog.dart';
 import 'package:sound_mind/features/appointment/data/models/booking.dart';
 import 'package:sound_mind/features/appointment/data/models/doctor_detail.dart';
 import 'package:sound_mind/features/appointment/data/models/physician_schedule.dart';
@@ -15,11 +16,11 @@ abstract class AppointmentRemoteDataSource {
   Future<List<AppointmentDto>> getAcceptedAppointments();
   Future<List<AppointmentDto>> getPendingAppointments();
   Future<List<AppointmentDto>> getRejectedAppointments();
+
+  Future<List<Blog>> getBlogs();
   Future<void> createBooking(CreateBookingRequest request);
-  Future<void> makePaymentForAppointment(
-      MakePaymentForAppointmentRequest request);
-  Future<List<Map<String, dynamic>>> getDoctors(
-      {required int pageNumber, required int pageSize});
+  Future<void> makePaymentForAppointment(MakePaymentForAppointmentRequest request);
+  Future<List<Map<String, dynamic>>> getDoctors({required int pageNumber, required int pageSize});
   Future<DoctorDetailModel> getDoctorDetails(int physicianId);
   Future<List<PhysicianScheduleModel>> getPhysicianSchedule(int physicianId);
 }
@@ -27,8 +28,7 @@ abstract class AppointmentRemoteDataSource {
 class AppointmentRemoteDataSourceImpl extends AppointmentRemoteDataSource {
   final Network _network;
 
-  AppointmentRemoteDataSourceImpl({required Network network})
-      : _network = network;
+  AppointmentRemoteDataSourceImpl({required Network network}) : _network = network;
   static String dummyJsonResponse = '''
 {
   "booking": {
@@ -68,8 +68,7 @@ class AppointmentRemoteDataSourceImpl extends AppointmentRemoteDataSource {
 
   List appointments = [dummyJsonResponse];
   @override
-  Future<List<Map<String, dynamic>>> getDoctors(
-      {required int pageNumber, required int pageSize}) async {
+  Future<List<Map<String, dynamic>>> getDoctors({required int pageNumber, required int pageSize}) async {
     try {
       final response = await _network.call(
         "/UserDashboard/GetDoctors",
@@ -79,9 +78,7 @@ class AppointmentRemoteDataSourceImpl extends AppointmentRemoteDataSource {
           "PageSize": pageSize,
         },
       );
-      return (response.data['data'] as List)
-          .map((e) => e as Map<String, dynamic>)
-          .toList();
+      return (response.data['data'] as List).map((e) => e as Map<String, dynamic>).toList();
     } catch (e) {
       print(e.toString());
       throw ServerException(message: "Error");
@@ -94,9 +91,8 @@ class AppointmentRemoteDataSourceImpl extends AppointmentRemoteDataSource {
       "/UserDashboard/GetUpcomingSessions",
       RequestMethod.get,
     );
-    List<AppointmentDto> appointments = (response.data['data'] as List)
-        .map((json) => AppointmentDto.fromJson(json))
-        .toList();
+    List<AppointmentDto> appointments =
+        (response.data['data'] as List).map((json) => AppointmentDto.fromJson(json)).toList();
     return appointments;
   }
 
@@ -106,9 +102,7 @@ class AppointmentRemoteDataSourceImpl extends AppointmentRemoteDataSource {
       "/UserDashboard/GetAcceptedAppointments",
       RequestMethod.get,
     );
-    return (response.data['data'] as List)
-        .map((booking) => AppointmentDto.fromJson(booking))
-        .toList();
+    return (response.data['data'] as List).map((booking) => AppointmentDto.fromJson(booking)).toList();
   }
 
   @override
@@ -119,12 +113,10 @@ class AppointmentRemoteDataSourceImpl extends AppointmentRemoteDataSource {
     );
 
     print((response.data['data'] as List)
-        .map((booking) =>
-            AppointmentDto.fromJson(booking as Map<String, dynamic>))
+        .map((booking) => AppointmentDto.fromJson(booking as Map<String, dynamic>))
         .toList());
     return (response.data['data'] as List)
-        .map((booking) =>
-            AppointmentDto.fromJson(booking as Map<String, dynamic>))
+        .map((booking) => AppointmentDto.fromJson(booking as Map<String, dynamic>))
         .toList();
   }
 
@@ -134,9 +126,7 @@ class AppointmentRemoteDataSourceImpl extends AppointmentRemoteDataSource {
       "/UserDashboard/GetRejectedAppointments",
       RequestMethod.get,
     );
-    return (response.data['data'] as List)
-        .map((booking) => AppointmentDto.fromJson(booking))
-        .toList();
+    return (response.data['data'] as List).map((booking) => AppointmentDto.fromJson(booking)).toList();
   }
 
   @override
@@ -149,8 +139,7 @@ class AppointmentRemoteDataSourceImpl extends AppointmentRemoteDataSource {
   }
 
   @override
-  Future<void> makePaymentForAppointment(
-      MakePaymentForAppointmentRequest request) async {
+  Future<void> makePaymentForAppointment(MakePaymentForAppointmentRequest request) async {
     await _network.call(
       "/UserDashboard/BookingPayment",
       RequestMethod.post,
@@ -168,17 +157,14 @@ class AppointmentRemoteDataSourceImpl extends AppointmentRemoteDataSource {
 
     // Check for error response and throw exception
     if (response.statusCode != 200) {
-      throw ServerException(
-          message: response
-              .statusMessage!); // You can customize this based on the response
+      throw ServerException(message: response.statusMessage!); // You can customize this based on the response
     }
 
     return DoctorDetailModel.fromMap(response.data['data']);
   }
 
   @override
-  Future<List<PhysicianScheduleModel>> getPhysicianSchedule(
-      int physicianId) async {
+  Future<List<PhysicianScheduleModel>> getPhysicianSchedule(int physicianId) async {
     final response = await _network.call(
       "/UserDashboard/GetPhysicianSchedule",
       RequestMethod.get,
@@ -189,8 +175,20 @@ class AppointmentRemoteDataSourceImpl extends AppointmentRemoteDataSource {
       throw ServerException(message: '');
     }
 
-    return (response.data['data'] as List)
-        .map((e) => PhysicianScheduleModel.fromMap(e))
-        .toList();
+    return (response.data['data'] as List).map((e) => PhysicianScheduleModel.fromMap(e)).toList();
+  }
+
+  @override
+  Future<List<Blog>> getBlogs() async {
+    final response = await _network.call(
+      "/Blog/GetBlogs",
+      RequestMethod.get,
+    );
+
+    if (response.statusCode != 200) {
+      throw ServerException(message: '');
+    }
+
+    return (response.data['data'] as List).map((e) => Blog.fromJson(e)).toList();
   }
 }

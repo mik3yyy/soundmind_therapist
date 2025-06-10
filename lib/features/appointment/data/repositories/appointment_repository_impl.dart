@@ -8,6 +8,7 @@ import 'package:sound_mind/features/appointment/data/datasources/appointment_hiv
 import 'package:sound_mind/features/appointment/data/models/CreateBookingReq.dart';
 import 'package:sound_mind/features/appointment/data/models/MakePaymentBookingReq.dart';
 import 'package:sound_mind/features/appointment/data/models/appointment.dart';
+import 'package:sound_mind/features/appointment/data/models/blog.dart';
 import 'package:sound_mind/features/appointment/data/models/booking.dart';
 import 'package:sound_mind/features/appointment/data/models/doctor.dart';
 import 'package:sound_mind/features/appointment/data/models/doctor_detail.dart';
@@ -25,8 +26,7 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
         _appointmentHiveDataSource = appointmentHiveDataSource;
 
   @override
-  ResultFuture<List<DoctorModel>> getDoctors(
-      {required int pageNumber, required int pageSize}) async {
+  ResultFuture<List<DoctorModel>> getDoctors({required int pageNumber, required int pageSize}) async {
     try {
       // final doctors = await _remoteDataSource.getDoctors(
       //     pageNumber: pageNumber, pageSize: pageSize);//it returns a List on Map<String, dynamic>
@@ -99,8 +99,7 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
   }
 
   @override
-  ResultFuture<void> makePaymentForAppointment(
-      MakePaymentForAppointmentRequest request) async {
+  ResultFuture<void> makePaymentForAppointment(MakePaymentForAppointmentRequest request) async {
     try {
       await _remoteDataSource.makePaymentForAppointment(request);
       return const Right(null);
@@ -110,11 +109,9 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
   }
 
   @override
-  ResultFuture<DoctorDetailModel> getDoctorDetails(
-      {required int physicianId}) async {
+  ResultFuture<DoctorDetailModel> getDoctorDetails({required int physicianId}) async {
     try {
-      final doctorDetail =
-          await _remoteDataSource.getDoctorDetails(physicianId);
+      final doctorDetail = await _remoteDataSource.getDoctorDetails(physicianId);
       return Right(doctorDetail);
     } on ApiError catch (e) {
       return Left(ServerFailure(e.errorDescription));
@@ -122,13 +119,26 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
   }
 
   @override
-  ResultFuture<List<PhysicianScheduleModel>> getPhysicianSchedule(
-      {required int physicianId}) async {
+  ResultFuture<List<PhysicianScheduleModel>> getPhysicianSchedule({required int physicianId}) async {
     try {
-      final scheduleList =
-          await _remoteDataSource.getPhysicianSchedule(physicianId);
+      final scheduleList = await _remoteDataSource.getPhysicianSchedule(physicianId);
       return Right(scheduleList);
     } on ApiError catch (e) {
+      return Left(ServerFailure(e.errorDescription));
+    }
+  }
+
+  @override
+  ResultFuture<List<Blog>> getBlogs() async {
+    try {
+      final scheduleList = await _remoteDataSource.getBlogs();
+      print("LIST ${scheduleList.length}");
+      print("${scheduleList[0].toJson()}");
+
+      return Right(scheduleList);
+    } on ApiError catch (e) {
+      print(e.data);
+      print("DOBDOIBDIPBD");
       return Left(ServerFailure(e.errorDescription));
     }
   }
