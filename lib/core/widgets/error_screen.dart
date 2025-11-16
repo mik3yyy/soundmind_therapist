@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sound_mind/core/extensions/context_extensions.dart';
 
 class CustomErrorScreen extends StatelessWidget {
   final String message;
@@ -31,9 +33,23 @@ class CustomErrorScreen extends StatelessWidget {
                 width: 150,
                 fit: BoxFit.cover,
               )
+            else if (message.contains('No'))
+              Icon(
+                icon ?? Icons.search, // Default icon if none provided
+                size: 120,
+                color: context.primaryColor,
+              )
+
+            //   CachedNetworkImage(
+            //     imageUrl: imageUrl ??
+            //         'https://www.google.com/imgres?q=empt%20icon%20image&imgurl=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fthumbnails%2F007%2F104%2F553%2Fsmall_2x%2Fsearch-no-result-not-found-concept-illustration-flat-design-eps10-modern-graphic-element-for-landing-page-empty-state-ui-infographic-icon-vector.jpg&imgrefurl=https%3A%2F%2Fwww.vecteezy.com%2Ffree-vector%2Fempty-icon&docid=fFP8XVrlIY_6ZM&tbnid=ERAkG_qanmVQ9M&vet=12ahUKEwip9enMvoiOAxWsWUEAHXr8DkUQM3oECBoQAA..i&w=400&h=400&hcb=2&ved=2ahUKEwip9enMvoiOAxWsWUEAHXr8DkUQM3oECBoQAA',
+            //     height: 150,
+            //     width: 150,
+            //     fit: BoxFit.cover,
+            //   )
             else
               Icon(
-                icon ?? Icons.error_outline, // Default icon if none provided
+                icon ?? Icons.search, // Default icon if none provided
                 size: 80,
                 color: Colors.redAccent,
               ),

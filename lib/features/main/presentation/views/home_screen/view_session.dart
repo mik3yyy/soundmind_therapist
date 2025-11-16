@@ -2,12 +2,16 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sound_mind/core/extensions/context_extensions.dart';
 import 'package:sound_mind/core/extensions/widget_extensions.dart';
+import 'package:sound_mind/core/routes/routes.dart';
 import 'package:sound_mind/core/utils/date_formater.dart';
 import 'package:sound_mind/core/utils/image_util.dart';
+import 'package:sound_mind/core/widgets/custom_button.dart';
 import 'package:sound_mind/features/appointment/data/models/appointment.dart';
 import 'package:clipboard/clipboard.dart';
+import 'package:sound_mind/features/appointment/presentation/views/booking/view_day_re.dart';
 
 class ViewSessionScreen extends StatefulWidget {
   const ViewSessionScreen({super.key, required this.appointment});
@@ -44,8 +48,7 @@ class _ViewSessionScreenState extends State<ViewSessionScreen> {
                 borderRadius: BorderRadius.circular(40),
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
-                  imageUrl:
-                      widget.appointment.profilePicture ?? ImageUtils.profile,
+                  imageUrl: widget.appointment.profilePicture ?? ImageUtils.profile,
                   width: 70,
                   height: 70,
                 ),
@@ -71,8 +74,7 @@ class _ViewSessionScreenState extends State<ViewSessionScreen> {
                   const Text("Time"),
                   Text(
                     DateFormater.formatTimeRange(
-                        widget.appointment.schedule.startTime,
-                        widget.appointment.schedule.endTime),
+                        widget.appointment.schedule.startTime, widget.appointment.schedule.endTime),
                     style: context.textTheme.titleLarge,
                   )
                 ],
@@ -95,8 +97,7 @@ class _ViewSessionScreenState extends State<ViewSessionScreen> {
                 children: [
                   const Text("Date"),
                   Text(
-                    DateFormater.formatDateTime(
-                        widget.appointment.booking.date),
+                    DateFormater.formatDateTime(widget.appointment.booking.date),
                     style: context.textTheme.titleLarge,
                   )
                 ],
@@ -119,8 +120,7 @@ class _ViewSessionScreenState extends State<ViewSessionScreen> {
                 children: [
                   const Text("Video Call link"),
                   AutoSizeText(
-                    widget.appointment.booking.link?.isNotEmpty ??
-                            false || widget.appointment.booking.link != null
+                    widget.appointment.booking.link?.isNotEmpty ?? false || widget.appointment.booking.link != null
                         ? widget.appointment.booking.link!
                         : "Link would be ready before the meeting time",
                     maxLines: 1,
@@ -147,8 +147,7 @@ class _ViewSessionScreenState extends State<ViewSessionScreen> {
                             ),
                             Text(
                               "Copy Link",
-                              style: context.textTheme.bodyMedium
-                                  ?.copyWith(color: context.primaryColor),
+                              style: context.textTheme.bodyMedium?.copyWith(color: context.primaryColor),
                             ),
                           ],
                         ),
@@ -166,9 +165,7 @@ class _ViewSessionScreenState extends State<ViewSessionScreen> {
             Gap(20),
             Container(
               width: context.screenWidth * .9,
-              height: widget.appointment.booking.code?.isNotEmpty ?? false
-                  ? 120
-                  : 72,
+              height: widget.appointment.booking.code?.isNotEmpty ?? false ? 120 : 72,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
                   color: context.secondaryColor.withOpacity(.5),
@@ -203,8 +200,7 @@ class _ViewSessionScreenState extends State<ViewSessionScreen> {
                             ),
                             Text(
                               "Copy Link",
-                              style: context.textTheme.bodyMedium
-                                  ?.copyWith(color: context.primaryColor),
+                              style: context.textTheme.bodyMedium?.copyWith(color: context.primaryColor),
                             ),
                           ],
                         ),
@@ -220,6 +216,21 @@ class _ViewSessionScreenState extends State<ViewSessionScreen> {
                 ],
               ),
             ),
+            Gap(20),
+            CustomButton(
+                label: "Reschedule",
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SelectDayPage2(
+                                id: widget.appointment.booking.physicianId,
+                                appointmentId: widget.appointment.booking.id.toString(),
+                              )));
+                  // context.pushNamed(Routes.viewDay2Name,
+                  //     extra: widget.appointment.booking.physicianId,
+                  //     queryParameters: {'appointmentId': widget.appointment.booking.id.toString()});
+                })
           ],
         ),
       ),

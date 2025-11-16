@@ -7,6 +7,7 @@ import 'package:sound_mind/features/appointment/data/models/booking.dart';
 import 'package:sound_mind/features/appointment/data/models/doctor.dart';
 import 'package:sound_mind/features/appointment/data/models/doctor_detail.dart';
 import 'package:sound_mind/features/appointment/data/models/physician_schedule.dart';
+import 'package:sound_mind/features/appointment/domain/usecases/create_booking.dart';
 
 abstract class AppointmentRepository {
   ResultFuture<List<AppointmentDto>> getUpcomingAppointment();
@@ -14,6 +15,7 @@ abstract class AppointmentRepository {
   ResultFuture<List<AppointmentDto>> getPendingAppointments();
   ResultFuture<List<AppointmentDto>> getRejectedAppointments();
   ResultFuture<void> createBooking(CreateBookingRequest request);
+  ResultFuture<void> rescheduleBooking(CreateBookingRequest request);
   ResultFuture<void> makePaymentForAppointment(MakePaymentForAppointmentRequest request);
   ResultFuture<List<DoctorModel>> getDoctors({required int pageNumber, required int pageSize});
   ResultFuture<DoctorDetailModel> getDoctorDetails({required int physicianId});

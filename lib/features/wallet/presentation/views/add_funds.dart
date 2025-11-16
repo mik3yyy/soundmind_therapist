@@ -10,6 +10,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sound_mind/core/extensions/context_extensions.dart';
 import 'package:sound_mind/core/extensions/widget_extensions.dart';
+import 'package:sound_mind/core/gen/assets.gen.dart';
 import 'package:sound_mind/core/widgets/custom_button.dart';
 import 'package:sound_mind/core/widgets/custom_text_field.dart';
 import 'package:sound_mind/features/Authentication/presentation/blocs/Authentication_bloc.dart';
@@ -28,10 +29,7 @@ class _AddFundsPageState extends State<AddFundsPage> {
   TextEditingController textEditingController = TextEditingController();
   var publicKey = dotenv.env['NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY']!;
   final plugin = PaystackPlugin();
-  handlePaymentInitialization(
-      {required String amout,
-      required String ref,
-      required BuildContext context}) async {
+  handlePaymentInitialization({required String amout, required String ref, required BuildContext context}) async {
     var user = (context.read<AuthenticationBloc>().state as UserAccount).user;
 
     Charge charge = Charge()
@@ -45,16 +43,11 @@ class _AddFundsPageState extends State<AddFundsPage> {
       charge: charge,
     );
     if (response.status) {
-      context
-          .read<TopUpCubit>()
-          .confirmTopUp(response.reference!, response.reference!);
+      context.read<TopUpCubit>().confirmTopUp(response.reference!, response.reference!);
     }
   }
 
-  handlePaymentInitialization1(
-      {required String amout,
-      required String ref,
-      required BuildContext context}) async {
+  handlePaymentInitialization1({required String amout, required String ref, required BuildContext context}) async {
     print(dotenv.env['NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY']!);
 
     var user = (context.read<AuthenticationBloc>().state as UserAccount).user;
@@ -87,16 +80,11 @@ class _AddFundsPageState extends State<AddFundsPage> {
   //   MaterialPageRoute(builder: (context) => PaymentWebViewPage()),
   // );
 
-  handlePaymentInitialization2(
-      {required String amout, required String ref}) async {
-    print(dotenv.env['NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY']!);
-
+  handlePaymentInitialization2({required String amout, required String ref}) async {
     var user = (context.read<AuthenticationBloc>().state as UserAccount).user;
 
-    final Customer customer = Customer(
-        name: user.lastName + user.firstName,
-        phoneNumber: user.phoneNumber,
-        email: user.email);
+    final Customer customer =
+        Customer(name: user.lastName + user.firstName, phoneNumber: user.phoneNumber, email: user.email);
     final Flutterwave flutterwave = Flutterwave(
       context: context,
       publicKey: dotenv.env['NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY']!,
@@ -113,9 +101,7 @@ class _AddFundsPageState extends State<AddFundsPage> {
 
     if (response.status != null) {
       if (response.status == 'completed') {
-        context
-            .read<TopUpCubit>()
-            .confirmTopUp(response.txRef!, response.transactionId!);
+        context.read<TopUpCubit>().confirmTopUp(response.txRef!, response.transactionId!);
         context.pop();
       }
     }
@@ -143,9 +129,7 @@ class _AddFundsPageState extends State<AddFundsPage> {
         listener: (context, state) {
           if (state is TopUpInitiated) {
             handlePaymentInitialization(
-                amout: textEditingController.text,
-                ref: state.topUpDetails['data'],
-                context: context);
+                amout: textEditingController.text, ref: state.topUpDetails['data'], context: context);
           }
           if (state is TopUpError) {
             Future.delayed(Duration(milliseconds: 100), () {
@@ -156,7 +140,24 @@ class _AddFundsPageState extends State<AddFundsPage> {
           }
         },
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Assets.application.assets.svgs.bank.svg(
+              width: 50,
+              height: 50,
+            ),
+            const Gap(20),
+            Text("wallet Account Number",
+                style: context.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                )),
+            Gap(10),
+            Text(
+              "Make a transfer to this account number and your wallet will be funded.",
+              textAlign: TextAlign.center,
+              style: context.textTheme.bodyMedium,
+            ),
             CustomTextField(
               controller: textEditingController,
               hintText: "1000",
@@ -170,8 +171,7 @@ class _AddFundsPageState extends State<AddFundsPage> {
                     label: "Top Up",
                     notifier: ValueNotifier(state is TopUpLoading),
                     onPressed: () {
-                      context.read<TopUpCubit>().initiateTopUp(
-                          double.parse(textEditingController.text));
+                      context.read<TopUpCubit>().initiateTopUp(double.parse(textEditingController.text));
                     });
               },
             )

@@ -10,6 +10,7 @@ import 'package:sound_mind/features/appointment/data/models/blog.dart';
 import 'package:sound_mind/features/appointment/data/models/booking.dart';
 import 'package:sound_mind/features/appointment/data/models/doctor_detail.dart';
 import 'package:sound_mind/features/appointment/data/models/physician_schedule.dart';
+import 'package:sound_mind/features/appointment/domain/usecases/create_booking.dart';
 
 abstract class AppointmentRemoteDataSource {
   Future<List<AppointmentDto>> getUpcomingAppointment();
@@ -19,6 +20,8 @@ abstract class AppointmentRemoteDataSource {
 
   Future<List<Blog>> getBlogs();
   Future<void> createBooking(CreateBookingRequest request);
+
+  Future<void> rescheduleBooking(CreateBookingRequest request);
   Future<void> makePaymentForAppointment(MakePaymentForAppointmentRequest request);
   Future<List<Map<String, dynamic>>> getDoctors({required int pageNumber, required int pageSize});
   Future<DoctorDetailModel> getDoctorDetails(int physicianId);
@@ -190,5 +193,14 @@ class AppointmentRemoteDataSourceImpl extends AppointmentRemoteDataSource {
     }
 
     return (response.data['data'] as List).map((e) => Blog.fromJson(e)).toList();
+  }
+
+  @override
+  Future<void> rescheduleBooking(CreateBookingRequest request) async {
+    await _network.call(
+      "/UserDashboard/RescheduleAppointment",
+      RequestMethod.patch,
+      data: json.encode(request.tonewJson()),
+    );
   }
 }

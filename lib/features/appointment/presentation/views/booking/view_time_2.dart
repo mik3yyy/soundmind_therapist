@@ -1,35 +1,53 @@
-import 'dart:developer';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:sound_mind/core/extensions/context_extensions.dart';
 import 'package:sound_mind/core/extensions/widget_extensions.dart';
 import 'package:sound_mind/core/routes/routes.dart';
 import 'package:sound_mind/core/services/injection_container.dart';
 import 'package:sound_mind/core/utils/string_extension.dart';
 import 'package:sound_mind/core/widgets/custom_button.dart';
-import 'package:sound_mind/core/widgets/custom_shimmer.dart';
-import 'package:sound_mind/core/widgets/error_screen.dart';
 import 'package:sound_mind/features/appointment/data/models/doctor_detail.dart';
+import 'package:sound_mind/features/appointment/data/models/physician_schedule.dart';
 import 'package:sound_mind/features/appointment/presentation/blocs/doctor_details/doctor_details_cubit.dart';
 import 'package:sound_mind/features/appointment/presentation/blocs/physician_schedule/physician_schedule_cubit.dart';
+import 'package:sound_mind/features/appointment/presentation/views/booking/view_summary.dart';
+import 'package:sound_mind/features/appointment/presentation/views/booking/view_summary_2.dart';
 
-class SelectDayPage extends StatefulWidget {
-  const SelectDayPage({super.key, required this.id});
+class SelectTimePage2 extends StatefulWidget {
+  const SelectTimePage2({super.key, required this.id, required this.day, required this.appointmentId});
   final Object? id;
+  final String day;
+  final String appointmentId;
   @override
-  State<SelectDayPage> createState() => _SelectDayPageState();
+  State<SelectTimePage2> createState() => _SelectTimePage2State();
 }
 
-class _SelectDayPageState extends State<SelectDayPage> {
+class _SelectTimePage2State extends State<SelectTimePage2> {
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    context.read<PhysicianScheduleCubit>().fetchPhysicianSchedule(widget.id as int);
+    print(widget.day);
+    // context
+    //     .read<PhysicianScheduleCubit>()
+    //     .fetchPhysicianSchedule(widget.id as int);
+  }
+
+  String formatTimeRange(String startTimeStr, String endTimeStr) {
+    // Parse the time strings into DateTime objects
+    DateTime startTime = DateFormat("HH:mm:ss").parse(startTimeStr);
+    DateTime endTime = DateFormat("HH:mm:ss").parse(endTimeStr);
+
+    // Format them into the desired 12-hour format with lowercase AM/PM
+    final DateFormat timeFormatter = DateFormat('h:mma');
+    String formattedStartTime = timeFormatter.format(startTime).toLowerCase();
+    String formattedEndTime = timeFormatter.format(endTime).toLowerCase();
+
+    return '$formattedStartTime - $formattedEndTime';
   }
 
   int currentIndex = -1;
@@ -37,7 +55,7 @@ class _SelectDayPageState extends State<SelectDayPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Book a session with"),
+        title: Text("Reschedule a session with"),
         centerTitle: false,
         leading: BackButton(
           color: context.colors.black,
@@ -51,18 +69,18 @@ class _SelectDayPageState extends State<SelectDayPage> {
           if (state is PhysicianScheduleLoaded) {
             var physicianSchedule = state.schedules;
 
-            List<String> availableDays = physicianSchedule
-                .where((element) => (element.isTaken == false && element.dayOfWeekTitle != "7"))
-                .map((e) => e.dayOfWeekTitle)
+            List<PhysicianScheduleModel> availableDays = physicianSchedule
+                .where((element) => element.isTaken == false && element.dayOfWeekTitle == widget.day)
                 .toList();
-            List<String> days = [];
 
-            for (String day in availableDays) {
-              if (days.contains(day)) {
-              } else {
-                days.add(day);
-              }
-            }
+            // List<String> days = [];
+
+            // for (String day in availableDays) {
+            //   if (days.contains(day)) {
+            //   } else {
+            //     days.add(day);
+            //   }
+            // }
             return BlocBuilder<DoctorDetailsCubit, DoctorDetailsState>(
               builder: (context, state) {
                 if (state is DoctorDetailsLoaded) {
@@ -74,21 +92,20 @@ class _SelectDayPageState extends State<SelectDayPage> {
                         Row(
                           children: [
                             CircleAvatar(
-                              radius: 50,
+                              radius: 70,
                               backgroundColor: context.colors.white,
                               child: Image.network(
                                 detailModel.profilePicture,
-                                height: 90,
-                                width: 90,
+                                height: 120,
+                                width: 120,
                                 fit: BoxFit.cover,
                               ).withClip(60),
                             ),
-                            Gap(20),
                             Column(
                               children: [
                                 AutoSizeText(
-                                  "${detailModel.firstName} ${detailModel.lastName}"
-                                      .toLowerCase(), //.capitalizeAllFirst,
+                                  "${detailModel.firstName} ${detailModel.lastName}".toLowerCase(),
+                                  // .capitalizeAllFirst,
                                   style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                                 ),
                                 // Text(detailModel.)
@@ -107,7 +124,7 @@ class _SelectDayPageState extends State<SelectDayPage> {
                         Expanded(
                           child: ListView.separated(
                             separatorBuilder: (context, index) => Gap(20),
-                            itemCount: days.length,
+                            itemCount: availableDays.length,
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: () {
@@ -141,7 +158,8 @@ class _SelectDayPageState extends State<SelectDayPage> {
                                       ),
                                     ),
                                     titleAlignment: ListTileTitleAlignment.titleHeight,
-                                    title: Text(days[index]),
+                                    title: Text(
+                                        formatTimeRange(availableDays[index].startTime, availableDays[index].endTime)),
                                   ),
                                 ),
                               );
@@ -150,14 +168,26 @@ class _SelectDayPageState extends State<SelectDayPage> {
                         )
                       ],
                     ).withSafeArea().withCustomPadding(),
-                    bottomNavigationBar: SizedBox(
-                      height: 100,
+                    bottomNavigationBar: Container(
+                      height: 150,
                       child: Center(
                         child: CustomButton(
-                          label: "Proceed to select time",
+                          label: "View Schedule Summary",
                           onPressed: () {
-                            context.goNamed(Routes.viewTimeName,
-                                extra: widget.id, queryParameters: {'day': availableDays[currentIndex]});
+                            print(availableDays[currentIndex].dayOfWeek);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ViewSummary2(
+                                          id: widget.id,
+                                          schedule: availableDays[currentIndex],
+                                          appointmentId: int.parse(widget.appointmentId),
+                                        )));
+                            // context.goNamed(Routes.viewTimeName,
+                            //     extra: widget.id,
+                            //     queryParameters: {
+                            //       'day': availableDays[currentIndex]
+                            //     });
                           },
                           enable: currentIndex != -1,
                         ),
@@ -165,23 +195,13 @@ class _SelectDayPageState extends State<SelectDayPage> {
                     ),
                   );
                 } else {
-                  return const CircularProgressIndicator().toCenter();
+                  return Container();
                 }
               },
             );
-          } else if (state is PhysicianScheduleError) {
-            return CustomErrorScreen(
-              onTap: () {
-                context.read<PhysicianScheduleCubit>().fetchPhysicianSchedule(widget.id as int);
-              },
-              message: state.message,
-            );
           } else {
-            return Scaffold(
-              body: ComplexShimmer.bookingScreenShimmer(context),
-            );
+            return CircularProgressIndicator().toCenter();
           }
-
           // var physicianSchedule= state as
         },
       ),

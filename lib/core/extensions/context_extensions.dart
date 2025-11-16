@@ -24,7 +24,7 @@ extension ContextExtensions on BuildContext {
     showTopSnackBar(
       Overlay.of(this),
       CustomSnackBar.info(
-        message: "Something went wrong. Please check your credentials and try again",
+        message: message, //"Something went wrong. Please check your credentials and try again",
         backgroundColor: primaryColor,
       ),
     );

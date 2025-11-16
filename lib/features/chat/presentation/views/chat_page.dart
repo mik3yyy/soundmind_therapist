@@ -76,26 +76,32 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           BlocBuilder<UpcomingAppointmentCubit, UpcomingAppointmentState>(
             builder: (context, state) {
               if (state is UpcomingAppointmentsLoaded) {
-                var doc = state.upcomingAppointments[0];
-                print("DATA: ${doc}");
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GestureDetector(
+                final appointments = state.upcomingAppointments;
+
+                return ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: appointments.length,
+                  itemBuilder: (context, index) {
+                    final doc = appointments[index];
+                    return GestureDetector(
                       onTap: () {
                         context.goNamed(Routes.viewSessionName, extra: doc);
                       },
                       child: Container(
+                        margin: const EdgeInsets.only(bottom: 20),
                         padding: const EdgeInsets.all(10),
                         width: context.screenWidth * .9,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            color: context.primaryColor),
+                          borderRadius: BorderRadius.circular(16),
+                          color: context.primaryColor,
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -103,8 +109,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 CachedNetworkImage(
-                                  imageUrl:
-                                      doc.profilePicture ?? ImageUtils.profile,
+                                  imageUrl: doc.profilePicture ?? ImageUtils.profile,
                                   width: 100,
                                   height: 100,
                                   fit: BoxFit.cover,
@@ -116,24 +121,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   children: [
                                     AutoSizeText(
                                       doc.therapistName,
-                                      style: context.textTheme.displayMedium
-                                          ?.copyWith(
+                                      style: context.textTheme.displayMedium?.copyWith(
                                         color: context.colors.white,
                                       ),
                                     ),
                                     AutoSizeText(
                                       doc.areaOfSpecialization ?? "",
-                                      style: context.textTheme.bodyMedium
-                                          ?.copyWith(
-                                              color: context.colors.white),
+                                      style: context.textTheme.bodyMedium?.copyWith(
+                                        color: context.colors.white,
+                                      ),
                                     ),
                                     Text(
                                       "Google Meet",
-                                      style: context.textTheme.titleLarge
-                                          ?.copyWith(
+                                      style: context.textTheme.titleLarge?.copyWith(
                                         color: context.colors.white,
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ).withExpanded()
                               ],
@@ -147,22 +150,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 color: Colors.purple[900]?.withOpacity(.5),
                               ),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
-                                      Icon(
-                                        Icons.timer,
-                                        color: context.colors.white,
-                                      ),
+                                      Icon(Icons.timer, color: context.colors.white),
                                       const Gap(5),
                                       Text(
-                                        DateFormater.formatTimeRange(
-                                            doc.schedule.startTime,
-                                            doc.schedule.endTime),
-                                        style: context.textTheme.bodyMedium
-                                            ?.copyWith(
+                                        DateFormater.formatTimeRange(doc.schedule.startTime, doc.schedule.endTime),
+                                        style: context.textTheme.bodyMedium?.copyWith(
                                           color: context.colors.white,
                                         ),
                                       ),
@@ -170,17 +166,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   ),
                                   Row(
                                     children: [
-                                      Icon(
-                                        Icons.calendar_month,
-                                        color: context.colors.white,
-                                      ),
+                                      Icon(Icons.calendar_month, color: context.colors.white),
                                       const Gap(5),
                                       Text(
-                                        DateFormater.formatDateTime(
-                                          doc.booking.date,
-                                        ),
-                                        style: context.textTheme.bodyMedium
-                                            ?.copyWith(
+                                        DateFormater.formatDateTime(doc.booking.date),
+                                        style: context.textTheme.bodyMedium?.copyWith(
                                           color: context.colors.white,
                                         ),
                                       ),
@@ -188,17 +178,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   ),
                                 ],
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
-                    )
-                  ],
-                ).withCustomPadding();
+                    );
+                  },
+                );
               } else if (state is UpcomingAppointmentLoading) {
-                return ComplexShimmer.cardShimmer(
-                        itemCount: 1,
-                        margin: EdgeInsets.symmetric(vertical: 20))
+                return ComplexShimmer.cardShimmer(itemCount: 1, margin: EdgeInsets.symmetric(vertical: 20))
                     .withCustomPadding();
               } else if (state is UpcomingAppointmentError) {
                 return Column(
@@ -207,9 +195,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     CustomErrorScreen(
                       message: state.message,
                       onTap: () {
-                        context
-                            .read<UpcomingAppointmentCubit>()
-                            .fetchUpcomingAppointments();
+                        context.read<UpcomingAppointmentCubit>().fetchUpcomingAppointments();
                       },
                     ),
                   ],
@@ -257,9 +243,7 @@ class _ChatMainScreenState extends State<ChatMainScreen> {
                           context.goNamed(
                             Routes.chatRoomName,
                             extra: chatRoom,
-                            pathParameters: {
-                              'id': chatRoom.chatRoomID.toString()
-                            },
+                            pathParameters: {'id': chatRoom.chatRoomID.toString()},
                           );
                         },
                         contentPadding: EdgeInsets.zero,
@@ -271,19 +255,14 @@ class _ChatMainScreenState extends State<ChatMainScreen> {
                             height: 40,
                             width: 40,
                             fit: BoxFit.cover,
-                            errorWidget: (context, url, error) =>
-                                CachedNetworkImage(
-                                    imageUrl: ImageUtils.profile),
+                            errorWidget: (context, url, error) => CachedNetworkImage(imageUrl: ImageUtils.profile),
                           ),
                         ).withClip(20),
-                        trailing: Assets
-                            .application.assets.svgs.therapistMessage
-                            .svg(),
+                        trailing: Assets.application.assets.svgs.therapistMessage.svg(),
                         title: Text(chatRoom.senderName),
                         subtitle: Text(
                           "Tap to open chat",
-                          style: context.textTheme.bodySmall?.copyWith(
-                              fontSize: 8, fontWeight: FontWeight.w700),
+                          style: context.textTheme.bodySmall?.copyWith(fontSize: 8, fontWeight: FontWeight.w700),
                         ),
                       );
                     },

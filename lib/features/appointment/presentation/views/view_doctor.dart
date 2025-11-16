@@ -129,11 +129,9 @@ class _ViewDoctorPageState extends State<ViewDoctorPage> {
                             Column(
                               children: [
                                 AutoSizeText(
-                                  "${detailModel.firstName} ${detailModel.lastName}"
-                                      .toLowerCase(),
+                                  "${detailModel.firstName} ${detailModel.lastName}".toLowerCase(),
                                   // .capitalizeAllFirst,
-                                  style: context.textTheme.bodyLarge
-                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                  style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                                 ),
                                 // Text(detailModel.)
                               ],
@@ -148,8 +146,7 @@ class _ViewDoctorPageState extends State<ViewDoctorPage> {
                               children: [
                                 Text(
                                   "${detailModel.yoe}yrs",
-                                  style: context.textTheme.titleLarge
-                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                  style: context.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                                 ),
                                 const Text("Experience")
                               ],
@@ -162,9 +159,8 @@ class _ViewDoctorPageState extends State<ViewDoctorPage> {
                             Column(
                               children: [
                                 Text(
-                                  "0",
-                                  style: context.textTheme.titleLarge
-                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                  " ${detailModel.ratingTotal}",
+                                  style: context.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                                 ),
                                 Text("Patients")
                               ],
@@ -178,13 +174,10 @@ class _ViewDoctorPageState extends State<ViewDoctorPage> {
                               children: [
                                 Row(
                                   children: [
-                                    Assets.application.assets.svgs.star
-                                        .svg(height: 20, width: 20),
+                                    Assets.application.assets.svgs.star.svg(height: 20, width: 20),
                                     Text(
-                                      " 4.5",
-                                      style: context.textTheme.titleLarge
-                                          ?.copyWith(
-                                              fontWeight: FontWeight.bold),
+                                      " ${detailModel.ratingAverage}",
+                                      style: context.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                                     ),
                                   ],
                                 ),
@@ -198,22 +191,17 @@ class _ViewDoctorPageState extends State<ViewDoctorPage> {
                           color: context.colors.greyDecor,
                           label: "Message Therapist",
                           onPressed: () {
-                            context.showSnackBar(
-                                "Book a Therapist before you message");
+                            context.showSnackBar("Book a Therapist before you message");
                           },
                           titleWidget: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Assets.application.assets.svgs.therapistMessage
-                                  .svg(
-                                      color:
-                                          context.colors.black.withOpacity(.5)),
+                                  .svg(color: context.colors.black.withOpacity(.5)),
                               Text(
                                 " Message Therapist",
                                 style: context.textTheme.bodyLarge?.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    color:
-                                        context.colors.black.withOpacity(.5)),
+                                    fontWeight: FontWeight.w700, color: context.colors.black.withOpacity(.5)),
                               )
                             ],
                           ),
@@ -228,15 +216,13 @@ class _ViewDoctorPageState extends State<ViewDoctorPage> {
                     children: [
                       Text(
                         "Pricing",
-                        style: context.textTheme.bodyMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
+                        style: context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       Gap(5),
                       Container(
                         height: 70,
                         width: context.screenWidth * .6,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           color: context.secondaryColor,
@@ -249,13 +235,11 @@ class _ViewDoctorPageState extends State<ViewDoctorPage> {
                               children: [
                                 Text(
                                   "₦${detailModel.consultationRate}",
-                                  style: context.textTheme.displayMedium
-                                      ?.copyWith(color: context.primaryColor),
+                                  style: context.textTheme.displayMedium?.copyWith(color: context.primaryColor),
                                 ),
                                 Text(
                                   "per session",
-                                  style: context.textTheme.bodySmall
-                                      ?.copyWith(color: context.primaryColor),
+                                  style: context.textTheme.bodySmall?.copyWith(color: context.primaryColor),
                                 )
                               ],
                             ),
@@ -269,14 +253,12 @@ class _ViewDoctorPageState extends State<ViewDoctorPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "2hrs",
-                                  style: context.textTheme.displayMedium
-                                      ?.copyWith(color: context.primaryColor),
+                                  "1hr",
+                                  style: context.textTheme.displayMedium?.copyWith(color: context.primaryColor),
                                 ),
                                 Text(
                                   "per session",
-                                  style: context.textTheme.bodySmall
-                                      ?.copyWith(color: context.primaryColor),
+                                  style: context.textTheme.bodySmall?.copyWith(color: context.primaryColor),
                                 )
                               ],
                             ),
@@ -291,8 +273,7 @@ class _ViewDoctorPageState extends State<ViewDoctorPage> {
                     children: [
                       Text(
                         "About",
-                        style: context.textTheme.bodyMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
+                        style: context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const Gap(5),
                       Text(detailModel.bio),
@@ -304,8 +285,7 @@ class _ViewDoctorPageState extends State<ViewDoctorPage> {
                     children: [
                       Text(
                         "Specializations",
-                        style: context.textTheme.bodyMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
+                        style: context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const Gap(5),
                       Wrap(
@@ -314,8 +294,7 @@ class _ViewDoctorPageState extends State<ViewDoctorPage> {
                         children: [
                           Chip(
                             label: Text(detailModel.areaOfSpecialization.name),
-                            backgroundColor:
-                                Colors.grey[200], // You can customize this
+                            backgroundColor: Colors.grey[200], // You can customize this
                           )
                         ],
                       ),
@@ -338,22 +317,17 @@ class _ViewDoctorPageState extends State<ViewDoctorPage> {
                         children: [
                           AutoSizeText(
                             "Earliest Availability",
-                            style: context.textTheme.titleLarge
-                                ?.copyWith(fontWeight: FontWeight.bold),
+                            style: context.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                             maxLines: 1,
                           ),
-                          Row(
-                            children: [
-                              Text(
-                                  "${formatDate(detailModel.earliestAvailabiltyDate)} "),
-                              CircleAvatar(
-                                radius: 4,
-                                backgroundColor: context.colors.black,
-                              ),
-                              Text(
-                                  "  ${formatTimeRange(detailModel.earliestAvailabilitySchedule.startTime, detailModel.earliestAvailabilitySchedule.endTime)}"),
-                            ],
-                          )
+                          AutoSizeText(
+                            "${formatDate(detailModel.earliestAvailabiltyDate)}  ●  ${formatTimeRange(detailModel.earliestAvailabilitySchedule.startTime, detailModel.earliestAvailabilitySchedule.endTime)} ",
+                            maxLines: 1,
+                            minFontSize: 10,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
                         ],
                       ).withExpanded(flex: 2),
                       CustomButton(

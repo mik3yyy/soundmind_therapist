@@ -20,8 +20,7 @@ class PersonalDetailsScreen extends StatefulWidget {
   State<PersonalDetailsScreen> createState() => _PersonalDetailsScreenState();
 }
 
-class _PersonalDetailsScreenState extends State<PersonalDetailsScreen>
-    with Validators {
+class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> with Validators {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lasttNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
@@ -36,8 +35,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen>
     print(user);
     _firstNameController.text = user.firstName;
     _lasttNameController.text = user.lastName;
-    _phoneNumberController.text =
-        user.phoneNumber.isEmpty ? "" : user.phoneNumber.substring(4);
+    _phoneNumberController.text = user.phoneNumber.isEmpty ? "" : user.phoneNumber.substring(4);
   }
 
   @override
@@ -47,6 +45,9 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen>
         if (state is UpdateUserSuccess) {
           context.read<AuthenticationBloc>().add(UpdateUser());
           context.pop();
+        }
+        if (state is UpdateUserError) {
+          context.showSnackBar(state.message);
         }
         // TODO: implement listener
       },
@@ -86,16 +87,21 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen>
         ).withSafeArea().withCustomPadding().withForm(updateForm),
         bottomNavigationBar: Container(
           height: 200,
-          child: CustomButton(
-              label: "Save",
-              onPressed: () {
-                if (!updateForm.currentState!.validate()) return;
+          child: BlocBuilder<UpdateUserCubit, UpdateUserState>(
+            builder: (context, state) {
+              return CustomButton(
+                  label: "Save",
+                  notifier: ValueNotifier(state is UpdateUserLoading),
+                  onPressed: () {
+                    if (!updateForm.currentState!.validate()) return;
 
-                context.read<UpdateUserCubit>().updateUser(
-                    firstName: _firstNameController.text,
-                    lastName: _lasttNameController.text,
-                    phoneNumber: phoneNumber);
-              }).toCenter(),
+                    context.read<UpdateUserCubit>().updateUser(
+                        firstName: _firstNameController.text,
+                        lastName: _lasttNameController.text,
+                        phoneNumber: phoneNumber);
+                  });
+            },
+          ).toCenter(),
         ),
       ),
     );

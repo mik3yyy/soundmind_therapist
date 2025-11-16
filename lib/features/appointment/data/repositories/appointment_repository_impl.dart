@@ -99,6 +99,16 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
   }
 
   @override
+  ResultFuture<void> rescheduleBooking(CreateBookingRequest request) async {
+    try {
+      await _remoteDataSource.rescheduleBooking(request);
+      return const Right(null);
+    } on ApiError catch (e) {
+      return Left(ServerFailure(e.errorDescription));
+    }
+  }
+
+  @override
   ResultFuture<void> makePaymentForAppointment(MakePaymentForAppointmentRequest request) async {
     try {
       await _remoteDataSource.makePaymentForAppointment(request);

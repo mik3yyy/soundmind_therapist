@@ -17,24 +17,24 @@ class TopUpCubit extends Cubit<TopUpState> {
   Future<void> initiateTopUp(double amount) async {
     emit(TopUpLoading());
 
-    final result = await initiateWalletTopUp
-        .call(InitiateWalletTopUpParams(amount: amount));
+    final result = await initiateWalletTopUp.call(InitiateWalletTopUpParams(amount: amount));
     result.fold(
       (failure) => emit(TopUpError(message: failure.message)),
       (topUpDetails) => emit(TopUpInitiated(topUpDetails: topUpDetails)),
     );
   }
 
-  Future<void> confirmTopUp(
-      String transactionReference, String flutterwaveTransactionID) async {
+  Future<void> confirmTopUp(String transactionReference, String flutterwaveTransactionID) async {
     emit(TopUpLoading());
 
+    print("{        transactionReference: $transactionReference flutterwaveTransactionID: $flutterwaveTransactionID,}");
     final result = await confirmWalletTopUp.call(
       ConfirmWalletTopUpParams(
         transactionReference: transactionReference,
         flutterwaveTransactionID: flutterwaveTransactionID,
       ),
     );
+
     result.fold(
       (failure) => emit(TopUpError(message: failure.message)),
       (_) => emit(TopUpConfirmed()),

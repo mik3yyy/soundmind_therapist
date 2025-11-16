@@ -67,9 +67,7 @@ class _SelectTimePageState extends State<SelectTimePage> {
             var physicianSchedule = state.schedules;
 
             List<PhysicianScheduleModel> availableDays = physicianSchedule
-                .where((element) =>
-                    element.isTaken == false &&
-                    element.dayOfWeekTitle == widget.day)
+                .where((element) => element.isTaken == false && element.dayOfWeekTitle == widget.day)
                 .toList();
 
             // List<String> days = [];
@@ -103,11 +101,9 @@ class _SelectTimePageState extends State<SelectTimePage> {
                             Column(
                               children: [
                                 AutoSizeText(
-                                  "${detailModel.firstName} ${detailModel.lastName}"
-                                      .toLowerCase()
-                                      .capitalizeAllFirst,
-                                  style: context.textTheme.bodyLarge
-                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                  "${detailModel.firstName} ${detailModel.lastName}".toLowerCase(),
+                                  // .capitalizeAllFirst,
+                                  style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                                 ),
                                 // Text(detailModel.)
                               ],
@@ -119,8 +115,7 @@ class _SelectTimePageState extends State<SelectTimePage> {
                         const Gap(15),
                         Text(
                           "Therapist available days at the selected time ",
-                          style: context.textTheme.bodyLarge
-                              ?.copyWith(fontWeight: FontWeight.bold),
+                          style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         Gap(10),
                         Expanded(
@@ -136,45 +131,32 @@ class _SelectTimePageState extends State<SelectTimePage> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: currentIndex == index
-                                        ? context.secondaryColor
-                                        : context.colors.greyOutline,
+                                    color: currentIndex == index ? context.secondaryColor : context.colors.greyOutline,
                                     border: Border.all(
-                                      color: currentIndex == index
-                                          ? context.primaryColor
-                                          : context.colors.greyOutline,
+                                      color: currentIndex == index ? context.primaryColor : context.colors.greyOutline,
                                     ),
                                     borderRadius: BorderRadius.circular(38),
                                   ),
                                   padding: EdgeInsets.all(8),
                                   child: ListTile(
                                     leading: Transform.scale(
-                                      scale:
-                                          1.5, // Increase the scale to make the checkbox larger
+                                      scale: 1.5, // Increase the scale to make the checkbox larger
                                       child: Checkbox(
                                         value: currentIndex == index,
                                         shape: const CircleBorder(),
-                                        fillColor: WidgetStateProperty
-                                            .resolveWith<Color>(
-                                                (Set<WidgetState> states) {
-                                          if (states
-                                              .contains(WidgetState.selected)) {
-                                            return context
-                                                .primaryColor; // Color when the checkbox is checked
+                                        fillColor: WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+                                          if (states.contains(WidgetState.selected)) {
+                                            return context.primaryColor; // Color when the checkbox is checked
                                           }
-                                          return Colors
-                                              .grey; // Color when the checkbox is unchecked
+                                          return Colors.grey; // Color when the checkbox is unchecked
                                         }),
-                                        activeColor: Colors
-                                            .grey, // Set the background color when checked
+                                        activeColor: Colors.grey, // Set the background color when checked
                                         onChanged: (value) {},
                                       ),
                                     ),
-                                    titleAlignment:
-                                        ListTileTitleAlignment.titleHeight,
-                                    title: Text(formatTimeRange(
-                                        availableDays[index].startTime,
-                                        availableDays[index].endTime)),
+                                    titleAlignment: ListTileTitleAlignment.titleHeight,
+                                    title: Text(
+                                        formatTimeRange(availableDays[index].startTime, availableDays[index].endTime)),
                                   ),
                                 ),
                               );
@@ -192,10 +174,8 @@ class _SelectTimePageState extends State<SelectTimePage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ViewSummary(
-                                        id: widget.id,
-                                        schedule:
-                                            availableDays[currentIndex])));
+                                    builder: (context) =>
+                                        ViewSummary(id: widget.id, schedule: availableDays[currentIndex])));
                             // context.goNamed(Routes.viewTimeName,
                             //     extra: widget.id,
                             //     queryParameters: {

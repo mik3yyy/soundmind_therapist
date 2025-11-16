@@ -10,12 +10,10 @@ class DoctorCubit extends Cubit<DoctorState> {
 
   DoctorCubit({required this.getDoctorsUseCase}) : super(DoctorInitial());
 
-  Future<void> fetchDoctors(
-      {required int pageNumber, required int pageSize}) async {
+  Future<void> fetchDoctors({required int pageNumber, required int pageSize}) async {
     emit(DoctorLoading());
 
-    final result = await getDoctorsUseCase
-        .call(GetDoctorsParams(pageNumber: pageNumber, pageSize: pageSize));
+    final result = await getDoctorsUseCase.call(GetDoctorsParams(pageNumber: pageNumber, pageSize: pageSize));
 
     result.fold(
       (failure) => emit(DoctorError(message: failure.message)),
@@ -32,19 +30,14 @@ class DoctorCubit extends Cubit<DoctorState> {
       }
 
       emit(
-        DoctorLoaded(
-            doctors: doctors,
-            sort: sort ?? s.sort,
-            display: display ?? s.display,
-            search: search ?? s.search),
+        DoctorLoaded(doctors: doctors, sort: sort ?? s.sort, display: display ?? s.display, search: search ?? s.search),
       );
     }
   }
 }
 
 List<DoctorModel> sortDoctors(List<DoctorModel> doctors, Sort sortType) {
-  List<DoctorModel> sortedDoctors =
-      List.from(doctors); // Create a copy of the list
+  List<DoctorModel> sortedDoctors = List.from(doctors); // Create a copy of the list
 
   switch (sortType) {
     case Sort.a_z:
@@ -60,12 +53,10 @@ List<DoctorModel> sortDoctors(List<DoctorModel> doctors, Sort sortType) {
       sortedDoctors.sort((a, b) => b.ratingAverage.compareTo(a.ratingAverage));
       break;
     case Sort.Ph_l:
-      sortedDoctors
-          .sort((a, b) => b.consultationRate.compareTo(a.consultationRate));
+      sortedDoctors.sort((a, b) => b.consultationRate.compareTo(a.consultationRate));
       break;
     case Sort.Pl_h:
-      sortedDoctors
-          .sort((a, b) => a.consultationRate.compareTo(b.consultationRate));
+      sortedDoctors.sort((a, b) => a.consultationRate.compareTo(b.consultationRate));
       break;
     case Sort.most_experienced:
       sortedDoctors.sort((a, b) => b.yoe.compareTo(a.yoe));

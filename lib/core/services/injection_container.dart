@@ -209,8 +209,9 @@ Future<void> init() async {
     ..registerLazySingleton(() => GetDoctorDetailsUseCase(repository: sl()));
 
   sl
-    ..registerFactory(() => CreateBookingCubit(createBooking: sl()))
-    ..registerLazySingleton(() => CreateBooking(repository: sl()));
+    ..registerFactory(() => CreateBookingCubit(createBooking: sl(), rescheduleBooking: sl()))
+    ..registerLazySingleton(() => CreateBooking(repository: sl()))
+    ..registerLazySingleton(() => RescheduleBooking(repository: sl()));
 
   sl
     ..registerFactory(() => GetBankTransactionsCubit(getUserWalletTransactions: sl()))

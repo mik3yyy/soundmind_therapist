@@ -13,4 +13,11 @@ class CreateBookingRequest {
       "scheduleID": scheduleID,
     };
   }
+
+  Map<String, dynamic> tonewJson() {
+    return {
+      "appointmentId": physicianID,
+      "newScheduleId": scheduleID,
+    };
+  }
 }

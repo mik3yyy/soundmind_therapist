@@ -26,29 +26,22 @@ class ViewBookingScreen extends StatefulWidget {
   State<ViewBookingScreen> createState() => _ViewBookingScreenState();
 }
 
-class _ViewBookingScreenState extends State<ViewBookingScreen>
-    with SingleTickerProviderStateMixin {
+class _ViewBookingScreenState extends State<ViewBookingScreen> with SingleTickerProviderStateMixin {
   TabController? _tabController;
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    if (context.read<AcceptedAppointmentsCubit>().state
-            is! AcceptedAppointmentsLoaded &&
-        context.read<AcceptedAppointmentsCubit>().state
-            is! AcceptedAppointmentsLoading) {
+    if (context.read<AcceptedAppointmentsCubit>().state is! AcceptedAppointmentsLoaded &&
+        context.read<AcceptedAppointmentsCubit>().state is! AcceptedAppointmentsLoading) {
       context.read<AcceptedAppointmentsCubit>().fetchAcceptedAppointments();
     }
-    if (context.read<RejectedAppointmentsCubit>().state
-            is! RejectedAppointmentsLoaded &&
-        context.read<RejectedAppointmentsCubit>().state
-            is! RejectedAppointmentsLoading) {
+    if (context.read<RejectedAppointmentsCubit>().state is! RejectedAppointmentsLoaded &&
+        context.read<RejectedAppointmentsCubit>().state is! RejectedAppointmentsLoading) {
       context.read<RejectedAppointmentsCubit>().fetchRejectedAppointments();
     }
-    if (context.read<PendingAppointmentsCubit>().state
-            is! PendingAppointmentsLoaded &&
-        context.read<PendingAppointmentsCubit>().state
-            is! PendingAppointmentsLoading) {
+    if (context.read<PendingAppointmentsCubit>().state is! PendingAppointmentsLoaded &&
+        context.read<PendingAppointmentsCubit>().state is! PendingAppointmentsLoading) {
       context.read<PendingAppointmentsCubit>().fetchPendingAppointments();
     }
   }
@@ -69,17 +62,14 @@ class _ViewBookingScreenState extends State<ViewBookingScreen>
             Tab(text: "Rejected"),
           ],
           indicator: BoxDecoration(
-            color:
-                context.primaryColor, // Background color for the selected tab
+            color: context.primaryColor, // Background color for the selected tab
             borderRadius: BorderRadius.circular(20), // Rounded corners
           ),
           labelColor: Colors.white, // Text color for the selected tab
           unselectedLabelColor: Colors.grey, // Text color for unselected tabs
           // labelPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-          indicatorSize:
-              TabBarIndicatorSize.tab, // Make indicator cover the whole tab
-          indicatorPadding:
-              EdgeInsets.zero, // Ensures indicator has no extra padding
+          indicatorSize: TabBarIndicatorSize.tab, // Make indicator cover the whole tab
+          indicatorPadding: EdgeInsets.zero, // Ensures indicator has no extra padding
 
           padding: EdgeInsets.symmetric(horizontal: 20),
         ),
@@ -103,9 +93,7 @@ class _ViewBookingScreenState extends State<ViewBookingScreen>
         } else if (state is PendingAppointmentsLoaded) {
           return RefreshIndicator(
             onRefresh: () async {
-              context
-                  .read<PendingAppointmentsCubit>()
-                  .fetchPendingAppointments();
+              context.read<PendingAppointmentsCubit>().fetchPendingAppointments();
             },
             child: ListView.builder(
               itemCount: state.appointments.length,
@@ -124,9 +112,7 @@ class _ViewBookingScreenState extends State<ViewBookingScreen>
         } else if (state is PendingAppointmentsError) {
           return CustomErrorScreen(
             onTap: () {
-              context
-                  .read<PendingAppointmentsCubit>()
-                  .fetchPendingAppointments();
+              context.read<PendingAppointmentsCubit>().fetchPendingAppointments();
             },
             message: state.message,
           );
@@ -144,9 +130,7 @@ class _ViewBookingScreenState extends State<ViewBookingScreen>
         } else if (state is AcceptedAppointmentsLoaded) {
           return RefreshIndicator(
             onRefresh: () async {
-              await context
-                  .read<AcceptedAppointmentsCubit>()
-                  .fetchAcceptedAppointments();
+              await context.read<AcceptedAppointmentsCubit>().fetchAcceptedAppointments();
             },
             child: ListView.builder(
               itemCount: state.appointments.length,
@@ -165,9 +149,7 @@ class _ViewBookingScreenState extends State<ViewBookingScreen>
         } else if (state is AcceptedAppointmentsError) {
           return CustomErrorScreen(
             onTap: () {
-              context
-                  .read<AcceptedAppointmentsCubit>()
-                  .fetchAcceptedAppointments();
+              context.read<AcceptedAppointmentsCubit>().fetchAcceptedAppointments();
             },
             message: state.message,
           );
@@ -185,9 +167,7 @@ class _ViewBookingScreenState extends State<ViewBookingScreen>
         } else if (state is RejectedAppointmentsLoaded) {
           return RefreshIndicator(
             onRefresh: () async {
-              context
-                  .read<RejectedAppointmentsCubit>()
-                  .fetchRejectedAppointments();
+              context.read<RejectedAppointmentsCubit>().fetchRejectedAppointments();
             },
             child: ListView.builder(
               itemCount: state.appointments.length,
@@ -206,9 +186,7 @@ class _ViewBookingScreenState extends State<ViewBookingScreen>
         } else if (state is RejectedAppointmentsError) {
           return CustomErrorScreen(
             onTap: () {
-              context
-                  .read<RejectedAppointmentsCubit>()
-                  .fetchRejectedAppointments();
+              context.read<RejectedAppointmentsCubit>().fetchRejectedAppointments();
             },
             message: state.message,
           );
@@ -242,8 +220,7 @@ class _ViewBookingScreenState extends State<ViewBookingScreen>
                           height: 60,
                           width: 60,
                           fit: BoxFit.cover,
-                          imageUrl:
-                              appointment.profilePicture ?? ImageUtils.profile),
+                          imageUrl: appointment.profilePicture ?? ImageUtils.profile),
                     ),
                   ],
                 ),
@@ -251,9 +228,7 @@ class _ViewBookingScreenState extends State<ViewBookingScreen>
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(appointment.therapistName,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16)),
+                    Text(appointment.therapistName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                     // Text(appointment.areaOfSpecialization ?? "",
                     //     style: TextStyle(color: Colors.grey[600])),
                     Text("Day: ${appointment.schedule.dayOfWeekTitle}"),
@@ -298,10 +273,8 @@ class _ViewBookingScreenState extends State<ViewBookingScreen>
                           textColor: context.primaryColor,
                           label: "Pay to complete booking",
                           onPressed: () {
-                            context.read<PaymentCubit>().makePaymentEvent(
-                                MakePaymentForAppointmentParams(
-                                    request: MakePaymentForAppointmentRequest(
-                                        bookingID: appointment.booking.id)));
+                            context.read<PaymentCubit>().makePaymentEvent(MakePaymentForAppointmentParams(
+                                request: MakePaymentForAppointmentRequest(bookingID: appointment.booking.id)));
                           },
                         ),
                       ),

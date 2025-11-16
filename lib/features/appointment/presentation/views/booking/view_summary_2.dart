@@ -14,15 +14,17 @@ import 'package:sound_mind/features/appointment/presentation/blocs/booking/booki
 import 'package:sound_mind/features/appointment/presentation/blocs/doctor_details/doctor_details_cubit.dart';
 import 'package:sound_mind/features/appointment/presentation/widgets/succesful_widget.dart';
 
-class ViewSummary extends StatefulWidget {
-  const ViewSummary({super.key, required this.id, required this.schedule});
+class ViewSummary2 extends StatefulWidget {
+  const ViewSummary2({super.key, required this.id, required this.schedule, required this.appointmentId});
   final Object? id;
   final PhysicianScheduleModel schedule;
+  final int appointmentId;
+
   @override
-  State<ViewSummary> createState() => _ViewSummaryState();
+  State<ViewSummary2> createState() => _ViewSummary2State();
 }
 
-class _ViewSummaryState extends State<ViewSummary> {
+class _ViewSummary2State extends State<ViewSummary2> {
   String formatTimeRange(String startTimeStr, String endTimeStr) {
     // Parse the time strings into DateTime objects
     DateTime startTime = DateFormat("HH:mm:ss").parse(startTimeStr);
@@ -70,7 +72,7 @@ class _ViewSummaryState extends State<ViewSummary> {
                     ),
                     Gap(30),
                     Text(
-                      "You are almost done booking a session with",
+                      "You are almost done rescheduling a session with",
                       style: context.textTheme.displayMedium,
                       textAlign: TextAlign.center,
                     ).withCustomPadding(),
@@ -152,11 +154,12 @@ class _ViewSummaryState extends State<ViewSummary> {
             child: BlocBuilder<CreateBookingCubit, CreateBookingState>(
               builder: (context, state) {
                 return CustomButton(
-                  label: "Send Booking Request",
+                  label: "Send Reschedule Request",
                   notifier: ValueNotifier(state is CreateBookingLoading),
                   onPressed: () {
-                    context.read<CreateBookingCubit>().createBookingEvent(CreateBookingParams(
-                        request: CreateBookingRequest(physicianID: widget.id as int, scheduleID: widget.schedule.id)));
+                    context.read<CreateBookingCubit>().rescheuleBookingEvent(CreateBookingParams(
+                        request:
+                            CreateBookingRequest(physicianID: widget.appointmentId, scheduleID: widget.schedule.id)));
                   },
                 );
               },

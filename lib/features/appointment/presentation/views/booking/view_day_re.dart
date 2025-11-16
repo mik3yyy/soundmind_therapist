@@ -16,20 +16,23 @@ import 'package:sound_mind/core/widgets/error_screen.dart';
 import 'package:sound_mind/features/appointment/data/models/doctor_detail.dart';
 import 'package:sound_mind/features/appointment/presentation/blocs/doctor_details/doctor_details_cubit.dart';
 import 'package:sound_mind/features/appointment/presentation/blocs/physician_schedule/physician_schedule_cubit.dart';
+import 'package:sound_mind/features/appointment/presentation/views/booking/view_time_2.dart';
 
-class SelectDayPage extends StatefulWidget {
-  const SelectDayPage({super.key, required this.id});
+class SelectDayPage2 extends StatefulWidget {
+  const SelectDayPage2({super.key, required this.id, required this.appointmentId});
   final Object? id;
+  final String appointmentId;
   @override
-  State<SelectDayPage> createState() => _SelectDayPageState();
+  State<SelectDayPage2> createState() => _SelectDayPage2State();
 }
 
-class _SelectDayPageState extends State<SelectDayPage> {
+class _SelectDayPage2State extends State<SelectDayPage2> {
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     context.read<PhysicianScheduleCubit>().fetchPhysicianSchedule(widget.id as int);
+    context.read<DoctorDetailsCubit>().fetchDoctorDetails(widget.id as int);
   }
 
   int currentIndex = -1;
@@ -37,7 +40,7 @@ class _SelectDayPageState extends State<SelectDayPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Book a session with"),
+        title: Text("Reschedule a session with"),
         centerTitle: false,
         leading: BackButton(
           color: context.colors.black,
@@ -54,15 +57,17 @@ class _SelectDayPageState extends State<SelectDayPage> {
             List<String> availableDays = physicianSchedule
                 .where((element) => (element.isTaken == false && element.dayOfWeekTitle != "7"))
                 .map((e) => e.dayOfWeekTitle)
+                .toSet()
                 .toList();
-            List<String> days = [];
 
-            for (String day in availableDays) {
-              if (days.contains(day)) {
-              } else {
-                days.add(day);
-              }
-            }
+            // List<String> days = [];
+
+            // for (String day in availableDays) {
+            //   if (days.contains(day)) {
+            //   } else {
+            //     days.add(day);
+            //   }
+            // }
             return BlocBuilder<DoctorDetailsCubit, DoctorDetailsState>(
               builder: (context, state) {
                 if (state is DoctorDetailsLoaded) {
@@ -107,13 +112,16 @@ class _SelectDayPageState extends State<SelectDayPage> {
                         Expanded(
                           child: ListView.separated(
                             separatorBuilder: (context, index) => Gap(20),
-                            itemCount: days.length,
+                            itemCount: availableDays.length,
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: () {
                                   setState(() {
                                     currentIndex = index;
                                   });
+                                  print(currentIndex);
+                                  print(availableDays);
+                                  print(availableDays[currentIndex]);
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -141,7 +149,7 @@ class _SelectDayPageState extends State<SelectDayPage> {
                                       ),
                                     ),
                                     titleAlignment: ListTileTitleAlignment.titleHeight,
-                                    title: Text(days[index]),
+                                    title: Text(availableDays[index]),
                                   ),
                                 ),
                               );
@@ -156,8 +164,14 @@ class _SelectDayPageState extends State<SelectDayPage> {
                         child: CustomButton(
                           label: "Proceed to select time",
                           onPressed: () {
-                            context.goNamed(Routes.viewTimeName,
-                                extra: widget.id, queryParameters: {'day': availableDays[currentIndex]});
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SelectTimePage2(
+                                          id: widget.id,
+                                          day: availableDays[currentIndex],
+                                          appointmentId: widget.appointmentId,
+                                        )));
                           },
                           enable: currentIndex != -1,
                         ),

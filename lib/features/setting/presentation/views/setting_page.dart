@@ -65,10 +65,8 @@ class _SettingPageState extends State<SettingPage> {
                       children: [
                         Text(
                           "Personal details",
-                          style: context.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                              color: context.primaryColor),
+                          style: context.textTheme.bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.w600, fontSize: 14, color: context.primaryColor),
                         ),
                         IconButton(
                             padding: EdgeInsets.zero,
@@ -84,8 +82,7 @@ class _SettingPageState extends State<SettingPage> {
                       ListTile(
                         leading: const Icon(Icons.person_outline),
                         title: const Text("Name"),
-                        subtitle: Text(
-                            "${userModel.firstName} ${userModel.lastName}"),
+                        subtitle: Text("${userModel.firstName} ${userModel.lastName}"),
                       ),
                       ListTile(
                         leading: const Icon(Icons.person_outline),
@@ -110,10 +107,8 @@ class _SettingPageState extends State<SettingPage> {
               children: [
                 Text(
                   "Notification and Security",
-                  style: context.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                      color: context.primaryColor),
+                  style: context.textTheme.bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.w600, fontSize: 14, color: context.primaryColor),
                 ),
               ],
             ),
@@ -127,6 +122,10 @@ class _SettingPageState extends State<SettingPage> {
             trailing: Icon(Icons.chevron_right_rounded),
           ),
           ListTile(
+            onTap: () {
+              toggleBiometrics();
+              setState(() {});
+            },
             leading: Icon(Icons.fingerprint),
             title: const Text("Enable Biometrics"),
             trailing: IconButton(
@@ -135,15 +134,14 @@ class _SettingPageState extends State<SettingPage> {
                   setState(() {});
                 },
                 icon: Icon(
-                  box.get("EB", defaultValue: true) == true
-                      ? Icons.toggle_on
-                      : Icons.toggle_off,
+                  box.get("EB", defaultValue: true) == true ? Icons.toggle_on : Icons.toggle_off,
                 ),
-                color: box.get("EB", defaultValue: true) == true
-                    ? context.colors.green
-                    : context.colors.borderGrey),
+                color: box.get("EB", defaultValue: true) == true ? context.colors.green : context.colors.borderGrey),
           ),
           ListTile(
+            onTap: () {
+              context.goNamed(Routes.change_passwordName);
+            },
             leading: const Icon(Icons.password),
             title: const Text("Change Password"),
             trailing: IconButton(
@@ -155,17 +153,18 @@ class _SettingPageState extends State<SettingPage> {
               ),
             ),
           ),
-          ListTile(
-            leading: Assets.application.assets.images.logoPurple
-                .image(height: 32, width: 32),
-            title: const Text("About"),
-            trailing: IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.chevron_right,
-              ),
-            ),
-          ),
+          // ListTile(
+
+          //   leading: Assets.application.assets.images.logoPurple
+          //       .image(height: 32, width: 32),
+          //   title: const Text("About"),
+          //   trailing: IconButton(
+          //     onPressed: () {},
+          //     icon: const Icon(
+          //       Icons.chevron_right,
+          //     ),
+          //   ),
+          // ),
         ],
       ).withSafeArea().withCustomPadding().withScrollView(),
       bottomNavigationBar: Container(

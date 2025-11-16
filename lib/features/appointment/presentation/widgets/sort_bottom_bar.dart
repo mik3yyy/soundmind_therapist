@@ -20,15 +20,7 @@ class SortBottomBarWidget extends StatefulWidget {
 
 class _SortBottomBarWidgetState extends State<SortBottomBarWidget> {
   Sort? sort;
-  List<Sort> sorts = [
-    Sort.a_z,
-    Sort.z_a,
-    Sort.Rl_h,
-    Sort.Rh_l,
-    Sort.Ph_l,
-    Sort.Pl_h,
-    Sort.most_experienced
-  ];
+  List<Sort> sorts = [Sort.a_z, Sort.z_a, Sort.Rl_h, Sort.Rh_l, Sort.Ph_l, Sort.Pl_h, Sort.most_experienced];
   @override
   void initState() {
     // TODO: implement initState
@@ -48,9 +40,14 @@ class _SortBottomBarWidgetState extends State<SortBottomBarWidget> {
             leadingWidth: 0,
             backgroundColor: context.colors.white,
             actions: [
-              Icon(
-                Icons.cancel_outlined,
-                color: context.colors.black,
+              GestureDetector(
+                onTap: () {
+                  context.pop(); // Closes the modal
+                },
+                child: Icon(
+                  Icons.cancel_outlined,
+                  color: context.colors.black,
+                ),
               ),
               const Gap(20),
             ],
@@ -74,14 +71,10 @@ class _SortBottomBarWidgetState extends State<SortBottomBarWidget> {
                         });
                       },
                     ),
-                    textColor: sort == sorts[index]
-                        ? context.primaryColor
-                        : context.colors.black,
+                    textColor: sort == sorts[index] ? context.primaryColor : context.colors.black,
                     leading: Icon(
                       getIconData(sorts[index]),
-                      color: sort == sorts[index]
-                          ? context.primaryColor
-                          : context.colors.black,
+                      color: sort == sorts[index] ? context.primaryColor : context.colors.black,
                     ),
                     title: Text(getTitle(sorts[index])),
                     onTap: () {
@@ -93,6 +86,7 @@ class _SortBottomBarWidgetState extends State<SortBottomBarWidget> {
             },
           ).withExpanded(),
           CustomButton(
+            height: 50,
             label: "Save",
             onPressed: () {
               context.read<DoctorCubit>().chnageState(sort: sort);
@@ -132,8 +126,7 @@ IconData getIconData(Sort sort) {
     case Sort.a_z:
       return Icons.sort_by_alpha; // Icon for A-Z
     case Sort.z_a:
-      return Icons
-          .sort_by_alpha; // Icon for Z-A (you can rotate this to simulate reverse sorting if needed)
+      return Icons.sort_by_alpha; // Icon for Z-A (you can rotate this to simulate reverse sorting if needed)
     case Sort.Rl_h:
       return Icons.star_border; // Icon for Rating (low to High)
     case Sort.Rh_l:

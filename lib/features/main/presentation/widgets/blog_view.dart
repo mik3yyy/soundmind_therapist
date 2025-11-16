@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sound_mind/core/extensions/context_extensions.dart';
 import 'package:sound_mind/core/gen/assets.gen.dart';
@@ -65,8 +66,8 @@ class BlogView extends StatelessWidget {
           // Image on the right
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              imageUrl.isEmpty || imageUrl.contains('test.con') ? ImageUtils.defaultImage : imageUrl,
+            child: CachedNetworkImage(
+              imageUrl: imageUrl.isEmpty || imageUrl.contains('test.con') ? ImageUtils.defaultImage : imageUrl,
               width: 72,
               height: 48,
               fit: BoxFit.cover,

@@ -14,7 +14,9 @@ import 'package:sound_mind/features/appointment/data/models/appointment.dart';
 import 'package:sound_mind/features/appointment/presentation/views/appointment_page.dart';
 import 'package:sound_mind/features/appointment/presentation/views/booking/view_booking.dart';
 import 'package:sound_mind/features/appointment/presentation/views/booking/view_day.dart';
+import 'package:sound_mind/features/appointment/presentation/views/booking/view_day_re.dart';
 import 'package:sound_mind/features/appointment/presentation/views/booking/view_time.dart';
+import 'package:sound_mind/features/appointment/presentation/views/booking/view_time_2.dart';
 import 'package:sound_mind/features/appointment/presentation/views/view_doctor.dart';
 import 'package:sound_mind/features/chat/data/models/chat_room.dart';
 import 'package:sound_mind/features/chat/presentation/views/chat_page.dart';
@@ -56,6 +58,9 @@ class Routes {
   static const String viewTimePath = 'viewTime';
   static const String viewTimeName = 'viewTime';
 
+  static const String viewTime2Path = 'viewTime2';
+  static const String viewTime2Name = 'viewTime2';
+
   static const String addFundPath = 'addFund';
   static const String addFundName = 'addFund';
 
@@ -67,6 +72,9 @@ class Routes {
 
   static const String viewDayPath = 'viewDay';
   static const String viewDayName = 'viewDay';
+
+  static const String viewDay2Path = 'viewDay2';
+  static const String viewDay2Name = 'viewDay2';
 
   static const String view_docPath = 'view_doc';
   static const String view_docName = 'view_doc';
@@ -220,13 +228,45 @@ class Routes {
               //     HomeScreen(),
               routes: [
                 GoRoute(
-                  path: viewSessionPath,
-                  name: viewSessionName,
-                  parentNavigatorKey: rootNavigatorKey,
-                  builder: (context, state) => ViewSessionScreen(
-                    appointment: state.extra as AppointmentDto,
-                  ),
-                ),
+                    path: viewSessionPath,
+                    name: viewSessionName,
+                    parentNavigatorKey: rootNavigatorKey,
+                    builder: (context, state) => ViewSessionScreen(
+                          appointment: state.extra as AppointmentDto,
+                        ),
+                    routes: [
+                      GoRoute(
+                          path: viewDay2Path,
+                          name: viewDay2Name,
+                          parentNavigatorKey: rootNavigatorKey,
+                          builder: (context, state) => SelectDayPage2(
+                                id: state.extra,
+                                appointmentId: state.uri.queryParameters['appointmentId'].toString(),
+                              ), // Replace with actual screen widget
+                          routes: [
+                            GoRoute(
+                                path: viewTime2Path,
+                                name: viewTime2Name,
+                                parentNavigatorKey: rootNavigatorKey,
+                                builder: (context, state) => SelectTimePage2(
+                                      id: state.extra,
+                                      day: state.uri.queryParameters['day'] as String,
+                                      appointmentId: state.uri.queryParameters['appointmentId'].toString(),
+                                    ),
+
+                                // Replace with actual screen widget
+                                routes: [
+                                  //        GoRoute(
+                                  // path: ViewSummaryPath,
+                                  // name: ViewSummaryName,
+                                  // builder: (context, state) => ViewSummary(
+                                  //   id: state.extra,
+                                  //   physicianScheduleModel: state.,
+                                  // ),
+                                  // )
+                                ]),
+                          ]),
+                    ]),
                 GoRoute(
                   path: view_bookingPath,
                   name: view_bookingName,

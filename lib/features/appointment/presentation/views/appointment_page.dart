@@ -37,7 +37,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
         context.read<DoctorCubit>().chnageState(search: '');
       }
     } else {
-      context.read<DoctorCubit>().fetchDoctors(pageNumber: 1, pageSize: 20);
+      context.read<DoctorCubit>().fetchDoctors(pageNumber: 1, pageSize: 100);
     }
   }
 
@@ -66,9 +66,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                       hintText: "Search",
                       onChanged: (value) {
                         print(value);
-                        context
-                            .read<DoctorCubit>()
-                            .chnageState(search: value.toLowerCase());
+                        context.read<DoctorCubit>().chnageState(search: value.toLowerCase());
                       },
                     ),
                     const Gap(2),
@@ -80,15 +78,13 @@ class _AppointmentPageState extends State<AppointmentPage> {
                         ] else ...[
                           Container(
                             padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(36),
-                                color: context.primaryColor),
+                            decoration:
+                                BoxDecoration(borderRadius: BorderRadius.circular(36), color: context.primaryColor),
                             child: Row(
                               children: [
                                 Text(
                                   getTitle(state.sort!),
-                                  style: context.textTheme.bodyMedium
-                                      ?.copyWith(color: context.colors.white),
+                                  style: context.textTheme.bodyMedium?.copyWith(color: context.colors.white),
                                 ),
                                 // Icon(
                                 //   getIconData(state.sort!),
@@ -123,17 +119,14 @@ class _AppointmentPageState extends State<AppointmentPage> {
                               // radius: 25,
                               backgroundColor: context.colors.greyDecorDark,
                               child: Icon(
-                                state.display == Display.list
-                                    ? Icons.grid_view
-                                    : Icons.list,
+                                state.display == Display.list ? Icons.grid_view : Icons.list,
                                 color: context.colors.black,
                               ),
                             ).withOnTap(() {
                               // if(state.display==)
-                              context.read<DoctorCubit>().chnageState(
-                                  display: state.display == Display.list
-                                      ? Display.grid
-                                      : Display.list);
+                              context
+                                  .read<DoctorCubit>()
+                                  .chnageState(display: state.display == Display.list ? Display.grid : Display.list);
                             }),
                           ],
                         ),
@@ -161,9 +154,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
           if (state is DoctorLoading) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ComplexShimmer.listShimmer(itemCount: 10).withExpanded()
-              ],
+              children: [ComplexShimmer.listShimmer(itemCount: 10).withExpanded()],
             ).withCustomPadding();
           }
 
@@ -172,9 +163,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
               children: [
                 CustomErrorScreen(
                   onTap: () {
-                    context
-                        .read<DoctorCubit>()
-                        .fetchDoctors(pageNumber: 1, pageSize: 20);
+                    context.read<DoctorCubit>().fetchDoctors(pageNumber: 1, pageSize: 100);
                   },
                   message: state.message,
                 ),
@@ -186,16 +175,13 @@ class _AppointmentPageState extends State<AppointmentPage> {
             if (state.search.isNotEmpty) {
               doctors = doctors.where((e) {
                 // Create the full name string
-                final fullName =
-                    ('${e.firstName ?? ""} ${e.lastName ?? ""}').toLowerCase();
+                final fullName = ('${e.firstName ?? ""} ${e.lastName ?? ""}').toLowerCase();
 
                 // Get the search characters, ignoring spaces
-                final searchChars =
-                    state.search.replaceAll(' ', '').toLowerCase().split('');
+                final searchChars = state.search.replaceAll(' ', '').toLowerCase().split('');
 
                 // Build a regex pattern that requires each character to appear in the full name in any order
-                final searchPattern =
-                    searchChars.map((char) => '(?=.*$char)').join('');
+                final searchPattern = searchChars.map((char) => '(?=.*$char)').join('');
 
                 // Create a regular expression using the pattern
                 final regex = RegExp(searchPattern, caseSensitive: false);
@@ -206,9 +192,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
             }
             return RefreshIndicator(
               onRefresh: () async {
-                context
-                    .read<DoctorCubit>()
-                    .fetchDoctors(pageNumber: 1, pageSize: 20);
+                context.read<DoctorCubit>().fetchDoctors(pageNumber: 1, pageSize: 100);
                 Constants.delayed();
               },
               child: Column(
@@ -223,8 +207,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                         print("${doctor.lastName} ${doctor.firstName}");
                         return ListTile(
                           onTap: () {
-                            context.goNamed(Routes.view_docName,
-                                extra: doctor.physicianId);
+                            context.goNamed(Routes.view_docName, extra: doctor.physicianId);
                           },
                           leading: CachedNetworkImage(
                             imageUrl: doctor.profilePicture!,
@@ -236,8 +219,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               AutoSizeText(
-                                "${doctor.lastName} ${doctor.firstName}"
-                                    .toLowerCase(),
+                                "${doctor.lastName} ${doctor.firstName}".toLowerCase(),
                                 // .capitalizeAllFirst,
                                 maxLines: 1,
                               ),
@@ -246,15 +228,13 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                   Assets.application.assets.svgs.star.svg(),
                                   Text(
                                     " ${doctor.ratingAverage} ",
-                                    style:
-                                        context.textTheme.bodyMedium?.copyWith(
+                                    style: context.textTheme.bodyMedium?.copyWith(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   Text(
                                     "| ${doctor.yoe}yrs experience",
-                                    style:
-                                        context.textTheme.bodyMedium?.copyWith(
+                                    style: context.textTheme.bodyMedium?.copyWith(
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ), //₦15,000
@@ -286,8 +266,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                       itemCount: doctors.length,
                       itemBuilder: (context, index) {
                         return DoctorCard(doctor: doctors[index]).withOnTap(() {
-                          context.goNamed(Routes.view_docName,
-                              extra: doctors[index].physicianId);
+                          context.goNamed(Routes.view_docName, extra: doctors[index].physicianId);
                         });
                       },
                     ).withExpanded()

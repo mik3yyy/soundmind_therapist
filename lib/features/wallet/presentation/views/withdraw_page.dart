@@ -38,9 +38,7 @@ class _WithdrawPageState extends State<WithdrawPage> {
   check() {
     if (bank != null && _controller.text.isNotEmpty) {
       if (_controller.text.length == 10) {
-        context
-            .read<ResolveBankAccountCubit>()
-            .resolveAccount(_controller.text, bank!['code']!);
+        context.read<ResolveBankAccountCubit>().resolveAccount(_controller.text, bank!['code']!);
       }
     }
   }
@@ -49,8 +47,7 @@ class _WithdrawPageState extends State<WithdrawPage> {
 
   TextEditingController _controller = TextEditingController();
   Map<String, String> convertMapToString(Map<dynamic, dynamic> originalMap) {
-    return originalMap
-        .map((key, value) => MapEntry(key.toString(), value.toString()));
+    return originalMap.map((key, value) => MapEntry(key.toString(), value.toString()));
   }
 
   @override
@@ -85,8 +82,7 @@ class _WithdrawPageState extends State<WithdrawPage> {
                         children: [
                           Text(
                             "SoundMind Inc",
-                            style: context.textTheme.bodyLarge
-                                ?.copyWith(color: context.colors.white),
+                            style: context.textTheme.bodyLarge?.copyWith(color: context.colors.white),
                           ),
                         ],
                       ),
@@ -98,8 +94,7 @@ class _WithdrawPageState extends State<WithdrawPage> {
                             width: context.screenWidth * .3,
                             child: AutoSizeText(
                               "Available Balance",
-                              style: context.textTheme.displayMedium
-                                  ?.copyWith(color: context.colors.white),
+                              style: context.textTheme.displayMedium?.copyWith(color: context.colors.white),
                               maxLines: 1,
                               minFontSize: 5,
                               maxFontSize: 18,
@@ -110,8 +105,7 @@ class _WithdrawPageState extends State<WithdrawPage> {
                             width: context.screenWidth * .3,
                             child: AutoSizeText(
                               "${Constants.Naira}${MoneyFormatter.doubleToMoney(balance)}",
-                              style: context.textTheme.displayMedium
-                                  ?.copyWith(color: context.colors.white),
+                              style: context.textTheme.displayMedium?.copyWith(color: context.colors.white),
                               maxLines: 1,
                               minFontSize: 3,
                               maxFontSize: 18,
@@ -141,11 +135,9 @@ class _WithdrawPageState extends State<WithdrawPage> {
                     itemToString: (value) => value,
                     onChanged: (value) {
                       setState(() {
-                        bank = convertMapToString(
-                            state.banks.where((e) => e['name'] == value).first);
+                        bank = convertMapToString(state.banks.where((e) => e['name'] == value).first);
                       });
                       check();
-                      print(bank);
                     },
                   );
                 } else {
@@ -193,9 +185,7 @@ class _WithdrawPageState extends State<WithdrawPage> {
                       ),
                     ),
                     const Gap(10),
-                    if (state is ResolveBankAccountLoading) ...[
-                      const CircularProgressIndicator()
-                    ]
+                    if (state is ResolveBankAccountLoading) ...[const CircularProgressIndicator()]
                   ],
                 );
               },
@@ -206,9 +196,7 @@ class _WithdrawPageState extends State<WithdrawPage> {
           height: 150,
           child: CustomButton(
             label: "withdraw",
-            enable: bank != null &&
-                _controller.text.isNotEmpty &&
-                _controller.text.length == 10,
+            enable: bank != null && _controller.text.isNotEmpty && _controller.text.length == 10,
             onPressed: () {
               context.goNamed(
                 Routes.add_amountName,
