@@ -18,8 +18,7 @@ abstract class AppointmentRemoteDataSource {
 class AppointmentRemoteDataSourceImpl extends AppointmentRemoteDataSource {
   final Network _network;
 
-  AppointmentRemoteDataSourceImpl({required Network network})
-      : _network = network;
+  AppointmentRemoteDataSourceImpl({required Network network}) : _network = network;
 
   @override
   Future<DataMap> getUpcomingAppointments() async {
@@ -93,8 +92,7 @@ class AppointmentRemoteDataSourceImpl extends AppointmentRemoteDataSource {
   }
 
   @override
-  Future<void> finalizeBooking(
-      {required int bookingId, required String code}) async {
+  Future<void> finalizeBooking({required int bookingId, required String code}) async {
     Response response = await _network.call(
       "/TherapistDashboard/FinalizeBooking",
       RequestMethod.post,

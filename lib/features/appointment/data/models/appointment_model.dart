@@ -17,12 +17,13 @@ class AppointmentModel {
 
   // Factory constructor to create an AppointmentModel from a JSON object
   factory AppointmentModel.fromJson(Map<String, dynamic> json) {
+    print(json);
     return AppointmentModel(
       booking: Booking.fromJson(json['booking']),
       schedule: Schedule.fromJson(json['schedule']),
       patientName: json['patientName'],
       profilePicture: json['profilePicture'],
-      areaOfSpecialization: json['areaOfSpecialization'],
+      areaOfSpecialization: json['areaOfSpecialization'] as String?, // nullable and safe
     );
   }
 
@@ -87,6 +88,7 @@ class Booking {
 
   // Factory constructor to create a Booking from a JSON object
   factory Booking.fromJson(Map<String, dynamic> json) {
+    print("BOOKING JSON: $json");
     return Booking(
       id: json['id'],
       timeCreated: DateTime.parse(json['timeCreated']),

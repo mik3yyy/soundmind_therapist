@@ -22,14 +22,14 @@ class Referral {
 
   factory Referral.fromJson(Map<String, dynamic> json) {
     return Referral(
-      fname: json['firstName'],
-      institutionName: json['institutionName'],
-      id: json['id'],
-      lname: json['lastName'],
-      patientId: json['patientId'],
-      institutionId: json['institutionId'],
-      notes: json['notes'],
-      referralDate: DateTime.parse(json['referralDate']),
+      fname: json['firstName'] ?? '',
+      institutionName: json['institutionName'] ?? '',
+      id: json['id'] ?? 0,
+      lname: json['lastName'] ?? '',
+      patientId: json['patientId'] ?? 0,
+      institutionId: json['institutionId'] ?? 0,
+      notes: json['notes'] ?? '',
+      referralDate: DateTime.parse(json['referralDate'] ?? DateTime.now().toIso8601String()),
     );
   }
 

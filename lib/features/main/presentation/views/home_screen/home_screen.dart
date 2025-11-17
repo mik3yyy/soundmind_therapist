@@ -75,6 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               BlocBuilder<AuthenticationBloc, AuthenticationState>(
                 builder: (context, state) {
+                  print("HomeScreen state: $state");
                   var user = (state as UserAccount).userModel;
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

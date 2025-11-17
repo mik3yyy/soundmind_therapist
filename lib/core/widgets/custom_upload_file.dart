@@ -26,13 +26,17 @@ class _UploadfileState extends State<Uploadfile> {
 
   File? pdfFile;
   onImagePicker() async {
-    imageFile = await ImageUtils.pickImage();
+    try {
+      imageFile = await ImageUtils.pickImage();
 
-    if (imageFile != null) {
-      pdfFile = null;
+      if (imageFile != null) {
+        pdfFile = null;
+      }
+      setState(() {});
+      widget.onTap(imageFile, 2);
+    } catch (e) {
+      context.showSnackBar("Error picking image: $e");
     }
-    setState(() {});
-    widget.onTap(imageFile, 2);
   }
 
   addFilePicker() async {
@@ -69,22 +73,23 @@ class _UploadfileState extends State<Uploadfile> {
           fit: BoxFit.cover,
         );
       } else if (pdfFile != null) {
-        return PDFView(
-          filePath: pdfFile!.path,
-          enableSwipe: true,
-          swipeHorizontal: true,
-          autoSpacing: false,
-          pageFling: false,
-          backgroundColor: Colors.grey,
-          onRender: (_pages) {},
-          onError: (error) {
-            print(error.toString());
-          },
-          onPageError: (page, error) {
-            print('$page: ${error.toString()}');
-          },
-          onViewCreated: (PDFViewController pdfViewController) {},
-        );
+        return buildPDFView(pdfFile!);
+        // return PDFView(
+        //   filePath: pdfFile!.path,
+        //   enableSwipe: true,
+        //   swipeHorizontal: true,
+        //   autoSpacing: false,
+        //   pageFling: false,
+        //   backgroundColor: Colors.grey,
+        //   onRender: (_pages) {},
+        //   onError: (error) {
+        //     print(error.toString());
+        //   },
+        //   onPageError: (page, error) {
+        //     print('$page: ${error.toString()}');
+        //   },
+        //   onViewCreated: (PDFViewController pdfViewController) {},
+        // );
       } else {
         return EmptyUpload();
       }
@@ -107,8 +112,11 @@ class _UploadfileState extends State<Uploadfile> {
           ),
         ).withOnTap(() {
           showModalBottomSheet(
-            barrierColor: Colors.transparent,
             context: context,
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
             builder: (context) {
               return Container(
                 padding: const EdgeInsets.all(10),
@@ -174,6 +182,47 @@ class _UploadfileState extends State<Uploadfile> {
   }
 }
 
+Widget buildPDFView(File pdfFile) {
+  return FutureBuilder<bool>(
+    future: Future.delayed(Duration(milliseconds: 200), () => pdfFile.existsSync()),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState != ConnectionState.done) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      if (!snapshot.hasData || snapshot.data == false) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.warning, color: Colors.red, size: 40),
+              const SizedBox(height: 8),
+              const Text("Failed to load PDF file."),
+            ],
+          ),
+        );
+      }
+
+      return PDFView(
+        filePath: pdfFile.path,
+        enableSwipe: true,
+        swipeHorizontal: true,
+        autoSpacing: false,
+        pageFling: false,
+        backgroundColor: Colors.grey.shade200,
+        onRender: (_pages) {},
+        onError: (error) {
+          debugPrint("PDF render error: $error");
+        },
+        onPageError: (page, error) {
+          debugPrint("PDF page error ($page): $error");
+        },
+        onViewCreated: (PDFViewController pdfViewController) {},
+      );
+    },
+  );
+}
+
 class EmptyUpload extends StatelessWidget {
   const EmptyUpload({super.key});
 
@@ -186,8 +235,7 @@ class EmptyUpload extends StatelessWidget {
         CircleAvatar(
           backgroundColor: context.secondaryColor,
           radius: 25,
-          child:
-              Assets.application.assets.svgs.upload.svg(height: 24, width: 24),
+          child: Assets.application.assets.svgs.upload.svg(height: 24, width: 24),
         ),
         const Gap(5),
         const Text("Upload file")

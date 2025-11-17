@@ -61,21 +61,13 @@ class _SettingPageState extends State<SettingPage> {
                   SizedBox(
                     height: 20,
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
                           "Personal details",
-                          style: context.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                              color: context.primaryColor),
+                          style: context.textTheme.bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.w600, fontSize: 14, color: context.primaryColor),
                         ),
-                        IconButton(
-                            padding: EdgeInsets.zero,
-                            onPressed: () {
-                              // context.goNamed(Routes.personal_detailsName);
-                            },
-                            icon: Icon(Icons.chevron_right_rounded)),
                       ],
                     ),
                   ),
@@ -84,8 +76,7 @@ class _SettingPageState extends State<SettingPage> {
                       ListTile(
                         leading: const Icon(Icons.person_outline),
                         title: const Text("Name"),
-                        subtitle: Text(
-                            "${userModel.firstName} ${userModel.lastName}"),
+                        subtitle: Text("${userModel.firstName} ${userModel.lastName}"),
                       ),
                       ListTile(
                         leading: const Icon(Icons.person_outline),

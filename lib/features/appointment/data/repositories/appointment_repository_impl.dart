@@ -22,10 +22,9 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
   ResultFuture<List<AppointmentModel>> getUpcomingAppointments() async {
     try {
       final response = await _remoteDataSource.getUpcomingAppointments();
-      AppointmentModel appointment = AppointmentModel.fromJson(response);
-      List<AppointmentModel> appointments = (response['data'] as List)
-          .map((json) => AppointmentModel.fromJson(json))
-          .toList();
+      // AppointmentModel appointment = AppointmentModel.fromJson(response);
+      List<AppointmentModel> appointments =
+          (response['data'] as List).map((json) => AppointmentModel.fromJson(json)).toList();
       // await _hiveDataSource.saveUpcomingAppointments(appointment: appointment);
       return Right(appointments);
     } on ApiError catch (e) {
@@ -34,8 +33,7 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
   }
 
   @override
-  Future<Either<Failure, void>> finalizeBooking(
-      {required int bookingId, required String code}) async {
+  Future<Either<Failure, void>> finalizeBooking({required int bookingId, required String code}) async {
     try {
       await _remoteDataSource.finalizeBooking(bookingId: bookingId, code: code);
       return Right(null);
@@ -49,8 +47,7 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
     try {
       final response = await _remoteDataSource.getUpcomingAppointmentRequest();
       print(response);
-      AppointmentModel appointment =
-          AppointmentModel.fromJson(response['data']);
+      AppointmentModel appointment = AppointmentModel.fromJson(response['data']);
       return Right(appointment);
     } on ApiError catch (e) {
       return Left(ServerFailure(e.errorDescription));
@@ -75,9 +72,8 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
     try {
       final response = await _remoteDataSource.getAcceptedAppointments();
       print(response);
-      List<AppointmentModel> appointments = (response['data'] as List)
-          .map((json) => AppointmentModel.fromJson(json))
-          .toList();
+      List<AppointmentModel> appointments =
+          (response['data'] as List).map((json) => AppointmentModel.fromJson(json)).toList();
       return Right(appointments);
     } on ApiError catch (e) {
       return Left(ServerFailure(e.errorDescription));
@@ -89,9 +85,8 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
     try {
       final response = await _remoteDataSource.getPendingAppointments();
       print(response);
-      List<AppointmentModel> appointments = (response['data'] as List)
-          .map((json) => AppointmentModel.fromJson(json))
-          .toList();
+      List<AppointmentModel> appointments =
+          (response['data'] as List).map((json) => AppointmentModel.fromJson(json)).toList();
       return Right(appointments);
     } on ApiError catch (e) {
       return Left(ServerFailure(e.errorDescription));
@@ -102,9 +97,8 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
   ResultFuture<List<AppointmentModel>> getRejectedAppointments() async {
     try {
       final response = await _remoteDataSource.getRejectedAppointments();
-      List<AppointmentModel> appointments = (response['data'] as List)
-          .map((json) => AppointmentModel.fromJson(json))
-          .toList();
+      List<AppointmentModel> appointments =
+          (response['data'] as List).map((json) => AppointmentModel.fromJson(json)).toList();
       return Right(appointments);
     } on ApiError catch (e) {
       return Left(ServerFailure(e.errorDescription));

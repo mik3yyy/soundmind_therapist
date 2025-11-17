@@ -96,6 +96,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             maxLength: widget.maxLength,
             minLines: widget.minLines,
             focusNode: widget.focusNode,
+
             onTap: widget.onTap,
             expands: widget.expands,
 
@@ -138,8 +139,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 gapPadding: 0,
               ),
               hintText: widget.isPasswordField ? "●●●●●●●●" : widget.hintText,
-              hintStyle: context.textTheme.bodyMedium
-                  ?.copyWith(color: context.colors.black),
+              hintStyle: context.textTheme.bodyMedium?.copyWith(color: context.colors.black),
               suffixIcon: widget.isPasswordField
                   ? IconButton(
                       onPressed: () {
@@ -147,9 +147,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                           visible = !visible;
                         });
                       },
-                      icon: visible
-                          ? const Icon(Icons.visibility)
-                          : const Icon(Icons.visibility_off))
+                      icon: visible ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off))
                   : widget.suffixIcon,
             ),
           ),

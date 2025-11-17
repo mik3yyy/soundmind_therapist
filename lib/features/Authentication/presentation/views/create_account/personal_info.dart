@@ -142,22 +142,27 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> with Validators
               },
             ),
             const Gap(2),
-            BlocBuilder<CheckIfPhoneAndEmailExistCubit, CheckIfPhoneAndEmailExistState>(
-              builder: (context, state) {
-                return CustomButton(
-                  notifier: ValueNotifier(state is CheckIfPhoneAndEmailExistLoading || state is CreatingAccount),
-                  label: "Next",
-                  onPressed: () {
-                    if (!signupForm.currentState!.validate()) {
-                      return;
-                    }
-                    if (dob == null || gender == null) {
-                      context.showSnackBar("Fill all fields");
-                      return;
-                    }
-                    context
-                        .read<CheckIfPhoneAndEmailExistCubit>()
-                        .checkIfPhoneAndEmailExist(_emailController.text, phoneNumber);
+            BlocBuilder<AuthenticationBloc, AuthenticationState>(
+              builder: (context, authstate) {
+                return BlocBuilder<CheckIfPhoneAndEmailExistCubit, CheckIfPhoneAndEmailExistState>(
+                  builder: (context, state) {
+                    return CustomButton(
+                      notifier:
+                          ValueNotifier(state is CheckIfPhoneAndEmailExistLoading || authstate is CreatingAccount),
+                      label: "Next",
+                      onPressed: () {
+                        if (!signupForm.currentState!.validate()) {
+                          return;
+                        }
+                        if (dob == null || gender == null) {
+                          context.showSnackBar("Fill all fields");
+                          return;
+                        }
+                        context
+                            .read<CheckIfPhoneAndEmailExistCubit>()
+                            .checkIfPhoneAndEmailExist(_emailController.text, phoneNumber);
+                      },
+                    );
                   },
                 );
               },

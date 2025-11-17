@@ -25,7 +25,11 @@ class UserAccount extends AuthenticationState {
 
 class CreatingAccount extends AuthenticationState {}
 
-class CreatingAccountFailed extends AuthenticationState {}
+class CreatingAccountFailed extends AuthenticationState {
+  final String message;
+
+  CreatingAccountFailed({required this.message});
+}
 
 class SetUserState extends AuthenticationState {}
 

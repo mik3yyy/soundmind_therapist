@@ -31,7 +31,7 @@ class _EducationPopUpState extends State<EducationPopUp> {
   Widget build(BuildContext context) {
     return Dialog(
       child: Container(
-        height: context.screenHeight * .6,
+        // height: context.screenHeight * .6,
         width: context.screenWidth * .8,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -40,6 +40,7 @@ class _EducationPopUpState extends State<EducationPopUp> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -89,25 +90,19 @@ class _EducationPopUpState extends State<EducationPopUp> {
             Gap(10),
             CustomButton(
               label: "Save",
-              enable: startDate != null &&
-                  endDate != null &&
-                  _instituite.text.isNotEmpty &&
-                  _gradYear.text.isNotEmpty,
+              enable: startDate != null && endDate != null && _instituite.text.isNotEmpty && _gradYear.text.isNotEmpty,
               onPressed: () {
                 if (endDate!.year < startDate!.year) {
-                  context.showSnackBar(
-                      "End year is meant to be Greater than start year");
+                  context.showSnackBar("End year is meant to be Greater than start year");
                   return;
                 }
                 String endD = DateFormater.formatDate(endDate!);
                 String startD = DateFormater.formatDate(startDate!);
                 widget.onSubmit(Qualification(
-                    schoolName: _instituite.text,
-                    degree: _gradYear.text,
-                    startDate: startD,
-                    endDate: endD));
+                    schoolName: _instituite.text, degree: _gradYear.text, startDate: startD, endDate: endD));
               },
-            )
+            ),
+            Gap(20),
           ].addSpacer(const Gap(10)),
         ),
       ),

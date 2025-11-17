@@ -40,6 +40,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> with TickerPr
   Widget build(BuildContext context) {
     return BlocConsumer<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
+        if (state is CreatingAccountFailed) {
+          context.showSnackBar(state.message);
+        }
         if (state is ProfileInfoState) {
           var page = state.page ?? 0;
           // pageController.animateToPage(page, duration: const Duration(milliseconds: 500), curve: Curves.ease);

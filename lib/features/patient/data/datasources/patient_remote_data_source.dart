@@ -77,21 +77,16 @@ class PatientRemoteDataSourceImpl extends PatientRemoteDataSource {
       '/TherapistDashboard/GetUserChatRooms',
       RequestMethod.get,
     );
-    return (response.data['data'] as List)
-        .map((json) => ChatRoom.fromJson(json))
-        .toList();
+    return (response.data['data'] as List).map((json) => ChatRoom.fromJson(json)).toList();
   }
 
   @override
-  Future<List<ChatMessage>> getUserChatRoomMessages(
-      {required int chatRoomId}) async {
+  Future<List<ChatMessage>> getUserChatRoomMessages({required int chatRoomId}) async {
     Response response = await _network.call(
       '/TherapistDashboard/GetUserChatRoomMessages?ChatroomID=$chatRoomId',
       RequestMethod.get,
     );
-    return (response.data['data'] as List)
-        .map((json) => ChatMessage.fromJson(json))
-        .toList();
+    return (response.data['data'] as List).map((json) => ChatMessage.fromJson(json)).toList();
   }
 
   @override
@@ -100,9 +95,7 @@ class PatientRemoteDataSourceImpl extends PatientRemoteDataSource {
       '/Referral/GetReferralInstitutions',
       RequestMethod.get,
     );
-    return (response.data['data'] as List)
-        .map((json) => ReferralInstitution.fromJson(json))
-        .toList();
+    return (response.data['data'] as List).map((json) => ReferralInstitution.fromJson(json)).toList();
   }
 
   @override
@@ -111,10 +104,8 @@ class PatientRemoteDataSourceImpl extends PatientRemoteDataSource {
       '/Referral/GetReferrals',
       RequestMethod.get,
     );
-    print("RESPONSE" + response.data);
-    return (response.data['data'] as List)
-        .map((json) => Referral.fromJson(json))
-        .toList();
+    print("RESPONSE" + response.data.toString());
+    return (response.data['data'] as List).map((json) => Referral.fromJson(json)).toList();
   }
 
   @override

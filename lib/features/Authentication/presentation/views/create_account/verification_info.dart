@@ -137,7 +137,7 @@ class _VerificationInfoScreenState extends State<VerificationInfoScreen> with Au
                 return CustomButton(
                   label: 'Next',
                   notifier: ValueNotifier(state is TherapistProfileLoading),
-                  enable: professionalUpload != null && govIDUpload != null && Degree != null,
+                  enable: professionalUpload != null && govIDUpload != null && Degree != null && profilePicture != null,
                   onPressed: () {
                     context.read<TherapistProfileCubit>().uploadVerificarionInfo(
                           VerificationInfoModel(

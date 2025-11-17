@@ -54,8 +54,7 @@ class UpcomingAppointmentsTab extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          BlocBuilder<GetUpcomingAppointmentsCubit,
-              GetUpcomingAppointmentsState>(
+          BlocBuilder<GetUpcomingAppointmentsCubit, GetUpcomingAppointmentsState>(
             builder: (context, state) {
               if (state is GetUpcomingAppointmentsSuccess) {
                 var appointments = state.appointments;
@@ -68,15 +67,13 @@ class UpcomingAppointmentsTab extends StatelessWidget {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            context.goNamed(Routes.view_sessionName,
-                                extra: doc);
+                            context.goNamed(Routes.view_sessionName, extra: doc);
                           },
                           child: Container(
                             padding: EdgeInsets.all(10),
                             width: context.screenWidth * .9,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                color: context.primaryColor),
+                            decoration:
+                                BoxDecoration(borderRadius: BorderRadius.circular(16), color: context.primaryColor),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -92,15 +89,12 @@ class UpcomingAppointmentsTab extends StatelessWidget {
                                           ).withClip(4)
                                         : Container(),
                                     Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
                                         Text(
                                           doc.patientName,
-                                          style: context.textTheme.displayMedium
-                                              ?.copyWith(
+                                          style: context.textTheme.displayMedium?.copyWith(
                                             color: context.colors.white,
                                           ),
                                         ),
@@ -117,8 +111,7 @@ class UpcomingAppointmentsTab extends StatelessWidget {
                                     color: Colors.purple[900]?.withOpacity(.5),
                                   ),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Row(
                                         children: [
@@ -128,11 +121,8 @@ class UpcomingAppointmentsTab extends StatelessWidget {
                                           ),
                                           const Gap(5),
                                           Text(
-                                            DateFormater.formatTimeRange(
-                                                doc.schedule.startTime,
-                                                doc.schedule.endTime),
-                                            style: context.textTheme.bodyMedium
-                                                ?.copyWith(
+                                            DateFormater.formatTimeRange(doc.schedule.startTime, doc.schedule.endTime),
+                                            style: context.textTheme.bodyMedium?.copyWith(
                                               color: context.colors.white,
                                             ),
                                           ),
@@ -149,8 +139,7 @@ class UpcomingAppointmentsTab extends StatelessWidget {
                                             DateFormater.formatDateTime(
                                               doc.booking.date,
                                             ),
-                                            style: context.textTheme.bodyMedium
-                                                ?.copyWith(
+                                            style: context.textTheme.bodyMedium?.copyWith(
                                               color: context.colors.white,
                                             ),
                                           ),
@@ -164,13 +153,11 @@ class UpcomingAppointmentsTab extends StatelessWidget {
                           ),
                         )
                       ],
-                    );
+                    ).withCustomPadding();
                   },
-                );
+                ).withExpanded();
               } else if (state is GetUpcomingAppointmentsLoading) {
-                return ComplexShimmer.cardShimmer(
-                        itemCount: 1,
-                        margin: const EdgeInsets.symmetric(vertical: 20))
+                return ComplexShimmer.cardShimmer(itemCount: 1, margin: const EdgeInsets.symmetric(vertical: 20))
                     .withCustomPadding();
               } else {
                 return Container();

@@ -146,6 +146,7 @@ class _ProfessionalInfoScreenState extends State<ProfessionalInfoScreen>
             controller: _controller,
             titleText: "Bio",
             hintText: "Enter a bio about yourself",
+            // textInputAction: TextInputAction.newline,
             maxLines: 10,
             onChanged: (value) {
               setState(() {});
@@ -173,7 +174,8 @@ class _ProfessionalInfoScreenState extends State<ProfessionalInfoScreen>
         ].addSpacer(const Gap(10)),
       ).withSafeArea().withCustomPadding().withForm(signupForm).withScrollView(),
       bottomNavigationBar: Container(
-        height: 150,
+        color: Colors.transparent,
+        height: 100,
         child: Row(
           children: [
             Gap(5),
@@ -208,7 +210,7 @@ class _ProfessionalInfoScreenState extends State<ProfessionalInfoScreen>
                       return;
                     }
                     if (licenseExpiryDate == null || aoe == null && _controller.text.isNotEmpty) {
-                      context.showSnackBar("Fill al fields");
+                      context.showSnackBar("Fill all fields");
                     }
                     context.read<TherapistProfileCubit>().uploadProfessionalInfo(
                           ProfessionalInfoModel(

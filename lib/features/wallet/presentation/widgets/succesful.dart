@@ -11,8 +11,7 @@ class SuccessfulWithdawWidget extends StatefulWidget {
   const SuccessfulWithdawWidget({super.key});
 
   @override
-  State<SuccessfulWithdawWidget> createState() =>
-      _SuccessfulWithdawWidgetState();
+  State<SuccessfulWithdawWidget> createState() => _SuccessfulWithdawWidgetState();
 }
 
 class _SuccessfulWithdawWidgetState extends State<SuccessfulWithdawWidget> {
@@ -55,8 +54,7 @@ class _SuccessfulWithdawWidgetState extends State<SuccessfulWithdawWidget> {
 }
 
 class SuccessfulWidget extends StatefulWidget {
-  const SuccessfulWidget(
-      {super.key, required this.message, required this.onTap});
+  const SuccessfulWidget({super.key, required this.message, required this.onTap});
   final VoidCallback onTap;
   final String message;
   @override
@@ -67,11 +65,13 @@ class _SuccessfulWidgetState extends State<SuccessfulWidget> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      backgroundColor: Colors.transparent,
+      shadowColor: Colors.transparent,
       insetPadding: EdgeInsets.zero,
       child: Container(
         height: context.screenHeight,
         width: context.screenWidth * 1.2,
-        color: Colors.black.withOpacity(.7),
+        color: Colors.transparent,
         child: Container(
           padding: EdgeInsets.all(8),
           height: context.screenHeight * .28,

@@ -48,6 +48,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   }
 
   _personalInfo(PersonalInfoEvent event, Emitter emit) async {
+    emit(ProfileInfoState(page: event.page, personalInfoModel: event.personalInfoModel));
+
     if (state is ProfileInfoState) {
       var current = state as ProfileInfoState;
 
@@ -60,8 +62,11 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       );
 
       result.fold((failure) {
-        emit(CreatingAccountFailed());
+        emit(CreatingAccountFailed(
+          message: failure.message,
+        ));
       }, (verify) {
+        print("HERRRRRR");
         emit(VerifyAccount(verificationData: verify, personalInfoModel: event.personalInfoModel));
       });
     } else {

@@ -75,8 +75,7 @@ class _VerifyEmailState extends State<VerifyEmail> with Validators {
                               recognizer: TapGestureRecognizer()..onTap = () {},
                             ),
                             TextSpan(
-                              text:
-                                  'enter the code provided in the email to complete the sign up process',
+                              text: 'enter the code provided in the email to complete the sign up process',
                               style: context.textTheme.bodySmall,
                             ),
                           ],
@@ -92,8 +91,7 @@ class _VerifyEmailState extends State<VerifyEmail> with Validators {
                 keyboardType: TextInputType.number,
                 validator: validateDigit,
               ),
-              BlocBuilder<AuthenticationBloc, AuthenticationState>(
-                  builder: (context, state) {
+              BlocBuilder<AuthenticationBloc, AuthenticationState>(builder: (context, state) {
                 return RichText(
                   text: TextSpan(
                     text: "Didn’t get an email? ",
@@ -108,13 +106,9 @@ class _VerifyEmailState extends State<VerifyEmail> with Validators {
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             if (state is VeriftingAccountFailed) {
-                              context
-                                  .read<ResendOtpCubit>()
-                                  .resendOtp(state.verificationData['data']);
+                              context.read<ResendOtpCubit>().resendOtp(state.verificationData['data']);
                             } else if (state is VerifyAccount) {
-                              context
-                                  .read<ResendOtpCubit>()
-                                  .resendOtp(state.verificationData['data']);
+                              context.read<ResendOtpCubit>().resendOtp(state.verificationData['data']);
                             }
                           },
                       ),
@@ -124,46 +118,48 @@ class _VerifyEmailState extends State<VerifyEmail> with Validators {
               }).toCenter()
             ].addSpacer(const Gap(20)),
           ).withSafeArea().withCustomPadding().withForm(verifyForm),
-          bottomNavigationBar: Container(
+          bottomSheet: Container(
             height: 200,
-            child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-              builder: (context, state) {
-                if (state is VerifyingAccount) {
-                  // var currentState = state;
+            child: Center(
+              child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                builder: (context, state) {
+                  if (state is VerifyingAccount) {
+                    // var currentState = state;
 
-                  return CustomButton(
-                    label: "Proceed",
-                    notifier: ValueNotifier(true),
-                    onPressed: () {
-                      // if (!verifyForm.currentState!.validate()) return;
-                      // context.read<AuthenticationBloc>().add(VerifyEmailEvent(
-                      //     otp: _otpController.text,
-                      //     verificationData: state.verificationData));
-                    },
-                  );
-                } else if (state is VeriftingAccountFailed) {
-                  return CustomButton(
-                    label: "Proceed",
-                    onPressed: () {
-                      if (!verifyForm.currentState!.validate()) return;
-                      context.read<AuthenticationBloc>().add(VerifyEmailEvent(
-                          otp: _otpController.text,
-                          verificationData: state.verificationData));
-                    },
-                  );
-                } else if (state is VerifyAccount) {
-                  return CustomButton(
-                    label: "Proceed",
-                    onPressed: () {
-                      if (!verifyForm.currentState!.validate()) return;
-                      context.read<AuthenticationBloc>().add(VerifyEmailEvent(
-                          otp: _otpController.text,
-                          verificationData: state.verificationData));
-                    },
-                  );
-                }
-                return Container();
-              },
+                    return CustomButton(
+                      label: "Proceed",
+                      notifier: ValueNotifier(true),
+                      onPressed: () {
+                        // if (!verifyForm.currentState!.validate()) return;
+                        // context.read<AuthenticationBloc>().add(VerifyEmailEvent(
+                        //     otp: _otpController.text,
+                        //     verificationData: state.verificationData));
+                      },
+                    );
+                  } else if (state is VeriftingAccountFailed) {
+                    return CustomButton(
+                      label: "Proceed",
+                      onPressed: () {
+                        if (!verifyForm.currentState!.validate()) return;
+                        context
+                            .read<AuthenticationBloc>()
+                            .add(VerifyEmailEvent(otp: _otpController.text, verificationData: state.verificationData));
+                      },
+                    );
+                  } else if (state is VerifyAccount) {
+                    return CustomButton(
+                      label: "Proceed",
+                      onPressed: () {
+                        if (!verifyForm.currentState!.validate()) return;
+                        context
+                            .read<AuthenticationBloc>()
+                            .add(VerifyEmailEvent(otp: _otpController.text, verificationData: state.verificationData));
+                      },
+                    );
+                  }
+                  return Container();
+                },
+              ),
             ),
           ),
         ),
